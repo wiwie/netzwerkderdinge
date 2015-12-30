@@ -1,0 +1,19 @@
+<h1>Listing Assoziationen</h1>
+ 
+<table>
+  <tr>
+  	<th>Link</th>
+    <th>Ding 1</th>
+    <th>Ding 2</th>
+    <th>Häufigkeit</th>
+  </tr>
+ 
+<% @asses.each do |ass| %>
+  <tr>
+    <td><%= link_to ass.id, ass %></td>
+    <td><%= link_to ass.ding_eins.name, ass.ding_eins %></td>
+    <td><%= link_to ass.ding_zwei.name, ass.ding_zwei %></td>
+    <td><%= ass.count %></td>
+  </tr>
+<% end %>
+</table>

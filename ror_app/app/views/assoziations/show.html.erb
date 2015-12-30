@@ -1,0 +1,6 @@
+<h1>Benutzer <%= @ass.user.email %> assoziiert Ding '<%= @ass.ding_eins.name %>' und '<%= @ass.ding_zwei.name %>'</h1>
+
+Ding '<%= link_to @ass.ding_eins.name, @ass.ding_eins %>' und '<%= link_to @ass.ding_zwei.name, @ass.ding_zwei %>' sind von Benutzer <%= @ass.user.email %> assoziiert worden.
+
+<h2>Häufigkeit</h2>
+Diese beiden Dinge sind insgesamt von <%= @ass.count %> Benutzer(n) assoziiert worden.

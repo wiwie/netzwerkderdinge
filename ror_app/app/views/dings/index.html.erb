@@ -1,0 +1,13 @@
+<h1>Listing Dings</h1>
+ 
+<table>
+  <tr>
+    <th>ID</th>
+  </tr>
+ 
+<% @dings.each do |ding| %>
+  <tr>
+    <td><%= link_to ding.id, ding %></td>
+  </tr>
+<% end %>
+</table>

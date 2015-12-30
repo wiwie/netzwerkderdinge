@@ -1,0 +1,21 @@
+<h1>Ding <%= @ding.name %></h1>
+
+<h2>Beschreibung</h2>
+<%= @ding.description %>
+
+<h2>Andere Dinge mit denen dieses Ding assoziiert wurde:</h2>
+<ul>
+	<% @ding.assoziierte_dinge.each do |anderes_ding, count| %>
+		<% ding = Ding.find(anderes_ding) %>
+		<li><%= link_to ding.name, ding %> (<%= count %>)</li>
+	<% end %>
+</ul>
+
+<h2>Womit assoziierst du dieses Ding?</h2>
+<%= form_for @assoziation, :url => new_assoziation_path(), :method => :get do |f| %>
+  <%= f.label :ding %><br>
+  <%= hidden_field_tag :ding_eins_id, @ding.id %>
+  <%= f.autocomplete_field :ding_zwei_id, autocomplete_ding_name_dings_path, :id_element => '#selected_ding_id' %>
+  <%= hidden_field_tag :selected_ding_id %>
+  <%= f.submit %>
+<% end %>
