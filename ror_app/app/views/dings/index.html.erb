@@ -1,13 +1,15 @@
-<h1>Listing Dings</h1>
+<h1>Alle Dinge</h1>
  
 <table>
   <tr>
-    <th>ID</th>
+  	<th>DingID</th>
+    <th>Name</th>
   </tr>
  
 <% @dings.each do |ding| %>
   <tr>
-    <td><%= link_to ding.id, ding %></td>
+  	<td><%= ding.id %></td>
+    <td><%= link_to ding.name, ding %></td>
   </tr>
 <% end %>
 </table>

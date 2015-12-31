@@ -1,9 +1,13 @@
-<h1>Ding <%= @ding.name %></h1>
+<h1>Ding '<%= @ding.name %>'</h1>
 
 <h2>Beschreibung</h2>
+<% if not @ding.description.nil? %>
 <%= @ding.description %>
+<% else %>
+Bislang keine Beschreibung vorhanden.
+<% end %>
 
-<h2>Andere Dinge mit denen dieses Ding assoziiert wurde:</h2>
+<h2>Dieses Ding wurde mit den folgenden Dingen assoziiert:</h2>
 <ul>
 	<% @ding.assoziierte_dinge.each do |anderes_ding, count| %>
 		<% ding = Ding.find(anderes_ding) %>
@@ -15,7 +19,7 @@
 <%= form_for @assoziation, :url => new_assoziation_path(), :method => :get do |f| %>
   <%= f.label :ding %><br>
   <%= hidden_field_tag :ding_eins_id, @ding.id %>
-  <%= f.autocomplete_field :ding_zwei_id, autocomplete_ding_name_dings_path, :id_element => '#selected_ding_id' %>
-  <%= hidden_field_tag :selected_ding_id %>
+  <%= f.autocomplete_field :ding_zwei_id, autocomplete_ding_name_dings_path, :id_element => '#selected_ding_zwei_id' %>
+  <%= hidden_field_tag :selected_ding_zwei_id %>
   <%= f.submit %>
 <% end %>

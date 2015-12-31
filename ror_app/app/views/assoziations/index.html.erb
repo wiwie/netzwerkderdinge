@@ -1,19 +1,18 @@
-<h1>Listing Assoziationen</h1>
+<h1>Alle Assoziationen</h1>
  
 <table>
   <tr>
-  	<th>Link</th>
-    <th>Ding 1</th>
+  	<th>Ding 1</th>
     <th>Ding 2</th>
     <th>Häufigkeit</th>
   </tr>
- 
-<% @asses.each do |ass| %>
+<% @asses.each do |ding_ids, count| %>
+  <% ding_eins = Ding.find(ding_ids[0]) %>
+  <% ding_zwei = Ding.find(ding_ids[1]) %>
   <tr>
-    <td><%= link_to ass.id, ass %></td>
-    <td><%= link_to ass.ding_eins.name, ass.ding_eins %></td>
-    <td><%= link_to ass.ding_zwei.name, ass.ding_zwei %></td>
-    <td><%= ass.count %></td>
+    <td><%= link_to ding_eins.name, ding_eins %></td>
+    <td><%= link_to ding_zwei.name, ding_zwei %></td>
+    <td><%= count %></td>
   </tr>
 <% end %>
 </table>
