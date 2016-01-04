@@ -38,25 +38,29 @@
   </head>
   <body>
 
-    <div class="navbar navbar-default navbar-static-top">
-      <div class="container">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#">RorApp</a>
-        <div class="navbar-collapse collapse navbar-responsive-collapse">
-          <ul class="nav navbar-nav">
-            <li><%= link_to "Assoziationen", "/assoziations"  %></li>
-            <li><%= link_to "Dinge", "/dings"  %></li>
-            <li><%= link_to "Profil", "/users"  %></li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    <%= nav_bar fixed: :top, brand: "Netzwerk der Dinge", responsive: true do %>
+      <%= menu_group do %>
+          <%= menu_item "Home", root_path %>
+          <%= menu_divider %>
+          <%= menu_item "Assoziationen", assoziations_path %>
+          <%= menu_item "Dinge", dings_path %>
+      <% end %>
+      <%= menu_group pull: :right do %>
+          <% if current_user %>
+              <%= menu_item "Log Out", destroy_user_session_path, :method => 'delete' %>
+          <% else %>
+              <%= form_for User.new, url: session_path(:user), :html => {class: "navbar-form pull-right"} do |f| -%>
+                <p><%= f.text_field :email %></p>
+                <p><%= f.password_field :password %></p>
+                <p><%= f.submit "Sign in" %></p>
+              <% end -%>
+              <%= button_to :Register, new_user_registration_path, :method => 'get' %>
+          <% end %>
+      <% end %>
+  <% end %>
 
     <div class="container">
+      <p style="height:50px"></p>
       <div class="row">
         <div class="col-lg-12">
           <%= bootstrap_flash %>
@@ -65,7 +69,7 @@
       </div><!--/row-->
 
       <footer>
-        <p>&copy; Company 2016</p>
+        <p></p>
       </footer>
 
     </div> <!-- /container -->

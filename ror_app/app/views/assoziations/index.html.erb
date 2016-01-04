@@ -9,7 +9,7 @@
         <li><%= link_to ass.ding_eins.name, ass.ding_eins %></li>
         <li><%= glyph(:link) %></li>
         <li><%= link_to ass.ding_zwei.name, ass.ding_zwei %></li>
-        <li><%= badge(ass.created_at.strftime("%d. %m. %Y"), :warning) %></li>
+        <li><%= badge(ass.created_at.strftime("%Y-%m-%d"), :warning) %></li>
     </ul>
 <% end %>
 

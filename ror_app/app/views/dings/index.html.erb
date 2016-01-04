@@ -1,15 +1,14 @@
-<h1>Alle Dinge</h1>
- 
-<table>
-  <tr>
-  	<th>DingID</th>
-    <th>Name</th>
-  </tr>
- 
-<% @dings.each do |ding| %>
-  <tr>
-  	<td><%= ding.id %></td>
-    <td><%= link_to ding.name, ding %></td>
-  </tr>
+<h1>Meist assoziierte Dinge</h1>
+
+<ul class="nav nav-list">
+<% @pop_dings.each do |pop_ding| %>
+	<% ding = Ding.find(pop_ding["ding_id"]) %>
+	<li>
+	    <ul class="list-inline">
+	        <li><%= glyph(:link) %></li>
+	        <li><%= link_to ding.name, ding %></li>
+	        <li><%= badge(pop_ding["count"], :warning) %></li>
+	    </ul>
+	</li>
 <% end %>
-</table>
+</ul>

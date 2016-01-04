@@ -14,12 +14,18 @@ Bislang keine Beschreibung vorhanden.
 <% end %>
 
 <h2>Dieses Ding wurde mit den folgenden Dingen assoziiert:</h2>
-<ul>
-	<% @ding.assoziierte_dinge.each do |anderes_ding, count| %>
-		<% ding = Ding.find(anderes_ding) %>
-		<li><%= link_to ding.name, ding %> (<%= count %>)</li>
-	<% end %>
-</ul>
+	<ul class="nav nav-list">
+		<% @ding.assoziierte_dinge.each do |anderes_ding, count| %>
+			<% ding = Ding.find(anderes_ding) %>
+			<li>
+			    <ul class="list-inline">
+	        		<li><%= glyph(:link) %></li>
+			        <li><%= link_to ding.name, ding %></li>
+			        <li><%= badge(count, :warning) %></li>
+			    </ul>
+			</li>
+		<% end %>
+	</ul>
 
 <h2>Womit assoziierst du dieses Ding?</h2>
 <%= form_for @assoziation, :url => new_assoziation_path(), :method => :get do |f| %>
