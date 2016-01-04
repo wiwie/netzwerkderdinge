@@ -1,4 +1,5 @@
 class AssoziationsController < ApplicationController
+	before_action :authenticate_user!
 
 	def new
 		if params.has_key?(:ding_eins_id) and params.has_key?(:selected_ding_zwei_id)
@@ -24,7 +25,16 @@ class AssoziationsController < ApplicationController
 	end
 
 	def index
-		@asses = Assoziation.group(:ding_eins_id, :ding_zwei_id).order('count_id desc').count('id')
+		#show associations of specific user
+		if params.has_key?(:user_id)
+			@asses = Assoziation.where(:user_id => params[:user_id]).order('created_at desc').limit(10)
+			@new_asses = current_user.get_new_associations(params[:user_id]).take(10)
+		#show associations of all users
+		else
+			@asses = Assoziation.group(:ding_eins_id, :ding_zwei_id).order('created_at desc').limit(10)
+			@pop_asses = Assoziation.group(:ding_eins_id, :ding_zwei_id).first(10)
+			@new_asses = current_user.get_new_associations().take(10)
+		end
 	end
 
 	def show

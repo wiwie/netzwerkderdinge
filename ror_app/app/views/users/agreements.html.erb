@@ -1,0 +1,10 @@
+<table>
+	<thead>
+		<th>Benutzer</th>
+		<th>Übereinstimmung</th>
+	</thead>
+	<% @agree.each do |agr| %>
+	<% @user = User.find(agr["user2_id"]) %>
+	<tr><td><%= link_to @user.email, user_assoziations_path(@user) %></td><td><%= number_to_percentage agr["agreement"]*100 %></td></tr>
+	<% end %>
+</table>

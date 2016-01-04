@@ -23,4 +23,20 @@ class DingsController < ApplicationController
 		@ding.save()
 		redirect_to @ding
 	end
+
+	def update
+	  @ding = Ding.find params[:id]
+
+	  respond_to do |format|
+	  	if params[:ding].has_key?(:kategorie)
+	  	  if @ding.update_attribute(:kategorie, Kategorie.find(params[:ding][:kategorie].to_i))
+		    format.html { redirect_to(@ding, :notice => 'User was successfully updated.') }
+		    format.json { respond_with_bip(@ding) }
+		  end
+	    else @ding.update_attributes(params.require(:ding).permit(:name))
+	      format.html { redirect_to(@ding, :notice => 'User was successfully updated.') }
+	      format.json { respond_with_bip(@ding) }
+	    end
+	  end
+	end
 end

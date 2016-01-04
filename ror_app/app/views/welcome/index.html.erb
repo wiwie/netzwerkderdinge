@@ -1,35 +1,15 @@
-<h1>Neueste Assoziationen</h1>
 
-<table>
-  <tr>
-  	<th>Ding 1</th>
-    <th>Ding 2</th>
-    <th>Zeitpunkt</th>
-  </tr>
-<% @newest_asses.each do |ass| %>
-  <tr>
-    <td><%= link_to ass.ding_eins.name, ass.ding_eins %></td>
-    <td><%= link_to ass.ding_zwei.name, ass.ding_zwei %></td>
-    <td><%= ass.created_at %></td>
-  </tr>
+<div class="page-header">
+  <h1>Willkommen</h1>
+</div>
+<% if Assoziation.where(user: current_user).count < 10 %>
+Füge ein paar Assoziation hinzu, damit wir dir Assoziationen vorschlagen können.
+<% else %>
+Wir empfehlen dir, die Assoziationen der folgenden Benutzer anzuschauen:
+	<ul>
+	<% current_user.get_agreement.first(5).each do |agreement| %>
+		<% user = User.find(agreement["user2_id"]) %>
+		<li><%= link_to user.email, :controller => :assoziations, :action => :index, :user_id => user.id %> <%= badge(number_to_percentage(agreement["agreement"]*100), :warning) %></li>
+	<% end %>
+	<ul>
 <% end %>
-</table>
-
-<h1>Beliebteste Assoziationen</h1>
-
-<table>
-  <tr>
-  	<th>Ding 1</th>
-    <th>Ding 2</th>
-    <th>Wie oft assoziiert?</th>
-  </tr>
-<% @pop_asses.each do |ding_ids, count| %>
-  <% ding_eins = Ding.find(ding_ids[0]) %>
-  <% ding_zwei = Ding.find(ding_ids[1]) %>
-  <tr>
-    <td><%= link_to ding_eins.name, ding_eins %></td>
-    <td><%= link_to ding_zwei.name, ding_zwei %></td>
-    <td><%= count %></td>
-  </tr>
-<% end %>
-</table>

@@ -1,18 +1,37 @@
-<h1>Alle Assoziationen</h1>
- 
-<table>
-  <tr>
-  	<th>Ding 1</th>
-    <th>Ding 2</th>
-    <th>Häufigkeit</th>
-  </tr>
-<% @asses.each do |ding_ids, count| %>
-  <% ding_eins = Ding.find(ding_ids[0]) %>
-  <% ding_zwei = Ding.find(ding_ids[1]) %>
-  <tr>
-    <td><%= link_to ding_eins.name, ding_eins %></td>
-    <td><%= link_to ding_zwei.name, ding_zwei %></td>
-    <td><%= count %></td>
-  </tr>
+<% if params.has_key?(:user_id) %>
+<h2>Neueste Assoziationen von Benutzer <%= User.find(params[:user_id]).email %></h2>
+<% else %>
+<h1>Neueste Assoziationen</h1>
 <% end %>
-</table>
+ 
+<% @asses.each do |ass| %>
+    <ul class="list-inline">
+        <li><%= link_to ass.ding_eins.name, ass.ding_eins %></li>
+        <li><%= glyph(:link) %></li>
+        <li><%= link_to ass.ding_zwei.name, ass.ding_zwei %></li>
+        <li><%= badge(ass.created_at.strftime("%d. %m. %Y"), :warning) %></li>
+    </ul>
+<% end %>
+
+<% if params.has_key?(:user_id) %>
+  <% if current_user.id.to_s != params["user_id"] %>
+    <h2>Übereinstimmung mit Dir</h2>
+    <%= number_to_percentage current_user.get_agreement.detect{|h| h["user2_id"] == params[:user_id].to_i}["agreement"]*100 %> der Assoziationen von '<%= User.find(params[:user_id]).email%>' hast du ebenso assoziiert.
+  <% end %>
+<% end %>
+
+<h2>Beliebteste Unbekannte Assoziationen</h2>
+<% if @new_asses.count > 0 %>
+  <% @new_asses.each do |ass| %>
+    <% ding_eins = Ding.find(ass["ding_eins_id"]) %>
+    <% ding_zwei = Ding.find(ass["ding_zwei_id"]) %>
+    <ul class="list-inline">
+        <li><%= link_to ding_eins.name, ding_eins %></li>
+        <li><%= glyph(:link) %></li>
+        <li><%= link_to ding_zwei.name, ding_zwei %></li>
+        <li><%= badge(ass["count_id"], :warning) %></li>
+    </ul>
+  <% end %>
+<% else %>
+  Keine unbekannten Assoziationen.
+<% end %>

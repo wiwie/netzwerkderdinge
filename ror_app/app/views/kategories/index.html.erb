@@ -1,0 +1,13 @@
+<h1>Alle Kategorien</h1>
+ 
+<table>
+  <tr>
+    <th>Name</th>
+  </tr>
+ 
+<% @kats.each do |kat| %>
+  <tr>
+    <td><%= link_to kat.name, kat %></td>
+  </tr>
+<% end %>
+</table>

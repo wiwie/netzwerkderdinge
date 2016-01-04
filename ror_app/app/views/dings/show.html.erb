@@ -1,4 +1,10 @@
-<h1>Ding '<%= @ding.name %>'</h1>
+<h1>Ding '<%= best_in_place @ding, :name, :as => :input %>'</h1>
+Kategorie: <%= best_in_place @ding, :kategorie, :as => :select, :collection => Hash[*Kategorie.all.map{ |x| [x.id, x.name] }.flatten] %>
+<% if @ding.kategorie %>
+<%= link_to @ding.kategorie.name, @ding.kategorie %>
+<% else %>
+
+<% end %>
 
 <h2>Beschreibung</h2>
 <% if not @ding.description.nil? %>

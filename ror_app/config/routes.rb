@@ -18,6 +18,11 @@ Rails.application.routes.draw do
     get :autocomplete_ding_name, :on => :collection
   end
   resources :assoziations
+  resources :users do
+    resources :assoziations
+    get 'agreements', on: :collection
+  end
+  resources :kategories
 
   # Example resource route with options:
   #   resources :products do
