@@ -1,4 +1,4 @@
-class AssoziationsController < ApplicationController
+class UserAssoziationsController < ApplicationController
 	before_action :authenticate_user!
 
 	def new
@@ -16,15 +16,17 @@ class AssoziationsController < ApplicationController
 				@id_eins = @id_zwei
 				@id_zwei = tmp
 			end
-			@ass = Assoziation.where(ding_eins_id: @id_eins, ding_zwei_id: @id_zwei).first_or_create
-
-			@ass.save()
-
-			@user_ass = UserAssoziation.where(:assoziation_id => @ass.id, :user => current_user).first_or_create
-			redirect_to @user_ass
+			# TODO
+			@ass = Assoziation.where(ding_eins_id: @id_eins, ding_zwei_id: @id_zwei, user: current_user).first_or_create
+			redirect_to @ass
 		else
 			@assoziation = Assoziation.new()
 		end
+	end
+
+	def show
+		@userass = UserAssoziation.find(params[:id])
+		@ass = @userass.assoziation
 	end
 
 	def create
@@ -47,26 +49,9 @@ class AssoziationsController < ApplicationController
 
 		@ass.save()
 
-		@user_ass = UserAssoziation.new(:assoziation_id => @ass.id, :user => current_user)
+		@user_ass = UserAssoziation.new(:assoziation => @ass, :user => current_user)
 		@user_ass.save()
 
-		redirect_to @user_ass
-	end
-
-	def index
-		#show associations of specific user
-		if params.has_key?(:user_id)
-			@asses = Assoziation.where(:user_id => params[:user_id]).order('created_at desc').limit(10)
-			@new_asses = current_user.get_new_associations(params[:user_id]).take(10)
-		#show associations of all users
-		else
-			@asses = UserAssoziation.order('created_at desc').limit(10)
-			@pop_asses = Assoziation.group(:ding_eins_id, :ding_zwei_id).first(10)
-			@new_asses = current_user.get_new_associations().take(10)
-		end
-	end
-
-	def show
-		@ass = Assoziation.find(params[:id])
+		redirect_to @ass
 	end
 end

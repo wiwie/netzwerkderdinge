@@ -20,17 +20,16 @@ class User < ActiveRecord::Base
 	def get_new_associations(other_user_id=nil)
 		if other_user_id.nil?			
 			st = ActiveRecord::Base.connection
-			res = st.execute('SELECT ding_eins_id,ding_zwei_id,count(*) as count_id FROM 
-					(SELECT ass.*
-					FROM assoziations ass
-					WHERE ass.user_id!=' + self.id.to_s + ') ass1
-				WHERE NOT EXISTS (
-					SELECT ding_eins_id,ding_zwei_id
-					FROM assoziations ass
-					WHERE ass.user_id=' + self.id.to_s + '
-					AND ass.ding_eins_id = ass1.ding_eins_id
-					AND ass.ding_zwei_id = ass1.ding_zwei_id
-				) GROUP BY ding_eins_id, ding_zwei_id ORDER BY count_id DESC;')
+			res = st.execute('SELECT assoziation_id,count(*) as count_id FROM 
+					(SELECT *
+					FROM user_assoziations
+					WHERE user_id!=' + self.id.to_s + ') ass1
+				WHERE assoziation_id NOT IN (
+					SELECT assoziation_id
+					FROM user_assoziations
+					WHERE user_id=' + self.id.to_s + '
+					AND assoziation_id = ass1.assoziation_id
+				) GROUP BY assoziation_id ORDER BY count_id DESC;')
 			st.close()
 			return res
 		else

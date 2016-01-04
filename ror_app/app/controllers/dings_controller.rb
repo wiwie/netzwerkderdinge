@@ -6,16 +6,19 @@ class DingsController < ApplicationController
 		@dings = Ding.all()
 
 		st = ActiveRecord::Base.connection
-		@pop_dings = st.execute('SELECT ass1.ding_id,ass1.count+ass2.count count FROM 
+		@pop_dings = st.execute('SELECT ding_id,SUM(count) count FROM
 				(SELECT ding_eins_id ding_id,count(*) as count 
-				FROM assoziations
-				GROUP BY ding_eins_id ORDER BY count DESC ) ass1 JOIN
-				(SELECT ding_zwei_id ding_id,count(*) as count 
-				FROM assoziations
-				GROUP BY ding_zwei_id ORDER BY count DESC ) ass2
-				ON (ass1.ding_id=ass2.ding_id)
+				FROM assoziations ass JOIN user_assoziations ua ON (ass.id=ua.assoziation_id)
+				GROUP BY ding_eins_id
+				UNION
+				SELECT ding_zwei_id ding_id,count(*) as count 
+				FROM assoziations ass JOIN user_assoziations ua ON (ass.id=ua.assoziation_id)
+				GROUP BY ding_zwei_id)
+				GROUP BY ding_id
 				ORDER BY count DESC LIMIT 10;')
 		st.close()
+
+		@newest_dings = Ding.order("created_at DESC").limit(10)
 	end
 
 	def show

@@ -11,20 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160103100848) do
+ActiveRecord::Schema.define(version: 20160104191930) do
 
   create_table "assoziations", force: :cascade do |t|
     t.integer  "ding_eins_id", null: false
     t.integer  "ding_zwei_id", null: false
-    t.integer  "user_id",      null: false
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end
 
-  add_index "assoziations", ["ding_eins_id", "ding_zwei_id", "user_id"], name: "assoziation_index", unique: true
+  add_index "assoziations", ["ding_eins_id", "ding_zwei_id"], name: "assoziation_index", unique: true
+  add_index "assoziations", ["ding_eins_id", "ding_zwei_id"], name: "index_assoziations_on_ding_eins_id_and_ding_zwei_id", unique: true
   add_index "assoziations", ["ding_eins_id"], name: "index_assoziations_on_ding_eins_id"
   add_index "assoziations", ["ding_zwei_id"], name: "index_assoziations_on_ding_zwei_id"
-  add_index "assoziations", ["user_id"], name: "index_assoziations_on_user_id"
 
   create_table "dings", force: :cascade do |t|
     t.datetime "created_at",   null: false
@@ -41,6 +40,17 @@ ActiveRecord::Schema.define(version: 20160103100848) do
     t.datetime "updated_at", null: false
     t.string   "name"
   end
+
+  create_table "user_assoziations", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "assoziation_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "user_assoziations", ["assoziation_id", "user_id"], name: "index_user_assoziations_on_assoziation_id_and_user_id", unique: true
+  add_index "user_assoziations", ["assoziation_id"], name: "index_user_assoziations_on_assoziation_id"
+  add_index "user_assoziations", ["user_id"], name: "index_user_assoziations_on_user_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false

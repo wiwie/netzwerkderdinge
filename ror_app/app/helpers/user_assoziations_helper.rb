@@ -1,0 +1,2 @@
+module UserAssoziationsHelper
+end

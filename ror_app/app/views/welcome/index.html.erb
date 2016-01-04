@@ -2,7 +2,7 @@
 <div class="page-header">
   <h1>Willkommen</h1>
 </div>
-<% if Assoziation.where(user: current_user).count < 10 %>
+<% if UserAssoziation.where(user: current_user).count < 10 %>
 Füge ein paar Assoziation hinzu, damit wir dir Assoziationen vorschlagen können. Als Inspiration kannst du dir <%= link_to :hier, assoziations_path %> Assoziationen anderer anschauen oder <%= link_to :hier, dings_path %> die am häufigsten assoziierten Dinge.
 <% else %>
 Wir empfehlen dir, die Assoziationen der folgenden Benutzer anzuschauen:

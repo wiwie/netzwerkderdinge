@@ -1,12 +1,12 @@
 class Assoziation < ActiveRecord::Base
 	belongs_to :ding_eins, :class_name => 'Ding', :foreign_key => 'ding_eins_id'
 	belongs_to :ding_zwei, :class_name => 'Ding', :foreign_key => 'ding_zwei_id'
-	belongs_to :user
+	has_many :user_assoziations
 
 	before_validation :handle_ding_ids, on: :create
 
 	def count
-		return Assoziation.where(:ding_eins_id => self.ding_eins.id, :ding_zwei_id => self.ding_zwei.id).count
+		return UserAssoziation.where(:assoziation_id => self.id).count
 	end
 	
 	private

@@ -18,8 +18,9 @@ Rails.application.routes.draw do
     get :autocomplete_ding_name, :on => :collection
   end
   resources :assoziations
+  resources :user_assoziations
   resources :users do
-    resources :assoziations
+    resources :user_assoziations
     get 'agreements', on: :collection
   end
   resources :kategories

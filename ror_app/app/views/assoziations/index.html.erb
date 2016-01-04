@@ -6,9 +6,9 @@
  
 <% @asses.each do |ass| %>
     <ul class="list-inline">
-        <li><%= link_to ass.ding_eins.name, ass.ding_eins %></li>
+        <li><%= link_to ass.assoziation.ding_eins.name, ass.assoziation.ding_eins %></li>
         <li><%= glyph(:link) %></li>
-        <li><%= link_to ass.ding_zwei.name, ass.ding_zwei %></li>
+        <li><%= link_to ass.assoziation.ding_zwei.name, ass.assoziation.ding_zwei %></li>
         <li><%= badge(ass.created_at.strftime("%Y-%m-%d"), :warning) %></li>
     </ul>
 <% end %>
@@ -22,14 +22,15 @@
 
 <h2>Beliebteste Unbekannte Assoziationen</h2>
 <% if @new_asses.count > 0 %>
-  <% @new_asses.each do |ass| %>
-    <% ding_eins = Ding.find(ass["ding_eins_id"]) %>
-    <% ding_zwei = Ding.find(ass["ding_zwei_id"]) %>
+  <% @new_asses.each do |userass| %>
+    <% ass = Assoziation.find(userass["assoziation_id"].to_i) %>
+    <% ding_eins = ass.ding_eins %>
+    <% ding_zwei = ass.ding_zwei %>
     <ul class="list-inline">
         <li><%= link_to ding_eins.name, ding_eins %></li>
         <li><%= glyph(:link) %></li>
         <li><%= link_to ding_zwei.name, ding_zwei %></li>
-        <li><%= badge(ass["count_id"], :warning) %></li>
+        <li><%= badge(ass.count, :warning) %></li>
     </ul>
   <% end %>
 <% else %>
