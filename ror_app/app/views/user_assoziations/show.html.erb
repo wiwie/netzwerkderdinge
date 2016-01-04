@@ -1,6 +1,11 @@
-<h1>Benutzer <%= @userass.user.email %> assoziiert Ding '<%= @ass.ding_eins.name %>' und '<%= @ass.ding_zwei.name %>'</h1>
+<h2>Neue Assoziation</h2>
+Benutzer <%= @userass.user.email %> hat eine neue Assoziation hinzugefügt!
 
-Ding '<%= link_to @ass.ding_eins.name, @ass.ding_eins %>' und '<%= link_to @ass.ding_zwei.name, @ass.ding_zwei %>' sind von Benutzer <%= @userass.user.email %> assoziiert worden.
-
-<h2>Häufigkeit</h2>
-Diese beiden Dinge sind insgesamt von <%= @ass.count %> Benutzer(n) assoziiert worden.
+<h2>Assoziation</h2>
+<ul class="list-inline">
+    <li><%= link_to @userass.assoziation.ding_eins.name, @userass.assoziation.ding_eins %></li>
+    <li><%= link_to @userass.assoziation do %>
+        <%= glyph(:link) %>
+      <% end %></li>
+    <li><%= link_to @userass.assoziation.ding_zwei.name, @userass.assoziation.ding_zwei %></li>
+</ul>

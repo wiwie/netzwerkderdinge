@@ -1,18 +1,34 @@
+<script type="text/javascript">
+function create_asso_for_curr_user(asso_id) {
+  $.ajax({
+      url: "/assoziations/" + asso_id + "/create_for_current_user",
+      type: "POST",
+      data: {},
+      success: function(resp){
+        location.reload();
+      }
+  });
+}
+</script>
+
 <% if params.has_key?(:user_id) %>
 <h2>Neueste Assoziationen von Benutzer <%= User.find(params[:user_id]).email %></h2>
 <% else %>
 <h1>Neueste Assoziationen</h1>
 <% end %>
  
+<ul class="nav nav-list">
 <% @asses.each do |ass| %>
-    <ul class="list-inline">
+    <li><ul class="list-inline">
         <li><%= link_to ass.assoziation.ding_eins.name, ass.assoziation.ding_eins %></li>
-        <li><%= glyph(:link) %></li>
+        <li><%= link_to ass do %>
+            <%= glyph(:link) %>
+          <% end %></li>
         <li><%= link_to ass.assoziation.ding_zwei.name, ass.assoziation.ding_zwei %></li>
         <li><%= badge(ass.created_at.strftime("%Y-%m-%d"), :warning) %></li>
-    </ul>
+    </ul></li>
 <% end %>
-
+</ul>
 <% if params.has_key?(:user_id) %>
   <% if current_user.id.to_s != params["user_id"] %>
     <h2>Übereinstimmung mit Dir</h2>
@@ -22,17 +38,26 @@
 
 <h2>Beliebteste Unbekannte Assoziationen</h2>
 <% if @new_asses.count > 0 %>
+  <ul class="nav nav-list">
   <% @new_asses.each do |userass| %>
     <% ass = Assoziation.find(userass["assoziation_id"].to_i) %>
     <% ding_eins = ass.ding_eins %>
     <% ding_zwei = ass.ding_zwei %>
-    <ul class="list-inline">
+    <li><ul class="list-inline">
         <li><%= link_to ding_eins.name, ding_eins %></li>
-        <li><%= glyph(:link) %></li>
+        <li><%= link_to ass do %>
+            <%= glyph(:link) %>
+          <% end %></li>
         <li><%= link_to ding_zwei.name, ding_zwei %></li>
-        <li><%= badge(ass.count, :warning) %></li>
-    </ul>
+        <li><%= badge(ass.count.to_s + " mal", :warning) %></li>
+        <li>
+          <%= link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + ass.id.to_s + ');' do %>
+            <%= glyph(:plus) %>
+          <% end %>
+        </li>
+    </ul></li>
   <% end %>
+</ul>
 <% else %>
   Keine unbekannten Assoziationen.
 <% end %>

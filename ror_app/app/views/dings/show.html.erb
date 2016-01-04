@@ -19,9 +19,9 @@ Bislang keine Beschreibung vorhanden.
 			<% ding = Ding.find(anderes_ding) %>
 			<li>
 			    <ul class="list-inline">
-	        		<li><%= glyph(:link) %></li>
+	        		<li><%= glyph(:paperclip) %></li>
 			        <li><%= link_to ding.name, ding %></li>
-			        <li><%= badge(count, :warning) %></li>
+			        <li><%= badge(count.to_s + " mal", :warning) %></li>
 			    </ul>
 			</li>
 		<% end %>

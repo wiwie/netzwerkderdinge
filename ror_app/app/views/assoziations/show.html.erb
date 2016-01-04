@@ -1,2 +1,15 @@
+<h2>Assoziation <%= @ass.id %></h2>
+<ul class="list-inline">
+	<li><%= link_to @ass.ding_eins.name, @ass.ding_eins %></li>
+	<li><%= glyph(:link) %></li>
+    <li><%= link_to @ass.ding_zwei.name, @ass.ding_zwei %></li>
+ </ul>
+
 <h2>Häufigkeit</h2>
-Diese beiden Dinge sind insgesamt von <%= @ass.count %> Benutzer(n) assoziiert worden.
+<p>Diese beiden Dinge sind insgesamt von <%= @ass.count %> Benutzer(n) assoziiert worden:</p>
+<% @ass.user_assoziations.each do |userass| %>
+<ul class="list-inline">
+		<li><%= glyph(:user) %> <%= link_to userass.user.email, userass.user %></li>
+</ul>
+<% end %>
+Assoziieren?

@@ -53,10 +53,16 @@ class AssoziationsController < ApplicationController
 		redirect_to @user_ass
 	end
 
+	def create_for_current_user
+		@ass = Assoziation.find(params[:assoziation_id])
+		@userass = UserAssoziation.where(:assoziation_id => @ass.id, :user_id => current_user.id).first_or_create
+		redirect_to @userass
+	end
+
 	def index
 		#show associations of specific user
 		if params.has_key?(:user_id)
-			@asses = Assoziation.where(:user_id => params[:user_id]).order('created_at desc').limit(10)
+			@asses = UserAssoziation.where(:user_id => params[:user_id]).order('created_at desc').limit(10)
 			@new_asses = current_user.get_new_associations(params[:user_id]).take(10)
 		#show associations of all users
 		else

@@ -6,13 +6,12 @@ class User < ActiveRecord::Base
 
 	def get_agreement
 		st = ActiveRecord::Base.connection
-		res = st.execute('SELECT u1.id user1_id,u2.id user2_id, (count(*)*1.0)/(SELECT count(*) FROM assoziations WHERE user_id=u2.id) as agreement
-			FROM users u1, users u2, assoziations ass1, assoziations ass2
+		res = st.execute('SELECT u1.id user1_id,u2.id user2_id, (count(*)*1.0)/(SELECT count(*) FROM user_assoziations WHERE user_id=u2.id) as agreement
+			FROM users u1, users u2, user_assoziations ass1, user_assoziations ass2
 			WHERE u1.id=' + self.id.to_s + ' AND u2.id != u1.id
 			AND ass1.user_id = u1.id
 			AND ass2.user_id = u2.id
-			AND ass1.ding_eins_id=ass2.ding_eins_id
-			AND ass1.ding_zwei_id=ass2.ding_zwei_id GROUP BY u1.id,u2.id ORDER BY agreement DESC')
+			AND ass1.assoziation_id=ass2.assoziation_id GROUP BY u1.id,u2.id ORDER BY agreement DESC')
 		st.close()
 		return res
 	end
@@ -34,17 +33,16 @@ class User < ActiveRecord::Base
 			return res
 		else
 			st = ActiveRecord::Base.connection
-			res = st.execute('SELECT ding_eins_id,ding_zwei_id,count(*) as count_id FROM 
-					(SELECT ass.*
-					FROM assoziations ass
-					WHERE ass.user_id=' + other_user_id.to_s + ') ass1
-				WHERE NOT EXISTS (
-					SELECT ding_eins_id,ding_zwei_id
-					FROM assoziations ass
-					WHERE ass.user_id=' + self.id.to_s + '
-					AND ass.ding_eins_id = ass1.ding_eins_id
-					AND ass.ding_zwei_id = ass1.ding_zwei_id
-				) GROUP BY ding_eins_id, ding_zwei_id ORDER BY count_id DESC;')
+			res = st.execute('SELECT assoziation_id,count(*) as count_id FROM 
+					(SELECT *
+					FROM user_assoziations
+					WHERE user_id=' + other_user_id.to_s + ') ass1
+				WHERE assoziation_id NOT IN (
+					SELECT assoziation_id
+					FROM user_assoziations
+					WHERE user_id=' + self.id.to_s + '
+					AND assoziation_id = ass1.assoziation_id
+				) GROUP BY assoziation_id ORDER BY count_id DESC;')
 			st.close()
 			return res
 		end
