@@ -24,3 +24,14 @@ $(document).ready(function() {
 /* Activating Best In Place */
 jQuery(".best_in_place").best_in_place()
 });
+
+function create_asso_for_curr_user(asso_id) {
+  $.ajax({
+      url: "/assoziations/" + asso_id + "/create_for_current_user",
+      type: "POST",
+      data: {},
+      success: function(resp){
+        location.reload();
+      }
+  });
+}

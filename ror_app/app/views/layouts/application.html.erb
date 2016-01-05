@@ -40,14 +40,14 @@
 
     <%= nav_bar fixed: :top, brand: "Netzwerk der Dinge", responsive: true do %>
       <%= menu_group do %>
-          <%= menu_item "Home", root_path %>
+          <%= menu_item glyph(:home) + " Home", root_path %>
           <%= menu_divider %>
-          <%= menu_item "Assoziationen", assoziations_path %>
-          <%= menu_item "Dinge", dings_path %>
+          <%= menu_item glyph(:link) + " Assoziationen", assoziations_path %>
+          <%= menu_item glyph(:paperclip) + " Dinge", dings_path %>
       <% end %>
       <%= menu_group pull: :right do %>
           <% if current_user %>
-              <%= menu_item "Log Out", destroy_user_session_path, :method => 'delete' %>
+              <%= menu_item glyph(:user) + " Log Out", destroy_user_session_path, :method => 'delete' %>
           <% else %>
               <%= form_for User.new, url: session_path(:user), :html => {class: "navbar-form pull-right"} do |f| -%>
                 <p><%= f.text_field :email %></p>

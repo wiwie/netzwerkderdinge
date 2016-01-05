@@ -10,6 +10,14 @@
 <% @ass.user_assoziations.each do |userass| %>
 <ul class="list-inline">
 		<li><%= glyph(:user) %> <%= link_to userass.user.email, userass.user %></li>
+		<li>(Details: <%= link_to userass do %>
+		            <%= glyph(:link) %><% end %>
+			)</li>
 </ul>
 <% end %>
-Assoziieren?
+<% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => @ass.id).count == 0 %>
+<h2>Assoziieren?</h2>
+Ich assoziiere diese beiden Dinge auch! <%= link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + @ass.id.to_s + ');' do %>
+            <%= glyph(:plus) %>
+          <% end %>
+<% end %>

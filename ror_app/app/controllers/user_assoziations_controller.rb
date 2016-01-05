@@ -54,4 +54,15 @@ class UserAssoziationsController < ApplicationController
 
 		redirect_to @ass
 	end
+
+	def update
+	  @userass = UserAssoziation.find params[:id]
+
+	  respond_to do |format|
+	  	if @userass.update_attributes(params.require(:user_assoziation).permit(:description))
+	      format.html { redirect_to(@userass, :notice => 'User was successfully updated.') }
+	      format.json { respond_with_bip(@userass) }
+	    end
+	  end
+	end
 end

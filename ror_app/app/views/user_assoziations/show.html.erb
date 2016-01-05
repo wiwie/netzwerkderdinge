@@ -9,3 +9,10 @@ Benutzer <%= @userass.user.email %> hat eine neue Assoziation hinzugefügt!
       <% end %></li>
     <li><%= link_to @userass.assoziation.ding_zwei.name, @userass.assoziation.ding_zwei %></li>
 </ul>
+
+<h2>Beschreibung</h2>
+<% if @userass.user == current_user %>
+<%= best_in_place @userass, :description, :as => :textarea, :place_holder => 'Du hast noch keine Beschreibung für diese Assoziation hinterlegt. Klicke hier um dies nun zu tun.', :ok_button => 'Save' %>
+<% else %>
+Dieser Benutzer hat für diese Assoziation keine Beschreibung hinterlegt.
+<% end %>

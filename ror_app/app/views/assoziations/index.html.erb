@@ -1,16 +1,3 @@
-<script type="text/javascript">
-function create_asso_for_curr_user(asso_id) {
-  $.ajax({
-      url: "/assoziations/" + asso_id + "/create_for_current_user",
-      type: "POST",
-      data: {},
-      success: function(resp){
-        location.reload();
-      }
-  });
-}
-</script>
-
 <% if params.has_key?(:user_id) %>
 <h2>Neueste Assoziationen von Benutzer <%= User.find(params[:user_id]).email %></h2>
 <% else %>
