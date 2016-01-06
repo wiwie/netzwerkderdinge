@@ -62,15 +62,15 @@ class AssoziationsController < ApplicationController
 	def index
 		#show associations of specific user
 		if params.has_key?(:user_id)
-			@asses = UserAssoziation.where(:user_id => params[:user_id]).order('created_at desc').limit(20)
-			@new_asses = current_user.get_new_associations(params[:user_id]).take(20)
-			@new_unknown_asses = current_user.get_new_associations(params[:user_id], 'created_at').take(20)
+			@asses = UserAssoziation.where(:user_id => params[:user_id]).order('created_at desc').limit(10)
+			@new_asses = current_user.get_new_associations(params[:user_id]).take(10)
+			@new_unknown_asses = current_user.get_new_associations(params[:user_id], 'created_at').take(10)
 		#show associations of all users
 		else
-			@asses = UserAssoziation.order('created_at desc').limit(20)
-			@pop_asses = Assoziation.group(:ding_eins_id, :ding_zwei_id).first(20)
-			@new_asses = current_user.get_new_associations().take(20)
-			@new_unknown_asses = current_user.get_new_associations(nil, 'created_at').take(20)
+			@asses = UserAssoziation.order('created_at desc').limit(10)
+			@pop_asses = Assoziation.group(:ding_eins_id, :ding_zwei_id).first(10)
+			@new_asses = current_user.get_new_associations().take(10)
+			@new_unknown_asses = current_user.get_new_associations(nil, 'created_at').take(10)
 		end
 	end
 
