@@ -1,7 +1,16 @@
+
+<% if params.has_key?(:user_id) %>
+  <% if current_user.id.to_s != params["user_id"] %>
+    <h2>Übereinstimmung mit Dir</h2>
+    <%= number_to_percentage current_user.get_agreement.detect{|h| h["user2_id"] == params[:user_id].to_i}["agreement"]*100 %> der Assoziationen von '<%= User.find(params[:user_id]).email%>' hast du ebenso assoziiert.
+  <% end %>
+<% end %>
+
+
 <% if params.has_key?(:user_id) %>
 <h2>Neueste Assoziationen von Benutzer <%= User.find(params[:user_id]).email %></h2>
 <% else %>
-<h1>Neueste Assoziationen</h1>
+<h2>Neueste Assoziationen</h2>
 <% end %>
  
 <ul class="nav nav-list">
@@ -24,13 +33,40 @@
 <% end %>
 </ul>
 <% if params.has_key?(:user_id) %>
-  <% if current_user.id.to_s != params["user_id"] %>
-    <h2>Übereinstimmung mit Dir</h2>
-    <%= number_to_percentage current_user.get_agreement.detect{|h| h["user2_id"] == params[:user_id].to_i}["agreement"]*100 %> der Assoziationen von '<%= User.find(params[:user_id]).email%>' hast du ebenso assoziiert.
+<h2>Neueste Unbekannte Assoziationen von Benutzer <%= User.find(params[:user_id]).email %></h2>
+<% else %>
+<h2>Neueste Unbekannte Assoziationen</h2>
+<% end %>
+<% if @new_unknown_asses.count > 0 %>
+  <ul class="nav nav-list">
+  <% @new_unknown_asses.each do |userass| %>
+    <% ass = Assoziation.find(userass["assoziation_id"].to_i) %>
+    <% ding_eins = ass.ding_eins %>
+    <% ding_zwei = ass.ding_zwei %>
+    <li><ul class="list-inline">
+        <li><%= link_to ding_eins.name, ding_eins %></li>
+        <li><%= link_to ass do %>
+            <%= glyph(:link) %>
+          <% end %></li>
+        <li><%= link_to ding_zwei.name, ding_zwei %></li>
+        <li><%= badge(ass.created_at.strftime("%Y-%m-%d"), :warning) %></li>
+        <li>
+          <%= link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + ass.id.to_s + ');' do %>
+            <%= glyph(:plus) %>
+          <% end %>
+        </li>
+    </ul></li>
   <% end %>
+</ul>
+<% else %>
+  Keine unbekannten Assoziationen.
 <% end %>
 
+<% if params.has_key?(:user_id) %>
+<h2>Beliebteste Unbekannte Assoziationen von Benutzer <%= User.find(params[:user_id]).email %></h2>
+<% else %>
 <h2>Beliebteste Unbekannte Assoziationen</h2>
+<% end %>
 <% if @new_asses.count > 0 %>
   <ul class="nav nav-list">
   <% @new_asses.each do |userass| %>

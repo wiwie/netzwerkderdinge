@@ -16,10 +16,10 @@ class User < ActiveRecord::Base
 		return res
 	end
 
-	def get_new_associations(other_user_id=nil)
+	def get_new_associations(other_user_id=nil, order_by='count_id')
 		if other_user_id.nil?			
 			st = ActiveRecord::Base.connection
-			res = st.execute('SELECT assoziation_id,count(*) as count_id FROM 
+			res = st.execute('SELECT assoziation_id,count(*) as count_id,created_at FROM 
 					(SELECT *
 					FROM user_assoziations
 					WHERE user_id!=' + self.id.to_s + ') ass1
@@ -28,12 +28,12 @@ class User < ActiveRecord::Base
 					FROM user_assoziations
 					WHERE user_id=' + self.id.to_s + '
 					AND assoziation_id = ass1.assoziation_id
-				) GROUP BY assoziation_id ORDER BY count_id DESC;')
+				) GROUP BY assoziation_id ORDER BY ' + order_by + ' DESC;')
 			st.close()
 			return res
 		else
 			st = ActiveRecord::Base.connection
-			res = st.execute('SELECT assoziation_id,count(*) as count_id FROM 
+			res = st.execute('SELECT assoziation_id,count(*) as count_id,created_at FROM 
 					(SELECT *
 					FROM user_assoziations
 					WHERE user_id=' + other_user_id.to_s + ') ass1
@@ -42,7 +42,7 @@ class User < ActiveRecord::Base
 					FROM user_assoziations
 					WHERE user_id=' + self.id.to_s + '
 					AND assoziation_id = ass1.assoziation_id
-				) GROUP BY assoziation_id ORDER BY count_id DESC;')
+				) GROUP BY assoziation_id ORDER BY ' + order_by + ' DESC;')
 			st.close()
 			return res
 		end
