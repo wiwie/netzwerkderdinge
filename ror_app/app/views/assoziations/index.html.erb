@@ -13,6 +13,13 @@
           <% end %></li>
         <li><%= link_to ass.assoziation.ding_zwei.name, ass.assoziation.ding_zwei %></li>
         <li><%= badge(ass.created_at.strftime("%Y-%m-%d"), :warning) %></li>
+        <% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => ass.assoziation.id).count == 0 %>
+        <li>
+          <%= link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + ass.assoziation.id.to_s + ');' do %>
+            <%= glyph(:plus) %>
+          <% end %>
+        </li>
+        <% end %>
     </ul></li>
 <% end %>
 </ul>
