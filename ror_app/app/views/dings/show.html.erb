@@ -22,6 +22,19 @@ Bislang keine Beschreibung vorhanden.
 	        		<li><%= glyph(:paperclip) %></li>
 			        <li><%= link_to ding.name, ding %></li>
 			        <li><%= badge(count.to_s + " mal", :warning) %></li>
+			        <% asses = Assoziation.where(:ding_eins_id => @ding.id, :ding_zwei_id => ding.id) %>
+			        <% if asses.count > 0 %>
+			        <% ass_id = asses.first.id %>
+			        <% else %>
+			        <% ass_id = Assoziation.where(:ding_eins_id => ding.id, :ding_zwei_id => @ding.id).first.id %>
+			        <% end %>
+			        <% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => ass_id).count == 0 %>
+			        <li>
+			          <%= link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + ass_id.to_s + ');' do %>
+			            <%= glyph(:plus) %>
+			          <% end %>
+			        </li>
+			        <% end %>
 			    </ul>
 			</li>
 		<% end %>
