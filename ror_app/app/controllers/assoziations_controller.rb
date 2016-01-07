@@ -29,7 +29,7 @@ class AssoziationsController < ApplicationController
 
 	def create
 		if not params.has_key?(:selected_ding_eins_id) or params[:selected_ding_eins_id] == ''
-			@ding = Ding.create(params[:assoziation][:ding_eins_id])
+			@ding = Ding.create(:name => params[:assoziation][:ding_eins_id])
 			ding_eins_id = @ding.id
 		else
 			ding_eins_id = params[:selected_ding_eins_id].to_i
