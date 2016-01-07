@@ -5,7 +5,7 @@ class AssoziationsController < ApplicationController
 		if params.has_key?(:ding_eins_id) and params.has_key?(:selected_ding_zwei_id)
 			@id_eins = params[:ding_eins_id].to_i
 			if params[:selected_ding_zwei_id] == ''
-				ding = Ding.create(:name => params[:assoziation][:ding_zwei_id])
+				ding = Ding.where(:name => params[:assoziation][:ding_zwei_id]).first_or_create
 				@id_zwei = ding.id
 			else
 				@id_zwei = params[:selected_ding_zwei_id].to_i
@@ -29,14 +29,14 @@ class AssoziationsController < ApplicationController
 
 	def create
 		if not params.has_key?(:selected_ding_eins_id) or params[:selected_ding_eins_id] == ''
-			@ding = Ding.create(:name => params[:assoziation][:ding_eins_id])
+			@ding = Ding.where(:name => params[:assoziation][:ding_eins_id]).first_or_create
 			ding_eins_id = @ding.id
 		else
 			ding_eins_id = params[:selected_ding_eins_id].to_i
 		end
 
 		if not params.has_key?(:selected_ding_zwei_id) or params[:selected_ding_zwei_id] == ''
-			@ding = Ding.create(:name => params[:assoziation][:ding_zwei_id])
+			@ding = Ding.where(:name => params[:assoziation][:ding_zwei_id]).first_or_create
 			ding_zwei_id = @ding.id
 		else
 			ding_zwei_id = params[:selected_ding_zwei_id].to_i
