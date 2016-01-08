@@ -1,3 +1,5 @@
+<h2>Neue Assoziation</h2>
+Füge eine neue Assoziation <%= link_to :hinzu, new_assoziation_path %>.
 
 <% if params.has_key?(:user_id) %>
   <% if current_user.id.to_s != params["user_id"] %>

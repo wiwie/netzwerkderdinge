@@ -1,4 +1,7 @@
-<h1>Meist assoziierte Dinge</h1>
+<h2>Neues Ding</h2>
+Füge ein neues Ding <%= link_to :hinzu, new_ding_path %>.
+
+<h2>Meist assoziierte Dinge</h2>
 <ul class="nav nav-list">
 <% @pop_dings.each do |pop_ding| %>
 	<% ding = Ding.find(pop_ding["ding_id"]) %>
@@ -12,7 +15,7 @@
 <% end %>
 </ul>
 
-<h1>Neueste Dinge</h1>
+<h2>Neueste Dinge</h2>
 <ul class="nav nav-list">
 <% @newest_dings.each do |ding| %>
 	<li>
