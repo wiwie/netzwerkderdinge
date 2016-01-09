@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   #   resources :products
   resources :dings do
     get :autocomplete_ding_name, :on => :collection
+    post :add_translation
   end
   resources :assoziations do
     post 'create_for_current_user'

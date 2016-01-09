@@ -76,6 +76,11 @@ GEM
     execjs (2.6.0)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
+    globalize (5.0.1)
+      activemodel (>= 4.2.0, < 4.3)
+      activerecord (>= 4.2.0, < 4.3)
+    globalize-accessors (0.2.1)
+      globalize (~> 5.0, >= 5.0.0)
     i18n (0.7.0)
     jbuilder (2.4.0)
       activesupport (>= 3.0.0, < 5.1)
@@ -189,6 +194,8 @@ DEPENDENCIES
   byebug
   coffee-rails (~> 4.1.0)
   devise
+  globalize (~> 5.0.0)
+  globalize-accessors
   jbuilder (~> 2.0)
   jquery-rails
   jquery-ui-rails

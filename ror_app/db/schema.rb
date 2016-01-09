@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160105122344) do
+ActiveRecord::Schema.define(version: 20160109012441) do
 
   create_table "assoziations", force: :cascade do |t|
     t.integer  "ding_eins_id", null: false
@@ -25,10 +25,21 @@ ActiveRecord::Schema.define(version: 20160105122344) do
   add_index "assoziations", ["ding_eins_id"], name: "index_assoziations_on_ding_eins_id"
   add_index "assoziations", ["ding_zwei_id"], name: "index_assoziations_on_ding_zwei_id"
 
+  create_table "ding_translations", force: :cascade do |t|
+    t.integer  "ding_id",     null: false
+    t.string   "locale",      null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.string   "name"
+    t.text     "description"
+  end
+
+  add_index "ding_translations", ["ding_id"], name: "index_ding_translations_on_ding_id"
+  add_index "ding_translations", ["locale"], name: "index_ding_translations_on_locale"
+
   create_table "dings", force: :cascade do |t|
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
-    t.string   "name"
     t.string   "description"
     t.integer  "kategorie_id"
   end

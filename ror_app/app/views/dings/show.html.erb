@@ -1,4 +1,18 @@
-<h1>Ding '<%= best_in_place @ding, :name, :as => :input %>'</h1>
+<h1>Ding <% if @ding.has_translation(:name, params[:locale]) %>'<%= best_in_place @ding, :name, :as => :input %>'<% else %>&lt;???&gt;<% end %></h1>
+<% if not @ding.has_translation(:name, params[:locale]) %>
+	Für den Namen dieses Dings wurde noch keine Übersetzung für deine Sprache hinterlegt. Bitte nutze das Textfeld um deine Übersetzung hinzuzufügen. Es folgen ein paar Übersetzungen in anderen Sprachen:
+	<ul>
+		<% if @ding.name_de %><li>Deutsch: <%= @ding.name_de %></li><% end %>
+		<% if @ding.name_en %><li>English: <%= @ding.name_en %></li><% end %>
+		<% if @ding.name_dk %><li>Dansk: <%= @ding.name_dk %></li><% end %>
+	</ul>
+	<%= form_for @ding, :url => ding_add_translation_path(@ding), :method => :post do |f| %>
+	  <%= hidden_field_tag :locale, params[:locale] %>
+	  <%= f.label :ding %><br>
+	  <%= f.text_field :name, :value => '' %>
+	  <%= f.submit :value => 'Add Translation' %>
+	<% end %>
+<% end %>
 <%# Kategorie: <%= best_in_place @ding, :kategorie, :as => :select, :collection => Hash[*Kategorie.all.map{ |x| [x.id, x.name] }.flatten] %>
 <%# if @ding.kategorie %>
 <%#= link_to @ding.kategorie.name, @ding.kategorie %>

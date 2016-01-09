@@ -52,3 +52,6 @@ gem 'rails-jquery-autocomplete'
 gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
 
 gem 'best_in_place'
+
+gem 'globalize', '~> 5.0.0'
+gem 'globalize-accessors'

@@ -21,6 +21,23 @@ class DingsController < ApplicationController
 		@newest_dings = Ding.order("created_at DESC").limit(10)
 	end
 
+	def has_translation(ding_id, attribute, locale)
+		@ding = Ding.find(ding_id)
+		puts @ding[attribute.to_s + "_" + locale]
+		return (not @ding[attribute.to_s + "_" + locale].nil?)
+	end
+
+	def add_translation()
+		if params.has_key?(:ding) and params.has_key?(:locale)
+			@ding = Ding.find(params[:ding_id])
+			if params[:ding].has_key?(:name)
+				@ding.attributes = { name: params[:ding][:name], locale: params[:locale] }
+				@ding.save
+			end
+		end
+		redirect_to(@ding)
+	end
+
 	def show
 		@ding = Ding.find(params[:id])
 
