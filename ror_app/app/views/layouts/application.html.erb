@@ -44,6 +44,7 @@
           <%= menu_divider %>
           <%= menu_item glyph(:link) + " Assoziationen", assoziations_path %>
           <%= menu_item glyph(:paperclip) + " Dinge", dings_path %>
+          <%= menu_item glyph(:star) + " Favoriten", user_favorits_path(current_user) %>
       <% end %>
       <%= menu_group pull: :right do %>
           <% if current_user %>

@@ -35,3 +35,25 @@ function create_asso_for_curr_user(asso_id) {
       }
   });
 }
+
+function add_favorit_for_curr_user(user_id, ding_id) {
+  $.ajax({
+      url: "/users/" + user_id + "/favorits/create_for_current_user",
+      type: "POST",
+      data: {'ding_id': ding_id},
+      success: function(resp){
+        location.reload();
+      }
+  });
+}
+
+function remove_favorit_for_curr_user(user_id, ding_id) {
+  $.ajax({
+      url: "/users/" + user_id + "/favorits/remove_for_current_user",
+      type: "POST",
+      data: {'ding_id': ding_id},
+      success: function(resp){
+        location.reload();
+      }
+  });
+}

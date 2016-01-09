@@ -21,6 +21,19 @@ class DingsController < ApplicationController
 		@newest_dings = Ding.order("created_at DESC").limit(10)
 	end
 
+
+	def autocomplete_ding_name
+		term = params[:term]
+		query = 'SELECT dings.id,ding_translations.name FROM dings JOIN ding_translations
+			ON (dings.id=ding_translations.ding_id)
+			WHERE ding_translations.locale = "' + params[:locale] + '" 
+			AND ding_translations.name LIKE "' + term + '%"
+			ORDER BY ding_translations.name'
+		puts query
+		dings = Ding.connection.select_all(query)
+		render :json => dings.map { |ding| {:id => ding["id"], :label => ding["name"], :value => ding["name"]} }
+	end
+
 	def has_translation(ding_id, attribute, locale)
 		@ding = Ding.find(ding_id)
 		puts @ding[attribute.to_s + "_" + locale]

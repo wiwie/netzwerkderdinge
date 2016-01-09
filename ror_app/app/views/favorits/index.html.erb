@@ -1,0 +1,9 @@
+<h2>Neuer Favorit</h2>
+Füge einen neue Favorit <%= link_to :hinzu, new_user_favorit_path(current_user) %>.
+
+<h2>Deine Favoriten</h2>
+<ul>
+	<% @favorits.each do |fav| %>
+		<li><%= link_to fav.ding.name, fav.ding %></li>
+	<% end %>
+</ul>

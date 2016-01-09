@@ -24,6 +24,10 @@ Rails.application.routes.draw do
   resources :user_assoziations
   resources :users do
     resources :user_assoziations
+    resources :favorits do
+      post 'create_for_current_user', :on => :collection
+      post 'remove_for_current_user', :on => :collection
+    end
     get 'agreements', on: :collection
   end
   resources :kategories

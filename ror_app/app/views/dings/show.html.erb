@@ -13,12 +13,16 @@
 	  <%= f.submit :value => 'Add Translation' %>
 	<% end %>
 <% end %>
-<%# Kategorie: <%= best_in_place @ding, :kategorie, :as => :select, :collection => Hash[*Kategorie.all.map{ |x| [x.id, x.name] }.flatten] %>
-<%# if @ding.kategorie %>
-<%#= link_to @ding.kategorie.name, @ding.kategorie %>
-<%# else %>
 
-<%# end %>
+<% if current_user.favorits.where(:ding_id => @ding.id).count == 0 %>
+<%= glyph('star-empty') %> - zu Favoriten <%= link_to (url = '#'), :onclick => 'add_favorit_for_curr_user(' + current_user.id.to_s + ', ' + @ding.id.to_s + ');' do %>
+			            hinzufügen
+			          <% end %>
+<% else %>
+<%= glyph('star') %> - von Favoriten <%= link_to (url = '#'), :onclick => 'remove_favorit_for_curr_user(' + current_user.id.to_s + ', ' + @ding.id.to_s + ');' do %>
+			            löschen
+			          <% end %>
+<% end %>
 
 <h2>Beschreibung</h2>
 <% if not @ding.description.nil? %>
