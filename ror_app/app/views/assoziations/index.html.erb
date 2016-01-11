@@ -1,9 +1,9 @@
-<h2>Neue Assoziation</h2>
-Füge eine neue Assoziation <%= link_to :hinzu, new_assoziation_path %>.
+<h2><%= I18n.t("assoziations.index.neue_assoziation") %></h2>
+<%= I18n.t("assoziations.index.füge_eine_neue_assoziation") %> <%= link_to I18n.t("hinzu") , new_assoziation_path %>.
 
 <% if params.has_key?(:user_id) %>
   <% if current_user.id.to_s != params["user_id"] %>
-    <h2>Übereinstimmung mit Dir</h2>
+    <h2><%= I18n.t("assoziations.index.Übereinstimmung_mit_dir") %></h2>
     <%= number_to_percentage current_user.get_agreement.detect{|h| h["user2_id"] == params[:user_id].to_i}["agreement"]*100 %> der Assoziationen von '<%= User.find(params[:user_id]).email%>' hast du ebenso assoziiert.
   <% end %>
 <% end %>
@@ -12,7 +12,7 @@ Füge eine neue Assoziation <%= link_to :hinzu, new_assoziation_path %>.
 <% if params.has_key?(:user_id) %>
 <h2>Neueste Assoziationen von Benutzer <%= User.find(params[:user_id]).email %></h2>
 <% else %>
-<h2>Neueste Assoziationen</h2>
+<h2><%= I18n.t("assoziations.index.neueste_assoziationen") %></h2>
 <% end %>
  
 <ul class="nav nav-list">
@@ -37,7 +37,7 @@ Füge eine neue Assoziation <%= link_to :hinzu, new_assoziation_path %>.
 <% if params.has_key?(:user_id) %>
 <h2>Neueste Unbekannte Assoziationen von Benutzer <%= User.find(params[:user_id]).email %></h2>
 <% else %>
-<h2>Neueste Unbekannte Assoziationen</h2>
+<h2><%= I18n.t("assoziations.index.neueste_unbekannte_assoziationen") %></h2>
 <% end %>
 <% if @new_unknown_asses.count > 0 %>
   <ul class="nav nav-list">
@@ -61,13 +61,13 @@ Füge eine neue Assoziation <%= link_to :hinzu, new_assoziation_path %>.
   <% end %>
 </ul>
 <% else %>
-  Keine unbekannten Assoziationen.
+  <%= I18n.t("assoziations.index.keine_unbekannten_assoziationen") %>
 <% end %>
 
 <% if params.has_key?(:user_id) %>
 <h2>Beliebteste Unbekannte Assoziationen von Benutzer <%= User.find(params[:user_id]).email %></h2>
 <% else %>
-<h2>Beliebteste Unbekannte Assoziationen</h2>
+<h2><%= I18n.t("assoziations.index.beliebteste_unbekannte_assoziationen") %></h2>
 <% end %>
 <% if @new_asses.count > 0 %>
   <ul class="nav nav-list">
@@ -91,5 +91,5 @@ Füge eine neue Assoziation <%= link_to :hinzu, new_assoziation_path %>.
   <% end %>
 </ul>
 <% else %>
-  Keine unbekannten Assoziationen.
+  <%= I18n.t("assoziations.index.keine_unbekannten_assoziationen") %>
 <% end %>

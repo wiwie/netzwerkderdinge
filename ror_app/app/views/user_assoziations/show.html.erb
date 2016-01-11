@@ -1,7 +1,7 @@
-<h2>Neue Assoziation</h2>
-Benutzer <%= @userass.user.email %> hat eine neue Assoziation hinzugefügt!
+<h2><%= I18n.t("user_assoziations.show.neue_assoziation") %></h2>
+<%= I18n.t("user_assoziations.show.benutzer") %><%= @userass.user.email %> hat eine neue Assoziation hinzugefügt!
 
-<h2>Assoziation</h2>
+<h2><%= I18n.t("user_assoziations.show.assoziation") %></h2>
 <ul class="list-inline">
     <li><%= link_to @userass.assoziation.ding_eins.name, @userass.assoziation.ding_eins %></li>
     <li><%= link_to @userass.assoziation do %>
@@ -10,9 +10,9 @@ Benutzer <%= @userass.user.email %> hat eine neue Assoziation hinzugefügt!
     <li><%= link_to @userass.assoziation.ding_zwei.name, @userass.assoziation.ding_zwei %></li>
 </ul>
 
-<h2>Beschreibung</h2>
+<h2><%= I18n.t("user_assoziations.show.beschreibung") %></h2>
 <% if @userass.user == current_user %>
 <%= best_in_place @userass, :description, :as => :textarea, :place_holder => 'Du hast noch keine Beschreibung für diese Assoziation hinterlegt. Klicke hier um dies nun zu tun.', :ok_button => 'Save' %>
 <% else %>
-Dieser Benutzer hat für diese Assoziation keine Beschreibung hinterlegt.
+<%= I18n.t("user_assoziations.show.dieser_benutzer_hat_für_diese_assoziation_keine_beschreibung_hinterlegt") %>
 <% end %>

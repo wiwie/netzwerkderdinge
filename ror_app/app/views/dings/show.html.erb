@@ -1,6 +1,6 @@
 <h1>Ding <% if @ding.has_translation(:name, params[:locale]) %>'<%= best_in_place @ding, :name, :as => :input %>'<% else %>&lt;???&gt;<% end %></h1>
 <% if not @ding.has_translation(:name, params[:locale]) %>
-	Für den Namen dieses Dings wurde noch keine Übersetzung für deine Sprache hinterlegt. Bitte nutze das Textfeld um deine Übersetzung hinzuzufügen. Es folgen ein paar Übersetzungen in anderen Sprachen:
+	<%= I18n.t("dings.show.für_den_namen_dieses_dings_wurde_noch_keine_Übersetzung_für_deine_sprache_hinterlegt_bitte_nutze_das_textfeld_um_deine_Übersetzung_hinzuzufügen_es_folgen_ein_paar_Übersetzungen_in_anderen_sprachen") %>
 	<ul>
 		<% if @ding.name_de %><li>Deutsch: <%= @ding.name_de %></li><% end %>
 		<% if @ding.name_en %><li>English: <%= @ding.name_en %></li><% end %>
@@ -8,30 +8,30 @@
 	</ul>
 	<%= form_for @ding, :url => ding_add_translation_path(@ding), :method => :post do |f| %>
 	  <%= hidden_field_tag :locale, params[:locale] %>
-	  <%= f.label :ding %><br>
+	  <%= f.label I18n.t("dings.show.ding") %><br>
 	  <%= f.text_field :name, :value => '' %>
-	  <%= f.submit :value => 'Add Translation' %>
+	  <%= f.submit I18n.t("dings.show.value") => 'Add Translation' %>
 	<% end %>
 <% end %>
 
 <% if current_user.favorits.where(:ding_id => @ding.id).count == 0 %>
 <%= glyph('star-empty') %> - zu Favoriten <%= link_to (url = '#'), :onclick => 'add_favorit_for_curr_user(' + current_user.id.to_s + ', ' + @ding.id.to_s + ');' do %>
-			            hinzufügen
+			            <%= I18n.t("dings.show.hinzufügen") %>
 			          <% end %>
 <% else %>
 <%= glyph('star') %> - von Favoriten <%= link_to (url = '#'), :onclick => 'remove_favorit_for_curr_user(' + current_user.id.to_s + ', ' + @ding.id.to_s + ');' do %>
-			            löschen
+			            <%= I18n.t("dings.show.löschen") %>
 			          <% end %>
 <% end %>
 
-<h2>Beschreibung</h2>
+<h2><%= I18n.t("dings.show.beschreibung") %></h2>
 <% if not @ding.description.nil? %>
 <%= @ding.description %>
 <% else %>
-Bislang keine Beschreibung vorhanden.
+<%= I18n.t("dings.show.bislang_keine_beschreibung_vorhanden") %>
 <% end %>
 
-<h2>Dieses Ding wurde mit den folgenden Dingen assoziiert:</h2>
+<h2><%= I18n.t("dings.show.dieses_ding_wurde_mit_den_folgenden_dingen_assoziiert") %></h2>
 	<ul class="nav nav-list">
 		<% @ding.assoziierte_dinge.each do |anderes_ding, ass| %>
 			<% ding = Ding.find(anderes_ding) %>
@@ -55,9 +55,9 @@ Bislang keine Beschreibung vorhanden.
 		<% end %>
 	</ul>
 
-<h2>Womit assoziierst du dieses Ding?</h2>
+<h2><%= I18n.t("dings.show.womit_assoziierst_du_dieses_ding") %></h2>
 <%= form_for @assoziation, :url => new_assoziation_path(), :method => :get do |f| %>
-  <%= f.label :ding %><br>
+  <%= f.label I18n.t("dings.show.ding") %><br>
   <%= hidden_field_tag :ding_eins_id, @ding.id %>
   <%= f.autocomplete_field :ding_zwei_id, autocomplete_ding_name_dings_path, :id_element => '#selected_ding_zwei_id' %>
   <%= hidden_field_tag :selected_ding_zwei_id %>

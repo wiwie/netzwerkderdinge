@@ -5,8 +5,8 @@
     <li><%= link_to @ass.ding_zwei.name, @ass.ding_zwei %></li>
  </ul>
 
-<h2>Häufigkeit</h2>
-<p>Diese beiden Dinge sind insgesamt von <%= @ass.count %> Benutzer(n) assoziiert worden:</p>
+<h2><%= I18n.t("assoziations.show.häufigkeit") %></h2>
+<p>Diese beiden Dinge sind insgesamt von <%= @ass.count %><%= I18n.t("assoziations.show.benutzern_assoziiert_worden") %></p>
 <% @ass.user_assoziations.each do |userass| %>
 <ul class="list-inline">
 		<li><%= glyph(:user) %> <%= link_to userass.user.email, userass.user %></li>
@@ -16,8 +16,8 @@
 </ul>
 <% end %>
 <% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => @ass.id).count == 0 %>
-<h2>Assoziieren?</h2>
-Ich assoziiere diese beiden Dinge auch! <%= link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + @ass.id.to_s + ');' do %>
+<h2><%= I18n.t("assoziations.show.assoziieren") %></h2>
+<%= I18n.t("assoziations.show.ich_assoziiere_diese_beiden_dinge_auch") %><%= link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + @ass.id.to_s + ');' do %>
             <%= glyph(:plus) %>
           <% end %>
 <% end %>

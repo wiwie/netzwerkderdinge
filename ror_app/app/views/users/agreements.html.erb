@@ -1,7 +1,7 @@
 <table>
 	<thead>
-		<th>Benutzer</th>
-		<th>Übereinstimmung</th>
+		<th><%= I18n.t("users.agreements.benutzer") %></th>
+		<th><%= I18n.t("users.agreements.Übereinstimmung") %></th>
 	</thead>
 	<% @agree.each do |agr| %>
 	<% @user = User.find(agr["user2_id"]) %>

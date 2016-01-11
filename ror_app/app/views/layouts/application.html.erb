@@ -38,24 +38,24 @@
   </head>
   <body>
 
-    <%= nav_bar brand: "Netzwerk der Dinge", responsive: true do %>
+    <%= nav_bar brand: I18n.t("netding"), responsive: true do %>
       <%= menu_group do %>
-          <%= menu_item glyph(:home) + " Home", root_path %>
+          <%= menu_item glyph(:home) + " " + I18n.t("home"), root_path %>
           <%= menu_divider %>
-          <%= menu_item glyph(:link) + " Assoziationen", assoziations_path %>
-          <%= menu_item glyph(:paperclip) + " Dinge", dings_path %>
+          <%= menu_item glyph(:link) + " " + I18n.t("associations"), assoziations_path %>
+          <%= menu_item glyph(:paperclip) + " " + I18n.t("things"), dings_path %>
           <% if current_user %>
-          <%= menu_item glyph(:star) + " Favoriten", user_favorits_path(current_user) %>
+          <%= menu_item glyph(:star) + " " + I18n.t("favorites"), user_favorits_path(current_user) %>
           <% end %>
       <% end %>
       <%= menu_group pull: :right do %>
           <% if current_user %>
-              <%= menu_item glyph(:user) + " Log Out", destroy_user_session_path, :method => 'delete' %>
+              <%= menu_item glyph(:user) + " " + I18n.t("logout"), destroy_user_session_path, :method => 'delete' %>
           <% else %>
               <%= form_for User.new, url: session_path(:user), :html => {class: "navbar-form pull-right"} do |f| -%>
                 <%= f.text_field :email %>
                 <%= f.password_field :password %>
-                <%= f.submit "Sign in" %>
+                <%= f.submit I18n.t("layouts.application.sign_in") %>
                 <%= link_to :Register, new_user_registration_path, :method => 'get' %>
               <% end -%>
           <% end %>

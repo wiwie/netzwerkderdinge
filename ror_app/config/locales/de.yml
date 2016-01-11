@@ -1,2 +1,37 @@
 de:
-  hello: "Hallo Welt!"
+  netding: "Netzwerk der Dinge"
+  home: "Home"
+  associations: "Assoziationen"
+  things: "Dinge"
+  favorites: "Favoriten"
+  logout: "Abmelden"
+  hinzu: hinzu
+  welcome:
+    index:
+      willkommen: "Willkommen"
+      wir_empfehlen_dir_die_assoziationen_der_folgenden_benutzer_anzuschauen: Wir empfehlen Dir die Assoziationen der folgenden Benutzer aanzuschauen
+  assoziations:
+    index:
+      neue_assoziation: Neue Assoziation
+      füge_eine_neue_assoziation: Füge eine neue Assoziation
+      neueste_assoziationen: Neueste Assoziationen
+      neueste_unbekannte_assoziationen: Neueste unbekannte Assoziationen
+      beliebteste_unbekannte_assoziationen: Beliebteste unbekannte Assoziationen
+      Übereinstimmung_mit_dir: Übereinstimmung mit dir
+    new:
+      neue_assoziation: Neue Assoziation
+  dings:
+    index:
+      neues_ding: Neues Ding
+      meist_assoziierte_dinge: Meist assoziierte Dinge
+      neueste_dinge: Neueste Dinge
+      füge_ein_neues_ding: Füge ein neues Ding
+    new:
+      neues_ding: Neues Ding
+  favorits:
+    index:
+      neuer_favorit: Neuer Favorit
+      füge_einen_neue_favorit: Füge einen neuen Favorit hinzu
+      deine_favoriten: Deine Favoriten
+    new:
+      neuer_favorit: Neuer Favorit

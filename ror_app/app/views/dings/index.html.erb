@@ -1,7 +1,7 @@
-<h2>Neues Ding</h2>
-Füge ein neues Ding <%= link_to :hinzu, new_ding_path %>.
+<h2><%= I18n.t("dings.index.neues_ding") %></h2>
+<%= I18n.t("dings.index.füge_ein_neues_ding") %> <%= link_to link_to I18n.t("hinzu"), new_ding_path %>.
 
-<h2>Meist assoziierte Dinge</h2>
+<h2><%= I18n.t("dings.index.meist_assoziierte_dinge") %></h2>
 <ul class="nav nav-list">
 <% @pop_dings.each do |pop_ding| %>
 	<% ding = Ding.find(pop_ding["ding_id"]) %>
@@ -15,7 +15,7 @@ Füge ein neues Ding <%= link_to :hinzu, new_ding_path %>.
 <% end %>
 </ul>
 
-<h2>Neueste Dinge</h2>
+<h2><%= I18n.t("dings.index.neueste_dinge") %></h2>
 <ul class="nav nav-list">
 <% @newest_dings.each do |ding| %>
 	<li>

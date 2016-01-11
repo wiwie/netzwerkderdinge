@@ -1,11 +1,11 @@
 
 <div class="page-header">
-  <h1>Willkommen</h1>
+  <h1><%= I18n.t("welcome.index.willkommen") %></h1>
 </div>
 <% if UserAssoziation.where(user: current_user).count < 10 %>
-Füge ein paar Assoziation hinzu, damit wir dir Assoziationen vorschlagen können. Als Inspiration kannst du dir <%= link_to :hier, assoziations_path %> Assoziationen anderer anschauen oder <%= link_to :hier, dings_path %> die am häufigsten assoziierten Dinge.
+<%= I18n.t("welcome.index.füge_ein_paar_assoziation_hinzu_damit_wir_dir_assoziationen_vorschlagen_können_als_inspiration_kannst_du_dir") %><%= link_to :hier, assoziations_path %> Assoziationen anderer anschauen oder <%= link_to :hier, dings_path %> die am häufigsten assoziierten Dinge.
 <% else %>
-Wir empfehlen dir, die Assoziationen der folgenden Benutzer anzuschauen:
+<%= I18n.t("welcome.index.wir_empfehlen_dir_die_assoziationen_der_folgenden_benutzer_anzuschauen") %>
 	<ul>
 	<% current_user.get_agreement.first(5).each do |agreement| %>
 		<% user = User.find(agreement["user2_id"]) %>

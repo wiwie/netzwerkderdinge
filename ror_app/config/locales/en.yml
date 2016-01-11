@@ -18,6 +18,40 @@
 #
 # To learn more, please read the Rails Internationalization guide
 # available at http://guides.rubyonrails.org/i18n.html.
-
 en:
-  hello: "Hello world"
+  netding: "Network of Things"
+  home: "Home"
+  associations: "Associations"
+  things: "Things"
+  favorites: "Favorites"
+  logout: "Logout"
+  hinzu: here
+  welcome:
+    index:
+      willkommen: "Welcome"
+      wir_empfehlen_dir_die_assoziationen_der_folgenden_benutzer_anzuschauen: We recommend you to have a look at the associations of the following users
+  assoziations:
+    index:
+      neue_assoziation: New Association
+      füge_eine_neue_assoziation: Add a new association
+      neueste_assoziationen: Newest Associations
+      neueste_unbekannte_assoziationen: Newest unknown Associations
+      beliebteste_unbekannte_assoziationen: Most populat unknown Associations
+      Übereinstimmung_mit_dir: Agreement with you
+    new:
+      neue_assoziation: New Association
+  dings:
+    index:
+      neues_ding: New Thing
+      meist_assoziierte_dinge: Most frequently associated Things
+      neueste_dinge: Newest Things
+      füge_ein_neues_ding: Add a new Thing
+    new:
+      neues_ding: New Thing
+  favorits:
+    index:
+      neuer_favorit: New Favorite
+      füge_einen_neue_favorit: Add a new favorite
+      deine_favoriten: Your Favorites
+    new:
+      neuer_favorit: New Favorite

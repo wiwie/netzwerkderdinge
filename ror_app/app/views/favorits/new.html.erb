@@ -1,6 +1,6 @@
-<h2>Neuer Favorit</h2>
+<h2><%= I18n.t("favorits.new.neuer_favorit") %></h2>
 <%= form_for @favorit, :url => user_favorits_path() do |f| %>
-  <%= f.label :ding %><br>
+  <%= f.label I18n.t("favorits.new.ding") %><br>
   <%= f.autocomplete_field :ding_id, autocomplete_ding_name_dings_path, :id_element => '#selected_ding_id' %>
   <%= hidden_field_tag :selected_ding_id %>
   <%= f.submit %>

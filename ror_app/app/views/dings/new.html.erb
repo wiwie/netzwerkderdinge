@@ -1,6 +1,6 @@
-<h2>Neues Ding</h2>
+<h2><%= I18n.t("dings.new.neues_ding") %></h2>
 <%= form_for @ding do |f| %>
-<%= f.label :name  %><br>
+<%= f.label I18n.t("dings.new.name")  %><br>
 <%= f.text_field :name %>
 <%= f.submit %>
 <% end %>
