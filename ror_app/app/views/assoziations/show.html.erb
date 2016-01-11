@@ -1,4 +1,4 @@
-<h2>Assoziation <%= @ass.id %></h2>
+<h2><%= I18n.t("assoziation") %> <%= @ass.id %></h2>
 <ul class="list-inline">
 	<li><%= link_to @ass.ding_eins.name, @ass.ding_eins %></li>
 	<li><%= glyph(:link) %></li>
@@ -6,7 +6,7 @@
  </ul>
 
 <h2><%= I18n.t("assoziations.show.häufigkeit") %></h2>
-<p>Diese beiden Dinge sind insgesamt von <%= @ass.count %><%= I18n.t("assoziations.show.benutzern_assoziiert_worden") %></p>
+<p><%= I18n.t("assoziations.show.these_two_things") %> <%= @ass.count %> <%= I18n.t("assoziations.show.benutzern_assoziiert_worden") %></p>
 <% @ass.user_assoziations.each do |userass| %>
 <ul class="list-inline">
 		<li><%= glyph(:user) %> <%= link_to userass.user.email, userass.user %></li>

@@ -2,6 +2,7 @@ de:
   netding: "Netzwerk der Dinge"
   home: "Home"
   associations: "Assoziationen"
+  assoziation: "Assoziation"
   things: "Dinge"
   favorites: "Favoriten"
   logout: "Abmelden"
@@ -20,6 +21,16 @@ de:
       Übereinstimmung_mit_dir: Übereinstimmung mit dir
     new:
       neue_assoziation: Neue Assoziation
+    show:
+      häufigkeit: Häufigkeit
+      these_two_things: Diese beiden Dinge sind insgesamt von
+      benutzern_assoziiert_worden: Benutzern assoziiert worden
+  user_assoziations:
+    show:
+      neue_assoziation: Neue Assoziation
+      assoziation: Assoziation
+      beschreibung: Beschreibung
+      benutzer: Benutzer
   dings:
     index:
       neues_ding: Neues Ding
@@ -28,6 +39,13 @@ de:
       füge_ein_neues_ding: Füge ein neues Ding
     new:
       neues_ding: Neues Ding
+    show:
+      beschreibung: Beschreibung
+      bislang_keine_beschreibung_vorhanden: bislang keine Beschreibung vorhanden
+      hinzufügen: hinzufügen
+      dieses_ding_wurde_mit_den_folgenden_dingen_assoziiert: Dieses Ding wurde mit den folgenden Dingen assoziiert
+      womit_assoziierst_du_dieses_ding: womit assoziierst du dieses Ding
+      für_den_namen_dieses_dings_wurde_noch_keine_Übersetzung_für_deine_sprache_hinterlegt_bitte_nutze_das_textfeld_um_deine_Übersetzung_hinzuzufügen_es_folgen_ein_paar_Übersetzungen_in_anderen_sprachen: Für den Namen dieses Dings wurde noch keine Übersetzung für deine Sprache hinterlegt bitte nutze das Textfeld um deine Übersetzung hinzuzufügen. Es folgen ein paar Übersetzungen in anderen Sprachen
   favorits:
     index:
       neuer_favorit: Neuer Favorit
