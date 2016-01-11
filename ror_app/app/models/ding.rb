@@ -10,8 +10,14 @@ class Ding < ActiveRecord::Base
 	end
 
 	def assoziierte_dinge
-		asses1 = Assoziation.where(:ding_eins_id => self.id).joins(:user_assoziations).group(:ding_zwei_id).count()
-		asses2 = Assoziation.where(:ding_zwei_id => self.id).joins(:user_assoziations).group(:ding_eins_id).count()
-		return asses1.merge(asses2).sort_by{|k, v| v}.reverse
+		asses1 = Hash[*Assoziation.where(
+			:ding_eins_id => self.id).map{ |ass| [ass.ding_zwei_id, ass] }.flatten]
+		asses2 = Hash[*Assoziation.where(
+			:ding_zwei_id => self.id).map{ |ass| [ass.ding_eins_id, ass] }.flatten]
+		merged = asses1.merge(asses2) {
+			|key, val1, val2| val1 + val2
+			}
+
+		return merged.sort_by {|x| x[1].user_assoziations.count}.reverse
 	end
 end
