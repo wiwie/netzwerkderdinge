@@ -72,6 +72,8 @@ GEM
       responders
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
+    epic-editor-rails (0.2.4)
+      railties (>= 3.2, < 5.0)
     erubis (2.7.0)
     execjs (2.6.0)
     globalid (0.3.6)
@@ -194,6 +196,7 @@ DEPENDENCIES
   byebug
   coffee-rails (~> 4.1.0)
   devise
+  epic-editor-rails
   globalize (~> 5.0.0)
   globalize-accessors
   jbuilder (~> 2.0)
