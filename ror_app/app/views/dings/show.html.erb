@@ -37,7 +37,8 @@ Bislang keine Beschreibung vorhanden.
 			<% ding = Ding.find(anderes_ding) %>
 			<li>
 			    <ul class="list-inline">
-	        		<li><span style="vertical-align:middle"><%= glyph(:paperclip) %></span> <%= link_to ding.name, ding %></li>
+	        		<li><span style="vertical-align:middle"><%= glyph(:paperclip) %></span></li>
+	        		<li><%= link_to ding.name, ding %></li>
 			        <li>(<%= link_to ass do %><span style="vertical-align:middle"><%= glyph(:link) %></span><% end %>)</li>
 			        <li><%= badge(ass.user_assoziations.count.to_s + " mal", :warning) %></li>
 			        <% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => ass.id).count == 0 %>
