@@ -1,0 +1,2 @@
+class DingTypsController < ApplicationController
+end

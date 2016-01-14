@@ -63,7 +63,11 @@ class DingsController < ApplicationController
 	end
 
 	def create
-		@ding = Ding.new(params.require(:ding).permit(:name))
+		@ding = Ding.new(params.require(:ding).permit(:name, :ding_typ_id))
+
+		if not @ding.ding_typ
+			@ding.ding_typ = DingTyp.find_by_name('Ding')
+		end
 
 		@ding.save()
 		redirect_to @ding
@@ -77,6 +81,11 @@ class DingsController < ApplicationController
 	  	# TODO: dont change existing ding;
 	  	if params[:ding].has_key?(:kategorie)
 	  	  if @ding.update_attribute(:kategorie, Kategorie.find(params[:ding][:kategorie].to_i))
+		    format.html { redirect_to(@ding, :notice => 'User was successfully updated.') }
+		    format.json { respond_with_bip(@ding) }
+		  end
+		elsif params[:ding].has_key?(:ding_typ_id)
+	  	  if @ding.update_attribute(:ding_typ_id, params[:ding][:ding_typ_id].to_i)
 		    format.html { redirect_to(@ding, :notice => 'User was successfully updated.') }
 		    format.json { respond_with_bip(@ding) }
 		  end

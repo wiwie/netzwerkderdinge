@@ -57,3 +57,4 @@ gem 'globalize', '~> 5.0.0'
 gem 'globalize-accessors'
 
 gem 'epic-editor-rails'
+gem 'fancybox2-rails', '~> 0.2.8'

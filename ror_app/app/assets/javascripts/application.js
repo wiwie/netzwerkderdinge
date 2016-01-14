@@ -19,6 +19,7 @@
 //= require best_in_place
 //= require best_in_place.jquery-ui
 //= require 'epiceditor'  
+//= require fancybox
 //= require_tree .
 
 $(document).ready(function() {
@@ -58,3 +59,7 @@ function remove_favorit_for_curr_user(user_id, ding_id) {
       }
   });
 }
+
+$(document).ready(function() {
+  $("a.fancybox").fancybox();
+});

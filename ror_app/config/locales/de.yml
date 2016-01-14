@@ -53,3 +53,6 @@ de:
       deine_favoriten: Deine Favoriten
     new:
       neuer_favorit: Neuer Favorit
+  layouts:
+    application:
+      sign_in: Einloggen

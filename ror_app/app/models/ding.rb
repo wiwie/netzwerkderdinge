@@ -2,6 +2,7 @@ class Ding < ActiveRecord::Base
 	#has_many :assoziation, :foreign_key => 'ding_eins_id'
 	#has_many :assoziierte_dinge, through: :assoziation, :source => 'ding_zwei'
 	belongs_to :kategorie
+	belongs_to :ding_typ
 	translates :name, :description
 	globalize_accessors
 
