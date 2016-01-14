@@ -7,8 +7,9 @@
 	<% ding = Ding.find(pop_ding["ding_id"]) %>
 	<li>
 	    <ul class="list-inline">
-	        <li><%= glyph(:paperclip) %></li>
-	        <li><%= link_to ding.name, ding %></li>
+	        <li><%= link_to ding do %>
+	        	<%= glyph(ding.get_symbol) %> <%= ding.name %>
+	        	<% end %></li>
 	        <li><span class="badge"><%= pop_ding["count"] %> <%= glyph(:link) %></span></li>
 	    </ul>
 	</li>
@@ -20,8 +21,9 @@
 <% @newest_dings.each do |ding| %>
 	<li>
 	    <ul class="list-inline">
-	        <li><%= glyph(:paperclip) %></li>
-	        <li><%= link_to ding.name, ding %></li>
+	        <li><%= link_to ding do %>
+	        	<%= glyph(ding.get_symbol) %> <%= ding.name %>
+	        	<% end %></li>
 	        <li><%= badge(ding.created_at.strftime("%Y-%m-%d")) %></li>
 	    </ul>
 	</li>

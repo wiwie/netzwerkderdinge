@@ -21,4 +21,16 @@ class Ding < ActiveRecord::Base
 
 		return merged.sort_by {|x| x[1].user_assoziations.count}.reverse
 	end
+
+	def get_symbol
+		if self.ding_typ == DingTyp.find_by_name("Image")
+			return "picture"
+		elsif self.ding_typ == DingTyp.find_by_name("Video")
+			return "film"
+		elsif self.ding_typ == DingTyp.find_by_name("URL")
+			return "new-window"
+		else
+			return "paperclip"
+		end
+	end
 end

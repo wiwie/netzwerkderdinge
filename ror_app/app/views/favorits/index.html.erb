@@ -2,8 +2,10 @@
 <%= I18n.t("favorits.index.füge_einen_neue_favorit") %> <%= link_to I18n.t("hinzu"), new_user_favorit_path(current_user) %>.
 
 <h2><%= I18n.t("favorits.index.deine_favoriten") %></h2>
-<ul>
+<ul class="nav nav-list">
 	<% @favorits.each do |fav| %>
-		<li><%= link_to fav.ding.name, fav.ding %></li>
+		<li><%= link_to fav.ding do %>
+			<%= glyph(fav.ding.get_symbol) %> <%= fav.ding.name %>
+			<% end %></li>
 	<% end %>
 </ul>
