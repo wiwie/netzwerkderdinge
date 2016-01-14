@@ -1,4 +1,4 @@
-<h1>Ding
+<h1><%= @ding.ding_typ.name %>
 	<% if @ding.ding_typ != DingTyp.find_by_name('Ding') or @ding.has_translation(:name, params[:locale]) %>
 		'<%= best_in_place @ding, :name, :as => :input %>'
 	<% else %>
@@ -37,10 +37,15 @@
 		Open URL
 	<% end %>
 <% elsif  @ding.ding_typ == DingTyp.find_by_name('Image') %>
-	<h2>Bild</h2>
+	<br>
 	<%= link_to @ding.name, {:class => 'fancybox'} do %>
 		<img src="<%= @ding.name %>" alt="<%= @ding.name %>" style="height:240px;">
 	<% end %>
+<% elsif  @ding.ding_typ == DingTyp.find_by_name('Video') %>
+	<br>
+	<div class="embed-responsive embed-responsive-16by9">
+	  <iframe class="embed-responsive-item" src="<%= @ding.name %>"></iframe>
+	</div>
 <% end %>
 
 <h2>Typ</h2>
