@@ -12,6 +12,7 @@ de:
   welcome:
     index:
       willkommen: "Willkommen"
+      add_some_associations: Füge ein paar Assoziation hinzu damit wir dir Assoziationen vorschlagen können. Als Inspiration kannst du dir
       wir_empfehlen_dir_die_assoziationen_der_folgenden_benutzer_anzuschauen: Wir empfehlen Dir die Assoziationen der folgenden Benutzer aanzuschauen
   assoziations:
     index:

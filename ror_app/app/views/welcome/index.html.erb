@@ -3,7 +3,7 @@
   <h1><%= I18n.t("welcome.index.willkommen") %></h1>
 </div>
 <% if UserAssoziation.where(user: current_user).count < 10 %>
-<%= I18n.t("welcome.index.füge_ein_paar_assoziation_hinzu_damit_wir_dir_assoziationen_vorschlagen_können_als_inspiration_kannst_du_dir") %><%= link_to :hier, assoziations_path %> Assoziationen anderer anschauen oder <%= link_to :hier, dings_path %> die am häufigsten assoziierten Dinge.
+<%= I18n.t("welcome.index.add_some_associations") %> <%= link_to :hier, assoziations_path %> Assoziationen anderer anschauen oder <%= link_to :hier, dings_path %> die am häufigsten assoziierten Dinge.
 <% else %>
 <%= I18n.t("welcome.index.wir_empfehlen_dir_die_assoziationen_der_folgenden_benutzer_anzuschauen") %>
 	<ul>

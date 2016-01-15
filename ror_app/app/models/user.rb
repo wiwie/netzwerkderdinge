@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
 					FROM user_assoziations
 					WHERE user_id!=' + self.id.to_s + ') ass1
 				WHERE 
-					published AND assoziation_id NOT IN (
+					published = "t" AND assoziation_id NOT IN (
 					SELECT assoziation_id
 					FROM user_assoziations
 					WHERE user_id=' + self.id.to_s + '
@@ -41,7 +41,7 @@ class User < ActiveRecord::Base
 					FROM user_assoziations
 					WHERE user_id=' + other_user_id.to_s + ') ass1
 				WHERE 
-					published AND assoziation_id NOT IN (
+					published = "t" AND assoziation_id NOT IN (
 					SELECT assoziation_id
 					FROM user_assoziations
 					WHERE user_id=' + self.id.to_s + '
