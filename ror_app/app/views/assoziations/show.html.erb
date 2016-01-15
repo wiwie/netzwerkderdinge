@@ -9,10 +9,14 @@
 <p><%= I18n.t("assoziations.show.these_two_things") %> <%= @ass.count %> <%= I18n.t("assoziations.show.benutzern_assoziiert_worden") %></p>
 <% @ass.user_assoziations.each do |userass| %>
 <ul class="list-inline">
-		<li><%= glyph(:user) %> <%= link_to userass.user.email, userass.user %></li>
-		<li>(Details: <%= link_to userass do %>
-		            <%= glyph(:link) %><% end %>
-			)</li>
+		<% if userass.published %>
+			<li><%= glyph(:user) %> <%= link_to userass.user.email, userass.user %></li>
+			<li>(Details: <%= link_to userass do %>
+			            <%= glyph(:link) %><% end %>
+				)</li>
+		<% else %>
+			<li><%= glyph(:user) %> Anonym</li>
+		<% end %>
 </ul>
 <% end %>
 <% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => @ass.id).count == 0 %>

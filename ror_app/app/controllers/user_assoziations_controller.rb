@@ -26,7 +26,9 @@ class UserAssoziationsController < ApplicationController
 
 	def show
 		@userass = UserAssoziation.find(params[:id])
-		@ass = @userass.assoziation
+		if current_user == @userass.user
+			@ass = @userass.assoziation
+		end
 	end
 
 	def create
@@ -59,7 +61,13 @@ class UserAssoziationsController < ApplicationController
 	  @userass = UserAssoziation.find params[:id]
 
 	  respond_to do |format|
-	  	if @userass.update_attributes(params.require(:user_assoziation).permit(:description))
+		if params[:user_assoziation].has_key?(:published)
+	  	  if @userass.update_attribute(:published, params[:user_assoziation][:published])
+		    format.html { redirect_to(@userass, :notice => 'User was successfully updated.') }
+		    format.json { respond_with_bip(@userass) }
+		  end
+	  	else 
+	  	  @userass.update_attributes(params.require(:user_assoziation).permit(:description))
 	      format.html { redirect_to(@userass, :notice => 'User was successfully updated.') }
 	      format.json { respond_with_bip(@userass) }
 	    end

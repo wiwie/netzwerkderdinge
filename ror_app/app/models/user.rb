@@ -30,6 +30,7 @@ class User < ActiveRecord::Base
 					FROM user_assoziations
 					WHERE user_id=' + self.id.to_s + '
 					AND assoziation_id = ass1.assoziation_id
+					AND published
 				) GROUP BY assoziation_id ORDER BY ' + order_by + ' DESC;')
 			st.close()
 			return res
@@ -44,6 +45,7 @@ class User < ActiveRecord::Base
 					FROM user_assoziations
 					WHERE user_id=' + self.id.to_s + '
 					AND assoziation_id = ass1.assoziation_id
+					AND published
 				) GROUP BY assoziation_id ORDER BY ' + order_by + ' DESC;')
 			st.close()
 			return res
