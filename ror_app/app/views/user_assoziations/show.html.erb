@@ -1,5 +1,5 @@
-<% if @userass %>
-	<h2><%= I18n.t("user_assoziations.show.neue_assoziation") %></h2>
+<h2><%= I18n.t("user_assoziations.show.neue_assoziation") %></h2>
+<% if @userass.published or @userass.user == current_user %>
 	<% if @userass.user == current_user %>Du hast<% else %><%= I18n.t("user_assoziations.show.benutzer") %> <%= @userass.user.email %> hat<% end %> eine neue Assoziation hinzugefügt!
 	<br>
 	Published? <%= best_in_place @userass, :published, :as => :checkbox, :collection => [raw("<i class='glyphicon glyphicon-unchecked'></i>"), raw("<i class='glyphicon glyphicon-check'></i>")]%>
