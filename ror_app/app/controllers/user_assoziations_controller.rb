@@ -51,7 +51,7 @@ class UserAssoziationsController < ApplicationController
 
 		@ass.save()
 
-		@user_ass = UserAssoziation.new(:assoziation => @ass, :user => current_user)
+		@user_ass = UserAssoziation.new(:assoziation => @ass, :user => current_user, :published => params["user_assoziation"]["published"] == "1")
 		@user_ass.save()
 
 		redirect_to @ass

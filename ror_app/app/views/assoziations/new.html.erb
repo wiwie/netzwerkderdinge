@@ -5,6 +5,8 @@
   <%= hidden_field_tag :selected_ding_eins_id %>
   <%= f.label I18n.t("assoziations.new.ding") %>
   <%= f.autocomplete_field :ding_zwei_id, autocomplete_ding_name_dings_path, :id_element => '#selected_ding_zwei_id' %><br>
+  <%= f.label "Publish?" %>
+  <%= check_box :user_assoziation, :published, {:checked => true} %><br>
   <%= hidden_field_tag :selected_ding_zwei_id %>
   <%= f.submit %>
 <% end %>
