@@ -41,4 +41,14 @@ class Ding < ActiveRecord::Base
 	    with_translations
 	  end
 	end
+
+	def get_video_link
+		if 'youtube'.in? self.name and 'watch'.in? self.name
+			self.name[/^.*((v\/)|(embed\/)|(watch\?))\??v?=?([^\&\?]*).*/]
+    		youtube_id = $5
+			return 'https://youtube.com/embed/' + youtube_id
+		else
+			return self.name
+		end
+	end
 end

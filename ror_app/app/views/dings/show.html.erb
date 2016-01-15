@@ -44,7 +44,7 @@
 <% elsif  @ding.ding_typ == DingTyp.find_by_name('Video') %>
 	<br>
 	<div class="embed-responsive embed-responsive-16by9">
-	  <iframe class="embed-responsive-item" src="<%= @ding.name %>" allowfullscreen></iframe>
+	  <iframe class="embed-responsive-item" src="<%= @ding.get_video_link %>" allowfullscreen></iframe>
 	</div>
 <% end %>
 
