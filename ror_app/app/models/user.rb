@@ -25,12 +25,12 @@ class User < ActiveRecord::Base
 					(SELECT *
 					FROM user_assoziations
 					WHERE user_id!=' + self.id.to_s + ') ass1
-				WHERE assoziation_id NOT IN (
+				WHERE 
+					published AND assoziation_id NOT IN (
 					SELECT assoziation_id
 					FROM user_assoziations
 					WHERE user_id=' + self.id.to_s + '
 					AND assoziation_id = ass1.assoziation_id
-					AND published
 				) GROUP BY assoziation_id ORDER BY ' + order_by + ' DESC;')
 			st.close()
 			return res
@@ -40,12 +40,12 @@ class User < ActiveRecord::Base
 					(SELECT *
 					FROM user_assoziations
 					WHERE user_id=' + other_user_id.to_s + ') ass1
-				WHERE assoziation_id NOT IN (
+				WHERE 
+					published AND assoziation_id NOT IN (
 					SELECT assoziation_id
 					FROM user_assoziations
 					WHERE user_id=' + self.id.to_s + '
 					AND assoziation_id = ass1.assoziation_id
-					AND published
 				) GROUP BY assoziation_id ORDER BY ' + order_by + ' DESC;')
 			st.close()
 			return res
