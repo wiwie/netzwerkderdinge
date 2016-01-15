@@ -20,6 +20,7 @@
 //= require best_in_place.jquery-ui
 //= require 'epiceditor'  
 //= require fancybox
+//= require vivagraph
 //= require_tree .
 
 $(document).ready(function() {

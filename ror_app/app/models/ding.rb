@@ -19,7 +19,14 @@ class Ding < ActiveRecord::Base
 			|key, val1, val2| val1 + val2
 			}
 
-		return merged.sort_by {|x| x[1].user_assoziations.count}.reverse
+		#return merged.sort_by {|x| Ding.with_translations(I18n.locale).find(x[0]).name}.reverse
+		return merged.sort_by {|x| [-x[1].user_assoziations.count, Ding.find(x[0]).name.nil? ? '' : Ding.find(x[0]).name.downcase] }
+		#Ding.with_translations(params[:locale])
+		#sort = merged.sort do |x, y|
+		#	comp = (x[1].user_assoziations.count <=> y[1].user_assoziations.count)
+		#	comp.zero? ? (Ding.with_translations(I18n.locale).find(x[0]).name <=> Ding.with_translations(I18n.locale).find(y[0]).name) : comp
+		#end
+		#return sort.reverse
 	end
 
 	def get_symbol

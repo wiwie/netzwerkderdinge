@@ -20,7 +20,7 @@ class DingsController < ApplicationController
 
 		@newest_dings = Ding.order("created_at DESC").limit(10)
 
-		@all_dings = Ding.paginate(:page => params[:page], :per_page => 10)
+		@all_dings = Ding.with_translations.order("name").paginate(:page => params[:page], :per_page => 10)
 	end
 
 

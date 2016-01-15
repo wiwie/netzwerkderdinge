@@ -83,7 +83,9 @@ class AssoziationsController < ApplicationController
 			@new_asses = current_user.get_new_associations().take(10)
 			@new_unknown_asses = current_user.get_new_associations(nil, 'created_at').take(10)
 
-			@all_asses = Assoziation.paginate(:page => params[:page], :per_page => 10)
+			@all_asses = Assoziation.includes(:ding_eins => :translations, :ding_zwei => :translations)
+			.order("ding_translations.name, translations_dings.name")
+			.paginate(:page => params[:page], :per_page => 10)
 		end
 	end
 

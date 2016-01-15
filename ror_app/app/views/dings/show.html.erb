@@ -82,6 +82,80 @@
 		<% end %>
 	</ul>
 
+
+<h2>Nachbarschafts-Graph</h2>
+<style type="text/css">
+	svg {
+		width: 800px;
+		height: 500px;
+	}
+</style>
+<div id="graph" style="width: 800px; height: 500px;"></div>
+<script type="text/javascript">
+	var graph = Viva.Graph.graph();
+	var data = {label: '<%= @ding.name %>', size: <%= @ding.assoziierte_dinge.count %>, url: '<%= url_for(controller: :dings, action: :show, id: @ding.id, only_path: false) %>'};
+	graph.addNode(0, data);
+
+	<% i = 1 %>
+	<% @ding.assoziierte_dinge.each do |anderes_ding, ass| %>
+		<% ding = Ding.find(anderes_ding) %>
+		<% if ass.user_assoziations.count > 0 %>
+			data = {label: '<%= ding.name %>', size: <%= ding.assoziierte_dinge.count %>, url: '<%= url_for(controller: :dings, action: :show, id: ding.id, only_path: false) %>'};
+			graph.addNode(<%= i %>, data);
+			graph.addLink(0, <%= i %>);
+	    <% end %>
+	    <% i = i + 1 %>
+	<% end %>
+
+	var graphics = Viva.Graph.View.svgGraphics();
+	graphics.node(function(node) {
+		console.log(node);
+       // The function is called every time renderer needs a ui to display node
+       var link = Viva.Graph.svg('a')
+             .link(node.data.url);
+       var circle = Viva.Graph.svg('circle')
+             .attr('r', 5+Math.log(node.data.size))
+             .attr('stroke', '#FFFFFF')
+             .attr('stroke-width', '2px');
+       link.append(circle);
+             
+		var text = Viva.Graph.svg('text')
+			.attr('style', 'fill: #000000;')
+			.attr('opacity','1')
+		    .text(node.data.label);
+		var ui = Viva.Graph.svg("g");
+		ui.append(link);
+		//ui.append(circle);
+		ui.append(text);
+		return ui;
+    })
+    .placeNode(function(nodeUI, pos){
+        // Shift image to let links go to the center:
+		var circle = nodeUI.childNodes[0].childNodes[0];
+		var radius = Number(circle.attr('r'));
+		var text = nodeUI.childNodes[1];
+
+		circle.attr('cx', pos.x).attr('cy', pos.y);
+		text.attr('x', pos.x + radius + 5).attr('y', pos.y);
+    });
+
+					
+	layout = Viva.Graph.Layout.forceDirected(graph, {
+	    springLength : 10,
+	    springCoeff : 0.00005,
+	    dragCoeff : 0.02,
+	    gravity : -5,
+	    stableThreshold: graph.getNodesCount()
+	});
+
+	var renderer = Viva.Graph.View.renderer(graph, {
+		layout: layout,
+		graphics: graphics,
+		container: document.getElementById('graph')
+	});
+	renderer.run();
+</script>
+
 <h2><%= I18n.t("dings.show.womit_assoziierst_du_dieses_ding") %></h2>
 <%= form_for @assoziation, :url => new_assoziation_path(), :method => :get do |f| %>
   <%= f.label I18n.t("dings.show.ding") %><br>
