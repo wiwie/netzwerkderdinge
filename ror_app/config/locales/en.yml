@@ -22,8 +22,10 @@ en:
   netding: "Network of Things"
   home: "Home"
   associations: "Associations"
+  your_associations: "Your Associations"
   assoziation: "Association"
   things: "Things"
+  search: "Search"
   favorites: "Favorites"
   logout: "Logout"
   hinzu: here

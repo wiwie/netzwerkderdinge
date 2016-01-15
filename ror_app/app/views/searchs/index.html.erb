@@ -1,0 +1,35 @@
+<h2>Suche nach Ding</h2>
+<%= form_tag searchs_path, :method => 'get' do %>
+  <p>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag "Search", :name => nil %>
+  </p>
+<% end %>
+
+<% if params.has_key?(:search) %>
+	<div class="alert alert-warning alert-dismissible" role="alert">
+	  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+	  	<span aria-hidden="true">&times;</span>
+	  </button>
+	  <% if @found_dings.count > 0 %>
+	  	Wir haben die folgenden Dinge gefunden.
+	  <% else %>
+	  	Wir konnten kein Ding finden.
+	  <% end %>
+	</div>
+	 <% if @found_dings.count > 0 %>
+	<h2>Such-Ergebnisse</h2>
+	<ul class="nav nav-list">
+	<% @found_dings.each do |ding| %>
+		<li>
+		    <ul class="list-inline">
+		        <li><%= link_to ding do %>
+		        	<%= glyph(ding.get_symbol) %> <%= ding.name %>
+		        	<% end %></li>
+		    </ul>
+		</li>
+	<% end %>
+	</ul>
+	<%= will_paginate @found_dings %>
+	<% end %>
+<% end %>

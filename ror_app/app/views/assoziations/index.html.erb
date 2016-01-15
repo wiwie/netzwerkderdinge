@@ -8,7 +8,6 @@
   <% end %>
 <% end %>
 
-
 <% if params.has_key?(:user_id) %>
 <h2>Neueste Assoziationen von Benutzer <%= User.find(params[:user_id]).email %></h2>
 <% else %>
@@ -104,4 +103,29 @@
 </ul>
 <% else %>
   <%= I18n.t("assoziations.index.keine_unbekannten_assoziationen") %>
+<% end %>
+
+
+<% if not params.has_key?(:user_id) %>
+<a name="all"></a>
+<h2>Stöbern</h2>
+<ul class="nav nav-list">
+<% @all_asses.each do |ass| %>
+  <li>
+      <ul class="list-inline">
+
+        <li><%= link_to ass.ding_eins do %>
+          <%= glyph(ass.ding_eins.get_symbol) %> <%= ass.ding_eins.name %>
+          <% end %></li>
+        <li><%= link_to ass do %>
+            <%= glyph(:link) %>
+          <% end %></li>
+        <li><%= link_to ass.ding_zwei do%>
+          <%= glyph(ass.ding_zwei.get_symbol) %> <%= ass.ding_zwei.name %>
+          <% end %></li>
+      </ul>
+  </li>
+<% end %>
+</ul>
+<%= will_paginate @all_asses, {:params => {anchor: 'all'}} %>
 <% end %>

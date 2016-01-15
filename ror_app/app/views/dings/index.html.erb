@@ -29,3 +29,18 @@
 	</li>
 <% end %>
 </ul>
+
+<a name="all"></a>
+<h2>Stöbern</h2>
+<ul class="nav nav-list">
+<% @all_dings.each do |ding| %>
+	<li>
+	    <ul class="list-inline">
+	        <li><%= link_to ding do %>
+	        	<%= glyph(ding.get_symbol) %> <%= ding.name %>
+	        	<% end %></li>
+	    </ul>
+	</li>
+<% end %>
+</ul>
+<%= will_paginate @all_dings, {:params => {anchor: 'all'}} %>

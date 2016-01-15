@@ -19,6 +19,8 @@ class DingsController < ApplicationController
 		st.close()
 
 		@newest_dings = Ding.order("created_at DESC").limit(10)
+
+		@all_dings = Ding.paginate(:page => params[:page], :per_page => 10)
 	end
 
 

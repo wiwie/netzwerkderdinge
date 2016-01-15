@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   end
   resources :assoziations do
     post 'create_for_current_user'
+    post 'remove_for_current_user'
   end
   resources :user_assoziations
   resources :users do
@@ -31,6 +32,7 @@ Rails.application.routes.draw do
     get 'agreements', on: :collection
   end
   resources :kategories
+  resources :searchs
 
   # Example resource route with options:
   #   resources :products do

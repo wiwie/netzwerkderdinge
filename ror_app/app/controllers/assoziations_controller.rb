@@ -59,6 +59,12 @@ class AssoziationsController < ApplicationController
 		redirect_to @userass
 	end
 
+	def remove_for_current_user
+		@ass = Assoziation.find(params[:assoziation_id])
+		@userass = UserAssoziation.where(:assoziation_id => @ass.id, :user_id => current_user.id).destroy_all
+		redirect_to url_for([current_user, UserAssoziation])
+	end
+
 	def index
 		#show associations of specific user
 		if params.has_key?(:user_id)
@@ -71,6 +77,8 @@ class AssoziationsController < ApplicationController
 			@pop_asses = Assoziation.group(:ding_eins_id, :ding_zwei_id).first(10)
 			@new_asses = current_user.get_new_associations().take(10)
 			@new_unknown_asses = current_user.get_new_associations(nil, 'created_at').take(10)
+
+			@all_asses = Assoziation.paginate(:page => params[:page], :per_page => 10)
 		end
 	end
 

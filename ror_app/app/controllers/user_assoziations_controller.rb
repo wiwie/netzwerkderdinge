@@ -65,4 +65,16 @@ class UserAssoziationsController < ApplicationController
 	    end
 	  end
 	end
+
+	def destroy
+		@userass = UserAssoziation.find params[:id]
+		if @userass.user == current_user
+			@userass.destroy
+			redirect_to(url_for(Assoziation), :notice => 'Association was successfully deleted.')
+		end
+	end
+
+	def index
+		@all_asses = current_user.user_assoziations.paginate(:page => params[:page], :per_page => 20).order("created_at DESC")
+	end
 end

@@ -33,4 +33,12 @@ class Ding < ActiveRecord::Base
 			return "paperclip"
 		end
 	end
+
+	def self.search(search)
+	  if search
+	    with_translations.where('name LIKE ?', "%#{search}%")
+	  else
+	    with_translations
+	  end
+	end
 end
