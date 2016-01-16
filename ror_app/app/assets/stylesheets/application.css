@@ -17,3 +17,13 @@
  */
 
 @import 'base/epiceditor'; 
+
+.welcome-jumbotron {
+	background-image: url("/assets/netding_banner.png");
+    background-size: cover;
+}
+
+.assoz-jumbotron {
+	background-image: url("/assets/netding_assoz.png");
+    background-size: cover;
+}

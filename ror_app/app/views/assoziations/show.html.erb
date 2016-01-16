@@ -1,11 +1,15 @@
-<h2><%= I18n.t("assoziation") %> <%= @ass.id %></h2>
-<ul class="list-inline">
+<div class="page-header">
+  <h1><%= I18n.t("assoziation") %> <%= @ass.id %></h1>
+</div>
+<div class="jumbotron assoz-jumbotron">
+  <h1><ul class="list-inline">
 	<li><%= link_to @ass.ding_eins.name, @ass.ding_eins %></li>
 	<li><%= glyph(:link) %></li>
     <li><%= link_to @ass.ding_zwei.name, @ass.ding_zwei %></li>
- </ul>
+ </ul></h1>
+</div>
 
-<h2><%= I18n.t("assoziations.show.häufigkeit") %></h2>
+<h2></h2>
 <p><%= I18n.t("assoziations.show.these_two_things") %> <%= @ass.count %> <%= I18n.t("assoziations.show.benutzern_assoziiert_worden") %></p>
 <% @ass.user_assoziations.each do |userass| %>
 <ul class="list-inline">

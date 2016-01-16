@@ -1,7 +1,11 @@
-
 <div class="page-header">
   <h1><%= I18n.t("welcome.index.willkommen") %></h1>
 </div>
+<div class="jumbotron welcome-jumbotron">
+  <h1>Netzwerk der Dinge</h1>
+  <p>Assoziiere dein Leben</p>
+</div>
+
 <% if UserAssoziation.where(user: current_user).count < 10 %>
 <%= I18n.t("welcome.index.add_some_associations") %> <%= link_to :hier, assoziations_path %> Assoziationen anderer anschauen oder <%= link_to :hier, dings_path %> die am häufigsten assoziierten Dinge.
 <% else %>
