@@ -12,10 +12,10 @@ class Ding < ActiveRecord::Base
 	end
 
 	def assoziierte_dinge
-		asses1 = Hash[*Assoziation.where(
-			:ding_eins_id => self.id).map{ |ass| [ass.ding_zwei_id, ass] }.flatten]
-		asses2 = Hash[*Assoziation.where(
-			:ding_zwei_id => self.id).map{ |ass| [ass.ding_eins_id, ass] }.flatten]
+		asses1 = Hash[*Assoziation.joins(:user_assoziations).where(
+			:ding_eins_id => self.id).where(:user_assoziations => {:published => true}).map{ |ass| [ass.ding_zwei_id, ass] }.flatten]
+		asses2 = Hash[*Assoziation.joins(:user_assoziations).where(
+			:ding_zwei_id => self.id).where(:user_assoziations => {:published => true}).map{ |ass| [ass.ding_eins_id, ass] }.flatten]
 		merged = asses1.merge(asses2) {
 			|key, val1, val2| val1 + val2
 			}
