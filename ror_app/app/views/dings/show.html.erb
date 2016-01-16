@@ -86,11 +86,11 @@
 <h2>Nachbarschafts-Graph</h2>
 <style type="text/css">
 	svg {
-		width: 800px;
+		width: 100%;
 		height: 500px;
 	}
 </style>
-<div id="graph" style="width: 800px; height: 500px;"></div>
+<div id="graph" style="width: 100%; height: 500px;"></div>
 <script type="text/javascript">
 	var graph = Viva.Graph.graph();
 	var data = {label: '<%= @ding.name %>', size: <%= @ding.assoziierte_dinge.count %>, url: '<%= url_for(controller: :dings, action: :show, id: @ding.id, only_path: false) %>'};
@@ -151,6 +151,7 @@
 	var renderer = Viva.Graph.View.renderer(graph, {
 		layout: layout,
 		graphics: graphics,
+		interactive: 'node',
 		container: document.getElementById('graph')
 	});
 	renderer.run();
