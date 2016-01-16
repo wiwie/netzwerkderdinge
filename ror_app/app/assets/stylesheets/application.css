@@ -27,3 +27,12 @@
 	background-image: url("/assets/netding_assoz.png");
     background-size: cover;
 }
+
+.image-jumbotron {
+	background-size: cover;
+}
+
+.image-jumbotron {
+	color: #fff;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
