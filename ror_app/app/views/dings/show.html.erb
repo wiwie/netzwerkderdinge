@@ -89,7 +89,7 @@
 
 <h2><%= I18n.t("dings.show.dieses_ding_wurde_mit_den_folgenden_dingen_assoziiert") %></h2>
 	<ul class="nav nav-list">
-		<% @ding.assoziierte_dinge.each do |anderes_ding, ass| %>
+		<% @ding.assoziierte_dinge(current_user).each do |anderes_ding, ass| %>
 			<% ding = Ding.find(anderes_ding) %>
 			<li>
 			    <ul class="list-inline">
@@ -136,14 +136,14 @@
 <div id="graph"></div>
 <script type="text/javascript">
 	var graph = Viva.Graph.graph();
-	var data = {label: '<%= @ding.name %>', size: <%= @ding.assoziierte_dinge.count %>, url: '<%= url_for(controller: :dings, action: :show, id: @ding.id, only_path: false) %>'};
+	var data = {label: '<%= @ding.name %>', size: <%= @ding.assoziierte_dinge(current_user).count %>, url: '<%= url_for(controller: :dings, action: :show, id: @ding.id, only_path: false) %>'};
 	graph.addNode(0, data);
 
 	<% i = 1 %>
-	<% @ding.assoziierte_dinge.each do |anderes_ding, ass| %>
+	<% @ding.assoziierte_dinge(current_user).each do |anderes_ding, ass| %>
 		<% ding = Ding.find(anderes_ding) %>
 		<% if ass.user_assoziations.count > 0 %>
-			data = {label: '<%= ding.name %>', size: <%= ding.assoziierte_dinge.count %>, url: '<%= url_for(controller: :dings, action: :show, id: ding.id, only_path: false) %>'};
+			data = {label: '<%= ding.name %>', size: <%= ding.assoziierte_dinge(current_user).count %>, url: '<%= url_for(controller: :dings, action: :show, id: ding.id, only_path: false) %>'};
 			graph.addNode(<%= i %>, data);
 			graph.addLink(0, <%= i %>);
 	    <% end %>

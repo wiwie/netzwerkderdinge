@@ -11,11 +11,11 @@ class Ding < ActiveRecord::Base
 		return self.send(attribute.to_s + '_' + locale.to_s)
 	end
 
-	def assoziierte_dinge
+	def assoziierte_dinge(user)
 		asses1 = Hash[*Assoziation.joins(:user_assoziations).where(
-			:ding_eins_id => self.id).where(:user_assoziations => {:published => true}).map{ |ass| [ass.ding_zwei_id, ass] }.flatten]
+			:ding_eins_id => self.id).where('user_assoziations.published = ? OR user_assoziations.user_id = ?', true, user.id).map{ |ass| [ass.ding_zwei_id, ass] }.flatten]
 		asses2 = Hash[*Assoziation.joins(:user_assoziations).where(
-			:ding_zwei_id => self.id).where(:user_assoziations => {:published => true}).map{ |ass| [ass.ding_eins_id, ass] }.flatten]
+			:ding_zwei_id => self.id).where('user_assoziations.published = ? OR user_assoziations.user_id = ?', true, user.id).map{ |ass| [ass.ding_eins_id, ass] }.flatten]
 		merged = asses1.merge(asses2) {
 			|key, val1, val2| val1 + val2
 			}
@@ -64,7 +64,7 @@ class Ding < ActiveRecord::Base
 		if name.start_with? 'http://' or name.start_with? 'https://'
 			url = URI.parse(name)
 		    http_o = Net::HTTP.new(url.host, url.port)
-	    	http_o.use_ssl = true
+	    	http_o.use_ssl = true if name.start_with? 'https://'
 	    	http_o.start do |http|
 		    	if http.head(url.request_uri)['Content-Type'].start_with? 'image'
 		    		return DingTyp.find_by_name('Image')
