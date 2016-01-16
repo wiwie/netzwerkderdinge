@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160115133558) do
+ActiveRecord::Schema.define(version: 20160116144111) do
 
   create_table "assoziations", force: :cascade do |t|
     t.integer  "ding_eins_id", null: false
@@ -44,11 +44,11 @@ ActiveRecord::Schema.define(version: 20160115133558) do
   end
 
   create_table "dings", force: :cascade do |t|
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
     t.string   "description"
     t.integer  "kategorie_id"
-    t.integer  "ding_typ_id",  default: 1
+    t.integer  "ding_typ_id"
   end
 
   add_index "dings", ["ding_typ_id"], name: "index_dings_on_ding_typ_id"

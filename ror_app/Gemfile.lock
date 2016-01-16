@@ -46,7 +46,10 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    addressable (2.4.0)
+    ansi (1.5.0)
     arel (6.0.3)
+    ast (2.2.0)
     bcrypt (3.1.10)
     best_in_place (3.1.0)
       actionpack (>= 3.2)
@@ -75,9 +78,12 @@ GEM
     epic-editor-rails (0.2.4)
       railties (>= 3.2, < 5.0)
     erubis (2.7.0)
+    ethon (0.8.1)
+      ffi (>= 1.3.0)
     execjs (2.6.0)
     fancybox2-rails (0.2.8)
       railties (>= 3.1.0, < 5.0)
+    ffi (1.9.10)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     globalize (5.0.1)
@@ -85,7 +91,13 @@ GEM
       activerecord (>= 4.2.0, < 4.3)
     globalize-accessors (0.2.1)
       globalize (~> 5.0, >= 5.0.0)
+    htmlentities (4.3.4)
     i18n (0.7.0)
+    image_info (1.1.2)
+      image_size
+      typhoeus
+    image_size (1.4.1)
+    iso8601 (0.9.0)
     jbuilder (2.4.0)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
@@ -104,6 +116,14 @@ GEM
       sprockets (> 2, < 4)
       tilt
     libv8 (3.16.14.13)
+    link_thumbnailer (3.1.0)
+      activesupport (>= 3.0)
+      image_info (~> 1.0)
+      json (~> 1.8, >= 1.7.7)
+      net-http-persistent (~> 2.9)
+      nokogiri (~> 1.6)
+      rake (>= 0.9)
+      video_info (~> 2.4)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
@@ -112,8 +132,13 @@ GEM
     mini_portile2 (2.0.0)
     minitest (5.8.3)
     multi_json (1.11.2)
+    net-http-persistent (2.9.4)
     nokogiri (1.6.7.1)
       mini_portile2 (~> 2.0.0.rc2)
+    oga (2.0.0)
+      ast
+      ruby-ll (~> 2.1)
+    open_uri_redirections (0.2.1)
     orm_adapter (0.5.0)
     rack (1.6.4)
     rack-test (0.6.3)
@@ -150,6 +175,9 @@ GEM
     ref (2.0.0)
     responders (2.1.1)
       railties (>= 4.2.0, < 5.1)
+    ruby-ll (2.1.2)
+      ansi
+      ast
     sass (3.4.20)
     sass-rails (5.0.4)
       railties (>= 4.0.0, < 5.0)
@@ -177,11 +205,20 @@ GEM
     tilt (2.0.1)
     turbolinks (2.5.3)
       coffee-rails
+    typhoeus (1.0.1)
+      ethon (>= 0.8.0)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     uglifier (2.7.2)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
+    video_info (2.5.0)
+      addressable
+      htmlentities
+      iso8601
+      multi_json (~> 1.11)
+      oga
+      open_uri_redirections
     warden (1.2.4)
       rack (>= 1.0)
     web-console (2.2.1)
@@ -206,6 +243,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   jquery-ui-rails
+  link_thumbnailer
   rails (= 4.2.5)
   rails-jquery-autocomplete
   sass-rails (~> 5.0)

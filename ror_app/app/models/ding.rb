@@ -5,6 +5,7 @@ class Ding < ActiveRecord::Base
 	belongs_to :ding_typ
 	translates :name, :description
 	globalize_accessors
+	before_validation :after_initialize, on: :create
 
 	def has_translation(attribute, locale)
 		return self.send(attribute.to_s + '_' + locale.to_s)
@@ -56,6 +57,31 @@ class Ding < ActiveRecord::Base
 			return 'https://youtube.com/embed/' + youtube_id
 		else
 			return self.name
+		end
+	end
+
+	def guess_ding_typ_from_name
+		if name.start_with? 'http://' or name.start_with? 'https://'
+			url = URI.parse(name)
+		    http_o = Net::HTTP.new(url.host, url.port)
+	    	http_o.use_ssl = true
+	    	http_o.start do |http|
+		    	if http.head(url.request_uri)['Content-Type'].start_with? 'image'
+		    		return DingTyp.find_by_name('Image')
+		    	elsif http.head(url.request_uri)['Content-Type'].start_with? 'video'
+		    		return DingTyp.find_by_name('Video')
+		    	end
+		    end
+		    return DingTyp.find_by_name('URL')
+		else
+			return DingTyp.find_by_name('Ding')
+		end
+	end
+
+	def after_initialize
+		puts "VALIDDDDDDDDDDDDDDDD"
+		if not ding_typ
+			write_attribute(:ding_typ_id, self.guess_ding_typ_from_name.id)
 		end
 	end
 end

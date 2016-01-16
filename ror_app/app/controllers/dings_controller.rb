@@ -56,6 +56,13 @@ class DingsController < ApplicationController
 	def show
 		@ding = Ding.find(params[:id])
 
+		if @ding.ding_typ.name == 'URL'
+			begin
+				@page_preview = LinkThumbnailer.generate(@ding.name)
+			rescue ArgumentError
+			end
+		end
+
 		#potential new assoziation
 		@assoziation = Assoziation.new
 	end
