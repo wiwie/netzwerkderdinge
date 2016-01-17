@@ -60,12 +60,14 @@
 		    <h4 class="list-group-item-heading">Page Description</h4>
 		    <p class="list-group-item-text"><%= @page_preview.description %></p>
 		  </a>
+		  <% if @page_preview.images.count > 0 %>
 		  <a href="#" class="list-group-item">
 		    <h4 class="list-group-item-heading">Image</h4>
 		    <p class="list-group-item-text">
 		    	<%= image_tag @page_preview.images.first.src.to_s, :height => '128' %>
 		    </p>
 		  </a>
+		  <% end %>
 		</div>
 	<% end %>
 <% elsif  @ding.ding_typ == DingTyp.find_by_name('Image') %>
