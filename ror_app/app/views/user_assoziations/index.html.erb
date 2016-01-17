@@ -7,18 +7,18 @@
       <ul class="list-inline">
 
         <li><%= link_to ass.ding_eins do %>
-          <%= glyph(ass.ding_eins.get_symbol) %> <%= ass.ding_eins.name %>
+          <%= fa_icon(ass.ding_eins.get_symbol) %> <%= ass.ding_eins.name %>
           <% end %></li>
         <li><%= link_to userass do %>
-            <%= glyph(:link) %>
+            <%= fa_icon(:link) %>
           <% end %></li>
         <li><%= link_to ass.ding_zwei do%>
-          <%= glyph(ass.ding_zwei.get_symbol) %> <%= ass.ding_zwei.name %>
+          <%= fa_icon(ass.ding_zwei.get_symbol) %> <%= ass.ding_zwei.name %>
           <% end %></li>
         <li><%= badge(ass.created_at.strftime("%Y-%m-%d"), :warning) %></li>
         <li>
           <%= link_to (url = '#'), :onclick => 'remove_asso_for_curr_user(' + ass.id.to_s + ');' do %>
-            <%= glyph(:minus) %>
+            <%= fa_icon(:minus) %>
           <% end %>
         </li>
       </ul>

@@ -1,5 +1,5 @@
 class AddVideoDingTyp < ActiveRecord::Migration
-  def change
+  def up
   	DingTyp.create(:name => 'Video')
   end
 end

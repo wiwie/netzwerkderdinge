@@ -31,15 +31,19 @@ class Ding < ActiveRecord::Base
 	end
 
 	def get_symbol
-		if self.ding_typ == DingTyp.find_by_name("Image")
+		if not self.ding_typ
+			# skip this if
+		elsif self.ding_typ.name == "Image"
 			return "picture"
-		elsif self.ding_typ == DingTyp.find_by_name("Video")
+		elsif self.ding_typ.name == "Video"
 			return "film"
-		elsif self.ding_typ == DingTyp.find_by_name("URL")
-			return "new-window"
-		else
-			return "paperclip"
+		elsif self.ding_typ.name == "URL"
+			return "external-link"
+		elsif self.ding_typ.name == "Quote"
+			return "quote-right"
 		end
+		
+		return "cube"
 	end
 
 	def self.search(search)
@@ -63,6 +67,9 @@ class Ding < ActiveRecord::Base
 	def guess_ding_typ_from_name
 		begin
 			if name.start_with? 'http://' or name.start_with? 'https://'
+				if name.includes?('youtube')
+					return DingTyp.find_by_name('Video')
+				end
 				url = URI.parse(name)
 			    http_o = Net::HTTP.new(url.host, url.port)
 		    	http_o.use_ssl = true if name.start_with? 'https://'

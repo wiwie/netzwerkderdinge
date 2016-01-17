@@ -4,7 +4,7 @@
 <div class="jumbotron assoz-jumbotron">
   <h1><ul class="list-inline">
 	<li><%= link_to @ass.ding_eins.name, @ass.ding_eins %></li>
-	<li><%= glyph(:link) %></li>
+	<li><%= fa_icon(:link) %></li>
     <li><%= link_to @ass.ding_zwei.name, @ass.ding_zwei %></li>
  </ul></h1>
 </div>
@@ -14,18 +14,18 @@
 <% @ass.user_assoziations.each do |userass| %>
 <ul class="list-inline">
 		<% if userass.published %>
-			<li><%= glyph(:user) %> <%= link_to userass.user.email, userass.user %></li>
+			<li><%= fa_icon(:user) %> <%= link_to userass.user.email, userass.user %></li>
 			<li>(Details: <%= link_to userass do %>
-			            <%= glyph(:link) %><% end %>
+			            <%= fa_icon(:link) %><% end %>
 				)</li>
 		<% else %>
-			<li><%= glyph(:user) %> Anonym</li>
+			<li><%= fa_icon(:user) %> Anonym</li>
 		<% end %>
 </ul>
 <% end %>
 <% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => @ass.id).count == 0 %>
 <h2><%= I18n.t("assoziations.show.assoziieren") %></h2>
 <%= I18n.t("assoziations.show.ich_assoziiere_diese_beiden_dinge_auch") %><%= link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + @ass.id.to_s + ');' do %>
-            <%= glyph(:plus) %>
+            <%= fa_icon(:plus) %>
           <% end %>
 <% end %>

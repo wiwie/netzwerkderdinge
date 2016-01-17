@@ -84,6 +84,8 @@ GEM
     fancybox2-rails (0.2.8)
       railties (>= 3.1.0, < 5.0)
     ffi (1.9.10)
+    font-awesome-rails (4.5.0.0)
+      railties (>= 3.2, < 5.0)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     globalize (5.0.1)
@@ -238,6 +240,7 @@ DEPENDENCIES
   devise
   epic-editor-rails
   fancybox2-rails (~> 0.2.8)
+  font-awesome-rails
   globalize (~> 5.0.0)
   globalize-accessors
   jbuilder (~> 2.0)

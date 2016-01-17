@@ -1,14 +1,14 @@
 <div class="page-header">
   <h1>Ding</h1>
 </div>
-<% if @ding.ding_typ == DingTyp.find_by_name('Image') %>
+<% if @ding.ding_typ.name == 'Image' %>
 	<div class="jumbotron image-jumbotron" style="background-image: url('<%= @ding.name %>');">
 <% else %>
 	<div class="jumbotron assoz-jumbotron">
 <% end %>
   <div class="h1">
-  	<%= glyph(@ding.get_symbol) %>
-	<% if @ding.ding_typ != DingTyp.find_by_name('Ding') or @ding.has_translation(:name, params[:locale]) %>
+  	<%= fa_icon(@ding.get_symbol) %>
+	<% if @ding.ding_typ.name != 'Ding' or @ding.has_translation(:name, params[:locale]) %>
 		<%= best_in_place @ding, :name, :as => :input %>
 	<% else %>
 		&lt;???&gt;
@@ -18,7 +18,7 @@
 	<%= best_in_place @ding, :ding_typ_id, :as => :select, :collection => Hash[DingTyp.all.map {|x| [x.id, x.name]}] %>
 	</div>
 </div>
-<% if @ding.ding_typ == DingTyp.find_by_name('Ding') and not @ding.has_translation(:name, params[:locale]) %>
+<% if @ding.ding_typ.name == 'Ding' and not @ding.has_translation(:name, params[:locale]) %>
 	<%= I18n.t("dings.show.für_den_namen_dieses_dings_wurde_noch_keine_Übersetzung_für_deine_sprache_hinterlegt_bitte_nutze_das_textfeld_um_deine_Übersetzung_hinzuzufügen_es_folgen_ein_paar_Übersetzungen_in_anderen_sprachen") %>
 	<ul>
 		<% if @ding.name_de %><li>Deutsch: <%= @ding.name_de %></li><% end %>
@@ -34,18 +34,18 @@
 <% end %>
 
 <% if current_user.favorits.where(:ding_id => @ding.id).count == 0 %>
-<%= glyph('star-empty') %> <%= link_to (url = '#'), :onclick => 'add_favorit_for_curr_user(' + current_user.id.to_s + ', ' + @ding.id.to_s + ');' do %>
+<%= fa_icon('star-empty') %> <%= link_to (url = '#'), :onclick => 'add_favorit_for_curr_user(' + current_user.id.to_s + ', ' + @ding.id.to_s + ');' do %>
 			            zu Favoriten <%= I18n.t("dings.show.hinzufügen") %>
 			          <% end %>
 <% else %>
-<%= glyph('star') %> <%= link_to (url = '#'), :onclick => 'remove_favorit_for_curr_user(' + current_user.id.to_s + ', ' + @ding.id.to_s + ');' do %>
+<%= fa_icon('star') %> <%= link_to (url = '#'), :onclick => 'remove_favorit_for_curr_user(' + current_user.id.to_s + ', ' + @ding.id.to_s + ');' do %>
 			            von Favoriten <%= I18n.t("dings.show.löschen") %>
 			          <% end %>
 <% end %>
 
-<% if @ding.ding_typ == DingTyp.find_by_name('URL') %>
+<% if @ding.ding_typ.name == 'URL' %>
 	<br>
-	<%= glyph("new-window") %>
+	<%= fa_icon("new-window") %>
 	<%= link_to @ding.name, target: "_blank" do %>
 		Open URL
 	<% end %>
@@ -70,16 +70,24 @@
 		  <% end %>
 		</div>
 	<% end %>
-<% elsif  @ding.ding_typ == DingTyp.find_by_name('Image') %>
+<% elsif  @ding.ding_typ.name == 'Image' %>
 	<h2>Eingebettetes Bild</h2>
 	<%= link_to @ding.name, {:class => 'fancybox'} do %>
 		<img src="<%= @ding.name %>" alt="<%= @ding.name %>" style="height:240px;">
 	<% end %>
-<% elsif  @ding.ding_typ == DingTyp.find_by_name('Video') %>
+<% elsif  @ding.ding_typ.name == 'Video' %>
 	<h2>Eingebettetes Video</h2>
 	<div class="embed-responsive embed-responsive-16by9">
 	  <iframe class="embed-responsive-item" src="<%= @ding.get_video_link %>" allowfullscreen></iframe>
 	</div>
+<% elsif  @ding.ding_typ.name == 'Quote' %>
+	<h2>Zitat</h2>
+	<blockquote>
+		<% quote = @ding.name.scan(/"([^"]*)"/)[0][0] %>
+		<% author = @ding.name.rpartition(',').last %>
+		<p><%= quote %></p>
+		<footer><%= author %></footer>
+	</blockquote>
 <% end %>
 
 <h2><%= I18n.t("dings.show.beschreibung") %></h2>
@@ -95,14 +103,14 @@
 			<% ding = Ding.find(anderes_ding) %>
 			<li>
 			    <ul class="list-inline">
-	        		<li><span style="vertical-align:middle"><%= glyph(ding.get_symbol) %></span></li>
+	        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol) %></span></li>
 	        		<li><%= link_to ding.name, ding %></li>
-			        <li>(<%= link_to ass do %><span style="vertical-align:middle"><%= glyph(:link) %></span><% end %>)</li>
+			        <li>(<%= link_to ass do %><span style="vertical-align:middle"><%= fa_icon(:link) %></span><% end %>)</li>
 			        <li><%= badge(ass.user_assoziations.count.to_s + " mal", :warning) %></li>
 			        <% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => ass.id).count == 0 %>
 			        <li>
 			          <%= link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + ass.id.to_s + ');' do %>
-			            <%= glyph(:plus) %>
+			            <%= fa_icon(:plus) %>
 			          <% end %>
 			        </li>
 			        <% end %>
