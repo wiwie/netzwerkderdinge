@@ -61,21 +61,23 @@ class Ding < ActiveRecord::Base
 	end
 
 	def guess_ding_typ_from_name
-		if name.start_with? 'http://' or name.start_with? 'https://'
-			url = URI.parse(name)
-		    http_o = Net::HTTP.new(url.host, url.port)
-	    	http_o.use_ssl = true if name.start_with? 'https://'
-	    	http_o.start do |http|
-		    	if http.head(url.request_uri)['Content-Type'].start_with? 'image'
-		    		return DingTyp.find_by_name('Image')
-		    	elsif http.head(url.request_uri)['Content-Type'].start_with? 'video'
-		    		return DingTyp.find_by_name('Video')
-		    	end
-		    end
-		    return DingTyp.find_by_name('URL')
-		else
-			return DingTyp.find_by_name('Ding')
+		begin
+			if name.start_with? 'http://' or name.start_with? 'https://'
+				url = URI.parse(name)
+			    http_o = Net::HTTP.new(url.host, url.port)
+		    	http_o.use_ssl = true if name.start_with? 'https://'
+		    	http_o.start do |http|
+			    	if http.head(url.request_uri)['Content-Type'].start_with? 'image'
+			    		return DingTyp.find_by_name('Image')
+			    	elsif http.head(url.request_uri)['Content-Type'].start_with? 'video'
+			    		return DingTyp.find_by_name('Video')
+			    	end
+			    end
+			    return DingTyp.find_by_name('URL')
+			end
+		rescue
 		end
+		return DingTyp.find_by_name('Ding')
 	end
 
 	def after_initialize
