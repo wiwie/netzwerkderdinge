@@ -59,7 +59,7 @@ class DingsController < ApplicationController
 		if @ding.ding_typ.name == 'URL'
 			begin
 				@page_preview = LinkThumbnailer.generate(@ding.name)
-			rescue ArgumentError
+			rescue
 			end
 		end
 
