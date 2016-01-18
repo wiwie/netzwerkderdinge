@@ -89,6 +89,27 @@
 		<footer><%= author %></footer>
 	</blockquote>
 <% elsif  @ding.ding_typ.name == 'Todo List' %>
+	<h2>Diese Liste ist Teil der folgenden Todo Listen</h2>
+	<ul class="nav nav-list">
+		<% @sublistof.each do |ass| %>
+			<% ding = ass.ding_eins %>
+			<li>
+			    <ul class="list-inline">
+	        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol) %></span></li>
+	        		<li><%= link_to ding.name, ding %></li>
+			        <li>(<%= link_to ass do %><span style="vertical-align:middle"><%= fa_icon(:link) %></span><% end %>)</li>
+			        <li><%= badge(ass.user_assoziations.count.to_s + " mal", :warning) %></li>
+			        <% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => ass.id).count == 0 %>
+			        <li>
+			          <%= link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + ass.id.to_s + ');' do %>
+			            <%= fa_icon(:plus) %>
+			          <% end %>
+			        </li>
+			        <% end %>
+			    </ul>
+			</li>
+		<% end %>
+	</ul>
 	<h2>Todo Liste Fortschritt</h2>
 	  	<% if @todos.count+@done_todos.count > 0 %>
 	<div class="progress">
