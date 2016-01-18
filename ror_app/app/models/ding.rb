@@ -46,6 +46,8 @@ class Ding < ActiveRecord::Base
 			return "quote-right"
 		elsif self.ding_typ.name == "Todo List"
 			return "tasks"
+		elsif self.ding_typ.name == "Todo List Done"
+			return "tasks"
 		elsif self.ding_typ.name == "Todo"
 			return "circle-o"
 		elsif self.ding_typ.name == "Todo Done"
