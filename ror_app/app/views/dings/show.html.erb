@@ -43,7 +43,7 @@
 			          <% end %>
 <% end %>
 
-<% if @ding.name.start_with?('http')
+<% if @ding.name.start_with?('http') %>
 	<br>
 	<%= fa_icon("new-window") %>
 	<%= link_to @ding.name, target: "_blank" do %>
