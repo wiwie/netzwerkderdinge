@@ -34,7 +34,7 @@
 <% end %>
 
 <% if current_user.favorits.where(:ding_id => @ding.id).count == 0 %>
-<%= fa_icon('star-empty') %> <%= link_to (url = '#'), :onclick => 'add_favorit_for_curr_user(' + current_user.id.to_s + ', ' + @ding.id.to_s + ');' do %>
+<%= fa_icon('star-o') %> <%= link_to (url = '#'), :onclick => 'add_favorit_for_curr_user(' + current_user.id.to_s + ', ' + @ding.id.to_s + ');' do %>
 			            zu Favoriten <%= I18n.t("dings.show.hinzufügen") %>
 			          <% end %>
 <% else %>
