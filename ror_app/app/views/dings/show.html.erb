@@ -45,7 +45,7 @@
 
 <% if @ding.name.start_with?('http') %>
 	<br>
-	<%= fa_icon("new-window") %>
+	<%= fa_icon("external-link") %>
 	<%= link_to @ding.name, target: "_blank" do %>
 		Open URL
 	<% end %>
