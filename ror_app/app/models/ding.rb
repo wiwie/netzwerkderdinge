@@ -34,13 +34,19 @@ class Ding < ActiveRecord::Base
 		if not self.ding_typ
 			# skip this if
 		elsif self.ding_typ.name == "Image"
-			return "picture"
+			return "picture-o"
 		elsif self.ding_typ.name == "Video"
 			return "film"
 		elsif self.ding_typ.name == "URL"
 			return "external-link"
 		elsif self.ding_typ.name == "Quote"
 			return "quote-right"
+		elsif self.ding_typ.name == "Todo List"
+			return "tasks"
+		elsif self.ding_typ.name == "Todo"
+			return "circle-o"
+		elsif self.ding_typ.name == "Todo Done"
+			return "check-circle-o"
 		end
 		
 		return "cube"

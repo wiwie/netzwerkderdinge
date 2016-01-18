@@ -88,6 +88,13 @@
 		<p><%= quote %></p>
 		<footer><%= author %></footer>
 	</blockquote>
+<% elsif  @ding.ding_typ.name == 'Todo List' %>
+	<h2>Todo Liste Fortschritt</h2>
+	<div class="progress">
+	  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+	    <%= (@todos.count.to_f/(@todos.count+@done_todos.count)*100).to_i %>% (<%= @todos.count %>/<%= @todos.count+@done_todos.count %>)
+	  </div>
+	</div>
 <% end %>
 
 <h2><%= I18n.t("dings.show.beschreibung") %></h2>

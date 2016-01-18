@@ -61,6 +61,9 @@ class DingsController < ApplicationController
 				@page_preview = LinkThumbnailer.generate(@ding.name)
 			rescue
 			end
+		elsif @ding.ding_typ.name == 'Todo List'
+			@todos = @ding.assoziierte_dinge(current_user).select {|d| Ding.find(d[0]).ding_typ.name == 'Todo' }
+			@done_todos = @ding.assoziierte_dinge(current_user).select {|d| Ding.find(d[0]).ding_typ.name == 'Todo Done' }
 		end
 
 		#potential new assoziation
