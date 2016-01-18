@@ -92,8 +92,8 @@
 	<h2>Todo Liste Fortschritt</h2>
 	  	<% if @todos.count+@done_todos.count > 0 %>
 	<div class="progress">
-	  <div class="progress-bar" role="progressbar" aria-valuenow="<%= (@done_todos.count.to_f/(@todos.count+@done_todos.count)*100).to_i %>" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-	    <%= (@done_todos.count.to_f/(@todos.count+@done_todos.count)*100).to_i %>% (<%= @done_todos.count %>/<%= @todos.count+@done_todos.count %>)
+	  <div class="progress-bar" role="progressbar" aria-valuenow="<%= @perc_finished %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= @perc_finished %>%;">
+	    <%= @perc_finished %>% (<%= @done_todos.count %>/<%= @todos.count+@done_todos.count %>)
 	  </div>
 	</div>
 	    <% else %>

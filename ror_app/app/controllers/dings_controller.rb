@@ -64,6 +64,9 @@ class DingsController < ApplicationController
 		elsif @ding.ding_typ.name == 'Todo List'
 			@todos = @ding.assoziierte_dinge(current_user).select {|d| Ding.find(d[0]).ding_typ.name == 'Todo' }
 			@done_todos = @ding.assoziierte_dinge(current_user).select {|d| Ding.find(d[0]).ding_typ.name == 'Todo Done' }
+	  		if @todos.count+@done_todos.count > 0
+				@perc_finished = (@done_todos.count.to_f/(@todos.count+@done_todos.count)*100).to_i
+			end
 		end
 
 		#potential new assoziation
