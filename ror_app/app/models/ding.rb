@@ -1,5 +1,5 @@
 class Ding < ActiveRecord::Base
-	#has_many :assoziation, :foreign_key => 'ding_eins_id'
+	has_many :assoziations, :foreign_key => 'ding_eins_id'
 	#has_many :assoziierte_dinge, through: :assoziation, :source => 'ding_zwei'
 	belongs_to :kategorie
 	belongs_to :ding_typ
@@ -12,22 +12,25 @@ class Ding < ActiveRecord::Base
 	end
 
 	def assoziierte_dinge(user)
-		asses1 = Hash[*Assoziation.joins(:user_assoziations).where(
-			:ding_eins_id => self.id).where('user_assoziations.published = ? OR user_assoziations.user_id = ?', true, user.id).map{ |ass| [ass.ding_zwei_id, ass] }.flatten]
-		asses2 = Hash[*Assoziation.joins(:user_assoziations).where(
-			:ding_zwei_id => self.id).where('user_assoziations.published = ? OR user_assoziations.user_id = ?', true, user.id).map{ |ass| [ass.ding_eins_id, ass] }.flatten]
-		merged = asses1.merge(asses2) {
-			|key, val1, val2| val1 + val2
-			}
+		#puts self.assoziations.joins(:user_assoziations).where(
+		#	'user_assoziations.published = ? OR user_assoziations.user_id = ?', true, user.id)
 
-		#return merged.sort_by {|x| Ding.with_translations(I18n.locale).find(x[0]).name}.reverse
-		return merged.sort_by {|x| [-x[1].user_assoziations.count, Ding.find(x[0]).name.nil? ? '' : Ding.find(x[0]).name.downcase] }
-		#Ding.with_translations(params[:locale])
-		#sort = merged.sort do |x, y|
-		#	comp = (x[1].user_assoziations.count <=> y[1].user_assoziations.count)
-		#	comp.zero? ? (Ding.with_translations(I18n.locale).find(x[0]).name <=> Ding.with_translations(I18n.locale).find(y[0]).name) : comp
-		#end
-		#return sort.reverse
+		hash = Hash[*Assoziation.joins(:user_assoziations).where(
+			:ding_eins_id => self.id).where(
+			'user_assoziations.published = ? OR user_assoziations.user_id = ?', true, user.id).map{ 
+				|ass| [ass.ding_zwei_id, ass] }.flatten].sort_by {|x| [-x[1].user_assoziations.count, Ding.find(x[0]).name.nil? ? '' : Ding.find(x[0]).name.downcase] }
+		puts hash
+		return hash
+
+
+		#asses1 = Hash[*Assoziation.joins(:user_assoziations).where(
+		#	:ding_eins_id => self.id).where('user_assoziations.published = ? OR user_assoziations.user_id = ?', true, user.id).map{ |ass| [ass.ding_zwei_id, ass] }.flatten]
+		#asses2 = Hash[*Assoziation.joins(:user_assoziations).where(
+		#	:ding_zwei_id => self.id).where('user_assoziations.published = ? OR user_assoziations.user_id = ?', true, user.id).map{ |ass| [ass.ding_eins_id, ass] }.flatten]
+		#merged = asses1.merge(asses2) {
+		#	|key, val1, val2| val1 + val2
+		#	}
+		#return merged.sort_by {|x| [-x[1].user_assoziations.count, Ding.find(x[0]).name.nil? ? '' : Ding.find(x[0]).name.downcase] }
 	end
 
 	def get_symbol

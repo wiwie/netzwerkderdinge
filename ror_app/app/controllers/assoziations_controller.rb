@@ -14,13 +14,13 @@ class AssoziationsController < ApplicationController
 				@id_zwei = params[:selected_ding_zwei_id].to_i
 			end
 
-			if @id_eins > @id_zwei
-				tmp = @id_eins
-				@id_eins = @id_zwei
-				@id_zwei = tmp
-			end
+			# TODO
+			#if @id_eins > @id_zwei
+			#	tmp = @id_eins
+			#	@id_eins = @id_zwei
+			#	@id_zwei = tmp
+			#end
 			@ass = Assoziation.where(ding_eins_id: @id_eins, ding_zwei_id: @id_zwei).first_or_create
-
 			@ass.save()
 
 			@user_ass = UserAssoziation.where(:assoziation_id => @ass.id, :user => current_user).first_or_create
@@ -51,15 +51,23 @@ class AssoziationsController < ApplicationController
 			ding_zwei_id = params[:selected_ding_zwei_id].to_i
 		end
 
-		@ass = Assoziation.where(:ding_eins_id => ding_eins_id,
+		@first_ass = Assoziation.where(:ding_eins_id => ding_eins_id,
 			:ding_zwei_id => ding_zwei_id).first_or_create
+		@first_ass.save()
 
-		@ass.save()
+		@first_user_ass = UserAssoziation.new(:assoziation => @first_ass, :user => current_user, :published => params["user_assoziation"]["published"] == "1")
+		@first_user_ass.save()
 
-		@user_ass = UserAssoziation.new(:assoziation => @ass, :user => current_user, :published => params["user_assoziation"]["published"] == "1")
-		@user_ass.save()
+		if params.has_key?(:assoziation) and params[:assoziation].has_key?(:symmetric) and params[:assoziation][:symmetric] == '1'
+			@snd_ass = Assoziation.where(:ding_eins_id => ding_zwei_id,
+				:ding_zwei_id => ding_eins_id).first_or_create
+			@snd_ass.save()
 
-		redirect_to @user_ass
+			@snd_user_ass = UserAssoziation.new(:assoziation => @snd_ass, :user => current_user, :published => params["user_assoziation"]["published"] == "1")
+			@snd_user_ass.save()
+		end
+
+		redirect_to @first_user_ass
 	end
 
 	def create_for_current_user
