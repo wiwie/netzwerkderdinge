@@ -47,7 +47,7 @@ class Ding < ActiveRecord::Base
 		elsif self.ding_typ.name == "Todo List"
 			return "tasks"
 		elsif self.ding_typ.name == "Todo List Done"
-			return "tasks"
+			return "check-circle-o"
 		elsif self.ding_typ.name == "Todo"
 			return "circle-o"
 		elsif self.ding_typ.name == "Todo Done"
