@@ -123,7 +123,7 @@
 	    <% else %>
 	    	Diese Todo Liste hat keine Einträge.
 	    <% end %>
-<% else %>
+<% elsif  @ding.ding_typ.name == 'Todo' %>
 	<h2>Dieses Todo ist Teil der folgenden Todo Listen</h2>
 	<ul class="nav nav-list">
 		<% @todoof.each do |ass| %>
