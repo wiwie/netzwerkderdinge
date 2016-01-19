@@ -14,17 +14,22 @@ class AssoziationsController < ApplicationController
 				@id_zwei = params[:selected_ding_zwei_id].to_i
 			end
 
-			# TODO
-			#if @id_eins > @id_zwei
-			#	tmp = @id_eins
-			#	@id_eins = @id_zwei
-			#	@id_zwei = tmp
-			#end
-			@ass = Assoziation.where(ding_eins_id: @id_eins, ding_zwei_id: @id_zwei).first_or_create
-			@ass.save()
+			@first_ass = Assoziation.where(ding_eins_id: @id_eins, ding_zwei_id: @id_zwei).first_or_create
+			@first_ass.save()
 
-			@user_ass = UserAssoziation.where(:assoziation_id => @ass.id, :user => current_user).first_or_create
-			redirect_to @user_ass
+			@first_user_ass = UserAssoziation.where(:assoziation_id => @first_ass.id, :user => current_user).first_or_create
+
+			# we change the default to creating the assoziations symmetricely;
+			if not params.has_key?(:assoziation) or not params[:assoziation].has_key?(:symmetric) or params[:assoziation][:symmetric] == '1'
+				@snd_ass = Assoziation.where(:ding_eins_id => @id_zwei,
+					:ding_zwei_id => @id_eins).first_or_create
+				@snd_ass.save()
+
+				@snd_user_ass = UserAssoziation.new(:assoziation => @snd_ass, :user => current_user, :published => true)
+				@snd_user_ass.save()
+			end
+
+			redirect_to @first_user_ass
 		else
 			@assoziation = Assoziation.new()
 		end
