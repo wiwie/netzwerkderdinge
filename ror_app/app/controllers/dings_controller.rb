@@ -68,6 +68,8 @@ class DingsController < ApplicationController
 				@perc_finished = (@done_todos.count.to_f/(@todos.count+@done_todos.count)*100).to_i
 			end
 			@sublistof = Assoziation.joins(:user_assoziations).joins(:ding_eins => :ding_typ).where(:ding_zwei => @ding).where('ding_typs.name = ? OR ding_typs.name = ?', 'Todo List', 'Todo List Done')
+		elsif @ding.ding_typ.name == 'Todo'
+			@todoof = Assoziation.joins(:user_assoziations).joins(:ding_eins => :ding_typ).where(:ding_zwei => @ding).where('ding_typs.name = ? OR ding_typs.name = ?', 'Todo List', 'Todo List Done')
 		end
 
 		#potential new assoziation
