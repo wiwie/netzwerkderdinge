@@ -13,7 +13,7 @@
 <p><%= I18n.t("assoziations.show.these_two_things") %> <%= @ass.count %> <%= I18n.t("assoziations.show.benutzern_assoziiert_worden") %></p>
 <% @ass.user_assoziations.each do |userass| %>
 <ul class="list-inline">
-		<% if userass.published %>
+		<% if userass.published or userass.user == current_user %>
 			<li><%= fa_icon(:user) %> <%= link_to userass.user.email, userass.user %></li>
 			<li>(Details: <%= link_to userass do %>
 			            <%= fa_icon(:link) %><% end %>
