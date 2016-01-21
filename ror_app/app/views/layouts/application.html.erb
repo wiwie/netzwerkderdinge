@@ -51,7 +51,7 @@
       <% end %>
       <%= menu_group pull: :right do %>
           <% if current_user %>
-            <%= drop_down fa_icon(:user) + " Profil" do %>
+            <%= drop_down fa_icon(:user) + " Profil (" + current_user.email + ")"  do %>
               <%= menu_item fa_icon("long-arrow-right") + " " + I18n.t("your_associations"), url_for([current_user, UserAssoziation]) %>
               <%= menu_item fa_icon("sign-out") + " " + I18n.t("logout"), destroy_user_session_path, :method => 'delete' %>
             <% end %>

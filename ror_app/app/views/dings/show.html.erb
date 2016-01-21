@@ -19,6 +19,11 @@
 	<div class="h2">Typ ändern: 
 	<%= best_in_place @ding, :ding_typ_id, :as => :select, :collection => Hash[DingTyp.all.map {|x| [x.id, x.name]}] %>
 	</div>
+	<% if @can_toggle_publish %>
+	<div class="h2">Öffentlich?:
+	<%= best_in_place @ding, :published, :as => :checkbox, :collection => [raw("<i class='fa fa-square-o'></i>"), raw("<i class='fa fa-check-square-o'></i>")] %>
+	</div>
+	<% end %>
 </div>
 <% if @ding.ding_typ.name == 'Ding' and not @ding.has_translation(:name, params[:locale]) %>
 	<%= I18n.t("dings.show.für_den_namen_dieses_dings_wurde_noch_keine_Übersetzung_für_deine_sprache_hinterlegt_bitte_nutze_das_textfeld_um_deine_Übersetzung_hinzuzufügen_es_folgen_ein_paar_Übersetzungen_in_anderen_sprachen") %>

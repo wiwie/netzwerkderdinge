@@ -73,6 +73,14 @@ class DingsController < ApplicationController
 			@todoof = Assoziation.joins(:user_assoziations).joins(:ding_eins => :ding_typ).where(:ding_zwei => @ding).where('ding_typs.name = ? OR ding_typs.name = ?', 'Todo List', 'Todo List Done')
 		end
 
+		if not @ding.published
+			@can_toggle_publish = true
+		else
+			@users = UserAssoziation.where(:assoziation_id => Assoziation.where('ding_eins_id = ? OR ding_zwei_id = ?', @ding.id, @ding.id)).select(:user_id).distinct.collect {|x| x.user_id}
+
+			@can_toggle_publish = (@users.count == 1 and @users.first == current_user.id)
+		end
+
 		#potential new assoziation
 		@assoziation = Assoziation.new
 	end
@@ -105,6 +113,11 @@ class DingsController < ApplicationController
 		  end
 		elsif params[:ding].has_key?(:ding_typ_id)
 	  	  if @ding.update_attribute(:ding_typ_id, params[:ding][:ding_typ_id].to_i)
+		    format.html { redirect_to(@ding, :notice => 'User was successfully updated.') }
+		    format.json { respond_with_bip(@ding) }
+		  end
+		elsif params[:ding].has_key?(:published)
+	  	  if @ding.update_attribute(:published, params[:ding][:published])
 		    format.html { redirect_to(@ding, :notice => 'User was successfully updated.') }
 		    format.json { respond_with_bip(@ding) }
 		  end
