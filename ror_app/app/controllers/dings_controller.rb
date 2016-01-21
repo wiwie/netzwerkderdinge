@@ -117,10 +117,31 @@ class DingsController < ApplicationController
 		    format.json { respond_with_bip(@ding) }
 		  end
 		elsif params[:ding].has_key?(:published)
-	  	  if @ding.update_attribute(:published, params[:ding][:published])
-		    format.html { redirect_to(@ding, :notice => 'User was successfully updated.') }
-		    format.json { respond_with_bip(@ding) }
-		  end
+			@success = false
+			#if we are unpublishing, make assoziationen consistent
+			if params[:ding][:published] == 'false'
+				# make sure that all assoziationen are from the current user (should be the case)
+				@userasses = UserAssoziation.where(:assoziation_id => Assoziation.where('ding_eins_id = ? OR ding_zwei_id = ?', @ding.id, @ding.id))
+			    @users = @userasses.select(:user_id).distinct.collect {|x| x.user_id}
+			    # if we have more than the current user, we cannot unpublish the ding
+				if not (@users.count == 1 and @users.first == current_user.id)
+					format.html { redirect_to(@ding, :notice => 'Ding konnte nicht unpublished werden, da es von anderen Benutzern assoziiert wurde.') }
+					format.json { respond_with_bip(@ding) }
+				else
+					@userasses.update_all(published: false)
+					@success = true
+				end
+			else
+				@success = true
+			end
+
+			if @success
+				# now update the published attribute of the ding
+				if @ding.update_attribute(:published, params[:ding][:published])
+					format.html { redirect_to(@ding, :notice => 'User was successfully updated.') }
+					format.json { respond_with_bip(@ding) }
+				end
+			end
 	    else
 	      @new_ding = Ding.where(:name => params[:ding][:name]).first_or_create
 	      # take all assoziationen which contain that ding
