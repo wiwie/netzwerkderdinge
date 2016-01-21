@@ -62,14 +62,14 @@ class DingsController < ApplicationController
 				@page_preview = LinkThumbnailer.generate(@ding.name)
 			rescue
 			end
-		elsif @ding.ding_typ.name == 'Todo List'
+		elsif @ding.ding_typ.name == 'Todo List' or @ding.ding_typ.name == 'Todo List Done'
 			@todos = @ding.assoziierte_dinge(current_user).select {|d| Ding.find(d[0]).ding_typ.name == 'Todo' or Ding.find(d[0]).ding_typ.name == 'Todo List' }
 			@done_todos = @ding.assoziierte_dinge(current_user).select {|d| Ding.find(d[0]).ding_typ.name == 'Todo Done' or Ding.find(d[0]).ding_typ.name == 'Todo List Done' }
 	  		if @todos.count+@done_todos.count > 0
 				@perc_finished = (@done_todos.count.to_f/(@todos.count+@done_todos.count)*100).to_i
 			end
 			@sublistof = Assoziation.joins(:user_assoziations).joins(:ding_eins => :ding_typ).where(:ding_zwei => @ding).where('ding_typs.name = ? OR ding_typs.name = ?', 'Todo List', 'Todo List Done')
-		elsif @ding.ding_typ.name == 'Todo'
+		elsif @ding.ding_typ.name == 'Todo' or @ding.ding_typ.name == 'Todo Done'
 			@todoof = Assoziation.joins(:user_assoziations).joins(:ding_eins => :ding_typ).where(:ding_zwei => @ding).where('ding_typs.name = ? OR ding_typs.name = ?', 'Todo List', 'Todo List Done')
 		end
 

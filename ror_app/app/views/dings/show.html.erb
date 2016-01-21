@@ -98,7 +98,7 @@
 		<p><%= quote %></p>
 		<footer><%= author %></footer>
 	</blockquote>
-<% elsif  @ding.ding_typ.name == 'Todo List' %>
+<% elsif  @ding.ding_typ.name == 'Todo List' or @ding.ding_typ.name == 'Todo List Done' %>
 	<h2>Diese Liste ist Teil der folgenden Todo Listen</h2>
 	<ul class="nav nav-list">
 		<% @sublistof.each do |ass| %>
@@ -130,7 +130,7 @@
 	    <% else %>
 	    	Diese Todo Liste hat keine Einträge.
 	    <% end %>
-<% elsif  @ding.ding_typ.name == 'Todo' %>
+<% elsif  @ding.ding_typ.name == 'Todo' or @ding.ding_typ.name == 'Todo Done' %>
 	<h2>Dieses Todo ist Teil der folgenden Todo Listen</h2>
 	<ul class="nav nav-list">
 		<% @todoof.each do |ass| %>
