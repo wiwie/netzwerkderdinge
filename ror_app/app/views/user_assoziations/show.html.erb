@@ -2,15 +2,15 @@
 <% if @userass.published or @userass.user == current_user %>
 	<% if @userass.user == current_user %>Du hast<% else %><%= I18n.t("user_assoziations.show.benutzer") %> <%= @userass.user.email %> hat<% end %> eine neue Assoziation hinzugefügt!
 	<br>
-	Published? <%= best_in_place @userass, :published, :as => :checkbox, :collection => [raw("<i class='fa_iconicon fa_iconicon-unchecked'></i>"), raw("<i class='fa_iconicon fa_iconicon-check'></i>")]%>
+	Published? <%= best_in_place @userass, :published, :as => :checkbox, :collection => [raw("<i class='fa fa-square-o'></i>"), raw("<i class='fa fa-check-square-o'></i>")]%>
 
 	<h2><%= I18n.t("user_assoziations.show.assoziation") %></h2>
 	<ul class="list-inline">
-	    <li><%= link_to @userass.assoziation.ding_eins.name, @userass.assoziation.ding_eins %></li>
+	    <li><% if not @userass.assoziation.ding_eins.published %><i><% end %><%= link_to @userass.assoziation.ding_eins.name, @userass.assoziation.ding_eins %><% if not @userass.assoziation.ding_eins.published %></i><% end %></li>
 	    <li><%= link_to @userass.assoziation do %>
 	        <%= fa_icon(:link) %>
 	      <% end %></li>
-	    <li><%= link_to @userass.assoziation.ding_zwei.name, @userass.assoziation.ding_zwei %></li>
+	    <li><% if not @userass.assoziation.ding_zwei.published %><i><% end %><%= link_to @userass.assoziation.ding_zwei.name, @userass.assoziation.ding_zwei %><% if not @userass.assoziation.ding_zwei.published %></i><% end %></li>
 	</ul>
 
 	<h2><%= I18n.t("user_assoziations.show.beschreibung") %></h2>

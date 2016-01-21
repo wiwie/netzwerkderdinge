@@ -3,9 +3,9 @@
 </div>
 <div class="jumbotron assoz-jumbotron">
   <h1><ul class="list-inline">
-	<li><%= link_to @ass.ding_eins.name, @ass.ding_eins %></li>
+	<li><% if not @ass.ding_eins.published %><i><% end %><%= link_to @ass.ding_eins.name, @ass.ding_eins %><% if not @ass.ding_eins.published %></i><% end %></li>
 	<li><%= fa_icon(:link) %></li>
-    <li><%= link_to @ass.ding_zwei.name, @ass.ding_zwei %></li>
+    <li><% if not @ass.ding_zwei.published %><i><% end %><%= link_to @ass.ding_zwei.name, @ass.ding_zwei %><% if not @ass.ding_zwei.published %></i><% end %></li>
  </ul></h1>
 </div>
 

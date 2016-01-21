@@ -1,5 +1,6 @@
 class Ding < ActiveRecord::Base
 	has_many :assoziations, :foreign_key => 'ding_eins_id'
+	has_many :eingehende_assoziations, :foreign_key => 'ding_zwei_id'
 	#has_many :assoziierte_dinge, through: :assoziation, :source => 'ding_zwei'
 	belongs_to :kategorie
 	belongs_to :ding_typ
@@ -99,7 +100,6 @@ class Ding < ActiveRecord::Base
 	end
 
 	def after_initialize
-		puts "VALIDDDDDDDDDDDDDDDD"
 		if not ding_typ
 			write_attribute(:ding_typ_id, self.guess_ding_typ_from_name.id)
 		end

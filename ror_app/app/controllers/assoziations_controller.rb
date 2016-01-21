@@ -4,11 +4,22 @@ class AssoziationsController < ApplicationController
 	def new
 		if params.has_key?(:ding_eins_id) and params.has_key?(:selected_ding_zwei_id)
 			@id_eins = params[:ding_eins_id].to_i
+			ding = Ding.find(@id_eins)
+
+			ding.update_attribute(
+				:published,
+				ding.published ? true : params["user_assoziation"]["published"] == "1"
+			)
+
 			if params[:selected_ding_zwei_id] == ''
 				ding = Ding.where(:name => params[:assoziation][:ding_zwei_id]).first
 				if not ding
 					ding = Ding.where(:name => params[:assoziation][:ding_zwei_id]).create
 				end
+				ding.update_attribute(
+					:published,
+					ding.published ? true : params["user_assoziation"]["published"] == "1"
+				)
 				@id_zwei = ding.id
 			else
 				@id_zwei = params[:selected_ding_zwei_id].to_i
@@ -41,6 +52,7 @@ class AssoziationsController < ApplicationController
 			if not @ding
 				@ding = Ding.where(:name => params[:assoziation][:ding_eins_id]).create
 			end
+			ding.update_attribute(:published,ding.published ? true : params["user_assoziation"]["published"] == "1")
 			ding_eins_id = @ding.id
 		else
 			ding_eins_id = params[:selected_ding_eins_id].to_i
@@ -51,6 +63,7 @@ class AssoziationsController < ApplicationController
 			if not @ding
 				@ding = Ding.where(:name => params[:assoziation][:ding_zwei_id]).create
 			end
+			ding.update_attribute(:published,ding.published ? true : params["user_assoziation"]["published"] == "1")
 			ding_zwei_id = @ding.id
 		else
 			ding_zwei_id = params[:selected_ding_zwei_id].to_i

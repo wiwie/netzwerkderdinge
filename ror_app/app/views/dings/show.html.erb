@@ -7,12 +7,14 @@
 	<div class="jumbotron assoz-jumbotron">
 <% end %>
   <div class="h1">
+  	<% if not @ding.published %><i><% end %>
   	<%= fa_icon(@ding.get_symbol) %>
 	<% if @ding.ding_typ.name != 'Ding' or @ding.has_translation(:name, params[:locale]) %>
 		<%= best_in_place @ding, :name, :as => :input %>
 	<% else %>
 		&lt;???&gt;
 	<% end %>
+	<% if not @ding.published %></i><% end %>
   </div>
 	<div class="h2">Typ ändern: 
 	<%= best_in_place @ding, :ding_typ_id, :as => :select, :collection => Hash[DingTyp.all.map {|x| [x.id, x.name]}] %>
@@ -161,7 +163,11 @@
 			<li>
 			    <ul class="list-inline">
 	        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol) %></span></li>
-	        		<li><%= link_to ding.name, ding %></li>
+	        		<li>
+	        			<% if not ding.published %><i><% end %>
+	        			<%= link_to ding.name, ding %>
+	        			<% if not ding.published %></i><% end %>
+	        		</li>
 			        <li>(<%= link_to ass do %><span style="vertical-align:middle"><%= fa_icon(:link) %></span><% end %>)</li>
 			        <li><%= badge(ass.user_assoziations.count.to_s + " mal", :warning) %></li>
 			        <% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => ass.id).count == 0 %>
@@ -182,7 +188,11 @@
   <%= f.label I18n.t("dings.show.ding") %><br>
   <%= hidden_field_tag :ding_eins_id, @ding.id %>
   <%= f.autocomplete_field :ding_zwei_id, autocomplete_ding_name_dings_path, :id_element => '#selected_ding_zwei_id' %>
-  <%= hidden_field_tag :selected_ding_zwei_id %>
+  <%= f.label "Publish?" %>
+  <%= check_box :user_assoziation, :published, {:checked => true} %>
+  <%= f.label "Assoziiere in beide Richtungen?" %>
+  <%= check_box :assoziation, :symmetric, {:checked => true} %>
+  <%= hidden_field_tag :selected_ding_zwei_id %><br>
   <%= f.submit %>
 <% end %>
 

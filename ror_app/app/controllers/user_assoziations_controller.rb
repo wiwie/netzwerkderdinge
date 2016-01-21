@@ -14,6 +14,10 @@ class UserAssoziationsController < ApplicationController
 	  respond_to do |format|
 		if params[:user_assoziation].has_key?(:published)
 	  	  if @userass.update_attribute(:published, params[:user_assoziation][:published])
+	  	  	if params[:user_assoziation][:published]
+	  	  		@userass.assoziation.ding_eins.update_attribute(:published, true)
+	  	  		@userass.assoziation.ding_zwei.update_attribute(:published, true)
+	  	  	end
 		    format.html { redirect_to(@userass, :notice => 'User was successfully updated.') }
 		    format.json { respond_with_bip(@userass) }
 		  end

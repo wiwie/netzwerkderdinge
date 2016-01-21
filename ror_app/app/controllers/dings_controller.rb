@@ -3,24 +3,24 @@ class DingsController < ApplicationController
 	autocomplete :ding, :name
 	
 	def index
-		@dings = Ding.all()
-
 		st = ActiveRecord::Base.connection
 		@pop_dings = st.execute('SELECT ding_id,SUM(count) count FROM
 				(SELECT ding_eins_id ding_id,count(*) as count 
 				FROM assoziations ass JOIN user_assoziations ua ON (ass.id=ua.assoziation_id)
+				WHERE published = "t"
 				GROUP BY ding_eins_id
 				UNION
 				SELECT ding_zwei_id ding_id,count(*) as count 
 				FROM assoziations ass JOIN user_assoziations ua ON (ass.id=ua.assoziation_id)
+				WHERE published = "t"
 				GROUP BY ding_zwei_id)
 				GROUP BY ding_id
 				ORDER BY count DESC LIMIT 10;')
 		st.close()
 
-		@newest_dings = Ding.order("created_at DESC").limit(10)
+		@newest_dings = Ding.where(:published => true).order("created_at DESC").limit(10)
 
-		@all_dings = Ding.with_translations.order("name").paginate(:page => params[:page], :per_page => 10)
+		@all_dings = Ding.where(:published => true).with_translations.order("name").paginate(:page => params[:page], :per_page => 10)
 	end
 
 
@@ -28,7 +28,8 @@ class DingsController < ApplicationController
 		term = params[:term]
 		query = 'SELECT dings.id,ding_translations.name FROM dings JOIN ding_translations
 			ON (dings.id=ding_translations.ding_id)
-			WHERE ding_translations.locale = "' + params[:locale] + '" 
+			WHERE dings.published = "t"
+			AND ding_translations.locale = "' + params[:locale] + '" 
 			AND ding_translations.name LIKE "' + term + '%"
 			ORDER BY ding_translations.name'
 		puts query
