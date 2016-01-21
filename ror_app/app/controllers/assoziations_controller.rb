@@ -29,6 +29,7 @@ class AssoziationsController < ApplicationController
 			@first_ass.save()
 
 			@first_user_ass = UserAssoziation.where(:assoziation_id => @first_ass.id, :user => current_user).first_or_create
+			@first_user_ass.update_attribute(:published, params["user_assoziation"]["published"] == "1")
 
 			# we change the default to creating the assoziations symmetricely;
 			if not params.has_key?(:assoziation) or not params[:assoziation].has_key?(:symmetric) or params[:assoziation][:symmetric] == '1'
@@ -36,7 +37,7 @@ class AssoziationsController < ApplicationController
 					:ding_zwei_id => @id_eins).first_or_create
 				@snd_ass.save()
 
-				@snd_user_ass = UserAssoziation.new(:assoziation => @snd_ass, :user => current_user, :published => true)
+				@snd_user_ass = UserAssoziation.new(:assoziation => @snd_ass, :user => current_user, :published => params["user_assoziation"]["published"] == "1")
 				@snd_user_ass.save()
 			end
 
