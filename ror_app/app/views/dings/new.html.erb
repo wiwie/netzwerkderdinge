@@ -2,7 +2,5 @@
 <%= form_for @ding do |f| %>
 <%= f.label I18n.t("dings.new.name")  %><br>
 <%= f.text_field :name %><br>
-<%= f.label I18n.t("dingtyp")  %><br>
-<%= f.collection_select :ding_typ_id, DingTyp.all, :id, :name %>
 <%= f.submit %>
 <% end %>

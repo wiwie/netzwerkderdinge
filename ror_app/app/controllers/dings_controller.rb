@@ -128,10 +128,6 @@ class DingsController < ApplicationController
 	    send_file file, :type => "image/png", :disposition => "inline"
 	  end
 
-	def new
-		@ding = Ding.new
-	end
-
 	def create
 		@ding = Ding.new(params.require(:ding).permit(:name, :ding_typ_id))
 
