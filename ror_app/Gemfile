@@ -64,3 +64,6 @@ gem "font-awesome-rails"
 
 
 gem 'rails-latex'
+gem 'marked-rails'
+gem 'rmagick'
+gem 'rsruby', :git => 'git://github.com/custora/rsruby.git'

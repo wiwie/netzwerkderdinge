@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   resources :dings do
     get :autocomplete_ding_name, :on => :collection
     post :add_translation
+    get 'description_as_png' => 'dings#description_as_png'
+    get 'r_plot' => 'dings#r_plot'
   end
   resources :assoziations do
     post 'create_for_current_user'

@@ -17,14 +17,9 @@
 		<% end %>
 		<% if not @ding.published %></i><% end %>
 	  </div>
-	  <%#= form_for @has_ding_typ do |f| %>
 		<div class="h2">Typ: 
-			<%#= @ding.ding_typ(current_user).name %>
-			<%#= collection_select(:ding_has_typ, :ding_typ_id, DingTyp.all, :id, :name) %>
-			<%#= f.submit %>
 		<%= best_in_place @has_ding_typ, :ding_typ_id, :as => :select, :collection => Hash[DingTyp.all.map {|x| [x.id, x.name]}], :classes => 'reload_on_success' %>
 		</div>
-		<%# end %>
 		<% if @can_toggle_publish %>
 		<div class="h2">Öffentlich?:
 		<%= best_in_place @ding, :published, :as => :checkbox, :collection => [raw("<i class='fa fa-square-o'></i>"), raw("<i class='fa fa-check-square-o'></i>")] %>
@@ -161,10 +156,43 @@
 	<% end %>
 
 	<h2><%= I18n.t("dings.show.beschreibung") %></h2>
-	<% if not @ding.description.nil? %>
-	<%= @ding.description %>
-	<% else %>
-	<%= I18n.t("dings.show.bislang_keine_beschreibung_vorhanden") %>
+	<div id="descr">
+	<%# if not @ding.description.nil? %>
+	<%#= @ding.description %>
+	<%= best_in_place @ding, :description, :as => :textarea, :classes => 'reload_on_success' %>
+	<%# else %>
+	<%#= I18n.t("dings.show.bislang_keine_beschreibung_vorhanden") %>
+	<%# end %>
+	</div>
+
+	<% if @ding.ding_typ(current_user).name == 'Markdown' %>
+	<h2>Markdown</h2>
+	<div id="content"></div>
+	  <script>
+		marked.setOptions({
+		  renderer: new marked.Renderer(),
+		  gfm: true,
+		  tables: true,
+		  breaks: true,
+		  pedantic: false,
+		  sanitize: true,
+		  smartLists: true,
+		  smartypants: true
+		});
+
+	    document.getElementById('content').innerHTML =
+	      marked($('#descr').text());
+	  </script>
+	 <% end %>
+
+	<% if @ding.ding_typ(current_user).name == 'LaTeX' %>
+	<h2>LaTeX</h2>
+	<img src="<%= url_for(:action => :description_as_png, :ding_id => @ding.id,:format => :png)%>">
+	<% end %>
+
+	<% if @ding.ding_typ(current_user).name == 'R' %>
+	<h2>R</h2>
+	<img src="<%= url_for(:action => :r_plot, :ding_id => @ding.id,:format => :png)%>">
 	<% end %>
 
 	<h2><%= I18n.t("dings.show.dieses_ding_wurde_mit_den_folgenden_dingen_assoziiert") %></h2>
@@ -240,7 +268,7 @@
 
 		var graphics = Viva.Graph.View.svgGraphics();
 		graphics.node(function(node) {
-			console.log(node);
+			//console.log(node);
 	       // The function is called every time renderer needs a ui to display node
 	       var link = Viva.Graph.svg('a')
 	             .link(node.data.url);

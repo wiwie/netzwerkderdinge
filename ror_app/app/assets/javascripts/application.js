@@ -21,6 +21,7 @@
 //= require 'epiceditor'  
 //= require fancybox
 //= require vivagraph
+//= require marked
 //= require_tree .
 
 $(document).ready(function() {

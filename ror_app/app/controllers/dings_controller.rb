@@ -1,3 +1,5 @@
+require 'rmagick'
+
 class DingsController < ApplicationController
 	before_action :authenticate_user!
 	autocomplete :ding, :name
@@ -38,7 +40,6 @@ class DingsController < ApplicationController
 
 	def has_translation(ding_id, attribute, locale)
 		@ding = Ding.find(ding_id)
-		puts @ding[attribute.to_s + "_" + locale]
 		return (not @ding[attribute.to_s + "_" + locale].nil?)
 	end
 
@@ -102,6 +103,31 @@ class DingsController < ApplicationController
 		end
 	end
 
+	def description_as_png
+		@ding = Ding.find(params[:ding_id])
+
+		output = render_to_string(:template => "/dings/description_as_png.pdf.erb", :layout => true)
+
+	    file = Tempfile.new('foo')
+	    file.write output
+	    file.close
+
+	    pdf = Magick::ImageList.new(file.path)
+	    png_path = file.path + ".png"
+		pdf.write(png_path)
+
+		send_file png_path, :type => "image/png", :disposition => "inline"
+	end
+
+	def r_plot
+		@ding = Ding.find(params[:ding_id])
+		file = Tempfile.new('foo')
+
+	    @@r.myplot.call(file.path, @ding.description.nil? ? '' : @ding.description)
+
+	    send_file file, :type => "image/png", :disposition => "inline"
+	  end
+
 	def new
 		@ding = Ding.new
 	end
@@ -130,8 +156,8 @@ class DingsController < ApplicationController
 		    format.html { redirect_to(@ding, :notice => 'User was successfully updated.') }
 		    format.json { respond_with_bip(@ding) }
 		  end
-		elsif params[:ding].has_key?(:ding_typ_id)
-	  	  if @ding.update_attribute(:ding_typ_id, params[:ding][:ding_typ_id].to_i)
+		elsif params[:ding].has_key?(:description)
+	  	  if @ding.update_attribute(:description, params[:ding][:description])
 		    format.html { redirect_to(@ding, :notice => 'User was successfully updated.') }
 		    format.json { respond_with_bip(@ding) }
 		  end
