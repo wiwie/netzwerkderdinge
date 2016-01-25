@@ -33,6 +33,7 @@ Rails.application.routes.draw do
   end
   resources :kategories
   resources :searchs
+  resources :ding_has_typs
 
   # Example resource route with options:
   #   resources :products do

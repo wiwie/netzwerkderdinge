@@ -4,6 +4,7 @@ class Ding < ActiveRecord::Base
 	#has_many :assoziierte_dinge, through: :assoziation, :source => 'ding_zwei'
 	belongs_to :kategorie
 	belongs_to :ding_typ
+	has_many :ding_has_typs
 	translates :name, :description
 	globalize_accessors
 	before_validation :after_initialize, on: :create
@@ -34,24 +35,25 @@ class Ding < ActiveRecord::Base
 		#return merged.sort_by {|x| [-x[1].user_assoziations.count, Ding.find(x[0]).name.nil? ? '' : Ding.find(x[0]).name.downcase] }
 	end
 
-	def get_symbol
-		if not self.ding_typ
+	def get_symbol(user)
+		ding_typ = self.ding_typ(user)
+		if not ding_typ
 			# skip this if
-		elsif self.ding_typ.name == "Image"
+		elsif ding_typ.name == "Image"
 			return "picture-o"
-		elsif self.ding_typ.name == "Video"
+		elsif ding_typ.name == "Video"
 			return "film"
-		elsif self.ding_typ.name == "URL"
+		elsif ding_typ.name == "URL"
 			return "external-link"
-		elsif self.ding_typ.name == "Quote"
+		elsif ding_typ.name == "Quote"
 			return "quote-right"
-		elsif self.ding_typ.name == "Todo List"
+		elsif ding_typ.name == "Todo List"
 			return "tasks"
-		elsif self.ding_typ.name == "Todo List Done"
+		elsif ding_typ.name == "Todo List Done"
 			return "check-circle-o"
-		elsif self.ding_typ.name == "Todo"
+		elsif ding_typ.name == "Todo"
 			return "circle-o"
-		elsif self.ding_typ.name == "Todo Done"
+		elsif ding_typ.name == "Todo Done"
 			return "check-circle-o"
 		end
 		
@@ -102,6 +104,19 @@ class Ding < ActiveRecord::Base
 	def after_initialize
 		if not ding_typ
 			write_attribute(:ding_typ_id, self.guess_ding_typ_from_name.id)
+		end
+	end
+
+	def ding_typ(user=nil)
+		if not user
+			return DingTyp.find_by_name('Ding')
+		else
+			#return has_ding_typs#.where(:user => user).first
+			@typs = DingHasTyp.where(:user => user, :ding => self)
+			if @typs.count > 0
+				return @typs.first.ding_typ
+			end
+			return DingTyp.find_by_name('Ding')
 		end
 	end
 end

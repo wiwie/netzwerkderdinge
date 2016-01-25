@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  ding_id: 
+  ding_typ_id: 
+  user_id: 
+
+two:
+  ding_id: 
+  ding_typ_id: 
+  user_id: 

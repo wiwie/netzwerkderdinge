@@ -11,7 +11,7 @@
 	<li>
 	    <ul class="list-inline">
 	        <li><%= link_to ding do %>
-	        	<%= fa_icon(ding.get_symbol) %> <%= ding.name %>
+	        	<%= fa_icon(ding.get_symbol(current_user)) %> <%= ding.name %>
 	        	<% end %></li>
 	        <li><span class="badge"><%= pop_ding["count"] %> <%= fa_icon(:link) %></span></li>
 	    </ul>
@@ -25,7 +25,7 @@
 	<li>
 	    <ul class="list-inline">
 	        <li><%= link_to ding do %>
-	        	<%= fa_icon(ding.get_symbol) %> <%= ding.name %>
+	        	<%= fa_icon(ding.get_symbol(current_user)) %> <%= ding.name %>
 	        	<% end %></li>
 	        <li><%= badge(ding.created_at.strftime("%Y-%m-%d")) %></li>
 	    </ul>
@@ -40,7 +40,7 @@
 	<li>
 	    <ul class="list-inline">
 	        <li><%= link_to ding do %>
-	        	<%= fa_icon(ding.get_symbol) %> <%= ding.name %>
+	        	<%= fa_icon(ding.get_symbol(current_user)) %> <%= ding.name %>
 	        	<% end %></li>
 	    </ul>
 	</li>

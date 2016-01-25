@@ -56,21 +56,32 @@ class DingsController < ApplicationController
 
 	def show
 		@ding = Ding.find(params[:id])
+		@has_ding_typ = @ding.ding_has_typs.where(:user => current_user).first
+		if not @has_ding_typ
+			@has_ding_typ = DingHasTyp.new(:ding => @ding, :user => current_user, :ding_typ => Ding.find_by_name('Ding'))
+		end
+		@ding_typ = @has_ding_typ.ding_typ
 
-		if @ding.ding_typ.name == 'URL'
+		if @ding_typ.name == 'URL'
 			begin
 				@page_preview = LinkThumbnailer.generate(@ding.name)
 			rescue
 			end
-		elsif @ding.ding_typ.name == 'Todo List' or @ding.ding_typ.name == 'Todo List Done'
-			@todos = @ding.assoziierte_dinge(current_user).select {|d| Ding.find(d[0]).ding_typ.name == 'Todo' or Ding.find(d[0]).ding_typ.name == 'Todo List' }
-			@done_todos = @ding.assoziierte_dinge(current_user).select {|d| Ding.find(d[0]).ding_typ.name == 'Todo Done' or Ding.find(d[0]).ding_typ.name == 'Todo List Done' }
+		elsif @ding_typ.name == 'Todo List' or @ding_typ.name == 'Todo List Done'
+			@todos = @ding.assoziierte_dinge(current_user).select {|d| Ding.find(d[0]).ding_typ(current_user).name == 'Todo' or Ding.find(d[0]).ding_typ(current_user).name == 'Todo List' }
+			@done_todos = @ding.assoziierte_dinge(current_user).select {|d| Ding.find(d[0]).ding_typ(current_user).name == 'Todo Done' or Ding.find(d[0]).ding_typ(current_user).name == 'Todo List Done' }
 	  		if @todos.count+@done_todos.count > 0
 				@perc_finished = (@done_todos.count.to_f/(@todos.count+@done_todos.count)*100).to_i
 			end
-			@sublistof = Assoziation.joins(:user_assoziations).joins(:ding_eins => :ding_typ).where(:ding_zwei => @ding).where('ding_typs.name = ? OR ding_typs.name = ?', 'Todo List', 'Todo List Done')
-		elsif @ding.ding_typ.name == 'Todo' or @ding.ding_typ.name == 'Todo Done'
-			@todoof = Assoziation.joins(:user_assoziations).joins(:ding_eins => :ding_typ).where(:ding_zwei => @ding).where('ding_typs.name = ? OR ding_typs.name = ?', 'Todo List', 'Todo List Done')
+			@sublistof = Assoziation.joins(:user_assoziations, 
+					:ding_eins => {:ding_has_typs => :ding_typ})
+				.where(:ding_zwei => @ding)
+				.where('ding_typs.name = ? OR ding_typs.name = ?', 'Todo List', 'Todo List Done')
+		elsif @ding_typ.name == 'Todo' or @ding_typ.name == 'Todo Done'
+			@todoof = Assoziation.joins(:user_assoziations,
+					:ding_eins => {:ding_has_typs => :ding_typ})
+				.where(:ding_zwei => @ding)
+				.where('ding_typs.name = ? OR ding_typs.name = ?', 'Todo List', 'Todo List Done')
 		end
 
 		if not @ding.published
@@ -92,7 +103,9 @@ class DingsController < ApplicationController
 	def create
 		@ding = Ding.new(params.require(:ding).permit(:name, :ding_typ_id))
 
+		# TODO
 		if not @ding.ding_typ
+			# TODO
 			@ding.ding_typ = DingTyp.find_by_name('Ding')
 		end
 

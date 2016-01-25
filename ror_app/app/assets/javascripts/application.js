@@ -25,7 +25,10 @@
 
 $(document).ready(function() {
 /* Activating Best In Place */
-jQuery(".best_in_place").best_in_place()
+  jQuery(".best_in_place").best_in_place();
+  $('.reload_on_success').bind("ajax:success", function(resp){
+        location.reload();
+      });
 });
 
 function create_asso_for_curr_user(asso_id) {

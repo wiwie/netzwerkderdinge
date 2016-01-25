@@ -1,31 +1,36 @@
 <div class="page-header">
   <h1>Ding</h1>
 </div>
-<% if @ding.ding_typ.name == 'Image' %>
+<% if @ding.ding_typ(current_user).name == 'Image' %>
 	<div class="jumbotron image-jumbotron" style="background-image: url('<%= @ding.name %>');">
 <% else %>
 	<div class="jumbotron assoz-jumbotron">
 <% end %>
   <div class="h1">
   	<% if not @ding.published %><i><% end %>
-  	<%= fa_icon(@ding.get_symbol) %>
-	<% if @ding.ding_typ.name != 'Ding' or @ding.has_translation(:name, params[:locale]) %>
+  	<%= fa_icon(@ding.get_symbol(current_user)) %>
+	<% if @ding.ding_typ(current_user).name != 'Ding' or @ding.has_translation(:name, params[:locale]) %>
 		<%= best_in_place @ding, :name, :as => :input %>
 	<% else %>
 		&lt;???&gt;
 	<% end %>
 	<% if not @ding.published %></i><% end %>
   </div>
-	<div class="h2">Typ ändern: 
-	<%= best_in_place @ding, :ding_typ_id, :as => :select, :collection => Hash[DingTyp.all.map {|x| [x.id, x.name]}] %>
+  <%#= form_for @has_ding_typ do |f| %>
+	<div class="h2">Typ: 
+		<%#= @ding.ding_typ(current_user).name %>
+		<%#= collection_select(:ding_has_typ, :ding_typ_id, DingTyp.all, :id, :name) %>
+		<%#= f.submit %>
+	<%= best_in_place @has_ding_typ, :ding_typ_id, :as => :select, :collection => Hash[DingTyp.all.map {|x| [x.id, x.name]}], :classes => 'reload_on_success' %>
 	</div>
+	<%# end %>
 	<% if @can_toggle_publish %>
 	<div class="h2">Öffentlich?:
 	<%= best_in_place @ding, :published, :as => :checkbox, :collection => [raw("<i class='fa fa-square-o'></i>"), raw("<i class='fa fa-check-square-o'></i>")] %>
 	</div>
 	<% end %>
 </div>
-<% if @ding.ding_typ.name == 'Ding' and not @ding.has_translation(:name, params[:locale]) %>
+<% if @ding.ding_typ(current_user).name == 'Ding' and not @ding.has_translation(:name, params[:locale]) %>
 	<%= I18n.t("dings.show.für_den_namen_dieses_dings_wurde_noch_keine_Übersetzung_für_deine_sprache_hinterlegt_bitte_nutze_das_textfeld_um_deine_Übersetzung_hinzuzufügen_es_folgen_ein_paar_Übersetzungen_in_anderen_sprachen") %>
 	<ul>
 		<% if @ding.name_de %><li>Deutsch: <%= @ding.name_de %></li><% end %>
@@ -58,7 +63,7 @@
 	<% end %>
 <% end %>
 
-<% if @ding.ding_typ.name == 'URL' %>
+<% if @ding.ding_typ(current_user).name == 'URL' %>
 	<% if @page_preview %>
 		<h2>URL Info</h2>
 		<div class="list-group">
@@ -80,17 +85,17 @@
 		  <% end %>
 		</div>
 	<% end %>
-<% elsif  @ding.ding_typ.name == 'Image' %>
+<% elsif  @ding.ding_typ(current_user).name == 'Image' %>
 	<h2>Eingebettetes Bild</h2>
 	<%= link_to @ding.name, {:class => 'fancybox'} do %>
 		<img src="<%= @ding.name %>" alt="<%= @ding.name %>" style="height:240px;">
 	<% end %>
-<% elsif  @ding.ding_typ.name == 'Video' %>
+<% elsif  @ding.ding_typ(current_user).name == 'Video' %>
 	<h2>Eingebettetes Video</h2>
 	<div class="embed-responsive embed-responsive-16by9">
 	  <iframe class="embed-responsive-item" src="<%= @ding.get_video_link %>" allowfullscreen></iframe>
 	</div>
-<% elsif  @ding.ding_typ.name == 'Quote' %>
+<% elsif  @ding.ding_typ(current_user).name == 'Quote' %>
 	<h2>Zitat</h2>
 	<blockquote>
 		<% quote = @ding.name.scan(/"([^"]*)"/)[0][0] %>
@@ -98,14 +103,14 @@
 		<p><%= quote %></p>
 		<footer><%= author %></footer>
 	</blockquote>
-<% elsif  @ding.ding_typ.name == 'Todo List' or @ding.ding_typ.name == 'Todo List Done' %>
+<% elsif  @ding.ding_typ(current_user).name == 'Todo List' or @ding.ding_typ(current_user).name == 'Todo List Done' %>
 	<h2>Diese Liste ist Teil der folgenden Todo Listen</h2>
 	<ul class="nav nav-list">
 		<% @sublistof.each do |ass| %>
 			<% ding = ass.ding_eins %>
 			<li>
 			    <ul class="list-inline">
-	        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol) %></span></li>
+	        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol(current_user)) %></span></li>
 	        		<li><%= link_to ding.name, ding %></li>
 			        <li>(<%= link_to ass do %><span style="vertical-align:middle"><%= fa_icon(:link) %></span><% end %>)</li>
 			        <li><%= badge(ass.user_assoziations.count.to_s + " mal", :warning) %></li>
@@ -130,14 +135,14 @@
 	    <% else %>
 	    	Diese Todo Liste hat keine Einträge.
 	    <% end %>
-<% elsif  @ding.ding_typ.name == 'Todo' or @ding.ding_typ.name == 'Todo Done' %>
+<% elsif  @ding.ding_typ(current_user).name == 'Todo' or @ding.ding_typ(current_user).name == 'Todo Done' %>
 	<h2>Dieses Todo ist Teil der folgenden Todo Listen</h2>
 	<ul class="nav nav-list">
 		<% @todoof.each do |ass| %>
 			<% ding = ass.ding_eins %>
 			<li>
 			    <ul class="list-inline">
-	        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol) %></span></li>
+	        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol(current_user)) %></span></li>
 	        		<li><%= link_to ding.name, ding %></li>
 			        <li>(<%= link_to ass do %><span style="vertical-align:middle"><%= fa_icon(:link) %></span><% end %>)</li>
 			        <li><%= badge(ass.user_assoziations.count.to_s + " mal", :warning) %></li>
@@ -167,7 +172,7 @@
 			<% ding = Ding.find(anderes_ding) %>
 			<li>
 			    <ul class="list-inline">
-	        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol) %></span></li>
+	        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol(current_user)) %></span></li>
 	        		<li>
 	        			<% if not ding.published %><i><% end %>
 	        			<%= link_to ding.name, ding %>

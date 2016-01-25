@@ -8,7 +8,7 @@
 <ul class="nav nav-list">
 	<% @favorits.each do |fav| %>
 		<li><%= link_to fav.ding do %>
-			<%= fa_icon(fav.ding.get_symbol) %> <%= fav.ding.name %>
+			<%= fa_icon(fav.ding.get_symbol(current_user)) %> <%= fav.ding.name %>
 			<% end %></li>
 	<% end %>
 </ul>

@@ -21,13 +21,13 @@
 <% @asses.each do |ass| %>
     <li><ul class="list-inline">
         <li><%= link_to ass.assoziation.ding_eins do %>
-          <%= fa_icon(ass.assoziation.ding_eins.get_symbol) %> <%= ass.assoziation.ding_eins.name %>
+          <%= fa_icon(ass.assoziation.ding_eins.get_symbol(current_user)) %> <%= ass.assoziation.ding_eins.name %>
           <% end %></li>
         <li><%= link_to ass do %>
             <%= fa_icon("long-arrow-right") %>
           <% end %></li>
         <li><%= link_to ass.assoziation.ding_zwei do%>
-          <%= fa_icon(ass.assoziation.ding_zwei.get_symbol) %> <%= ass.assoziation.ding_zwei.name %>
+          <%= fa_icon(ass.assoziation.ding_zwei.get_symbol(current_user)) %> <%= ass.assoziation.ding_zwei.name %>
           <% end %></li>
         <li><%= badge(ass.created_at.strftime("%Y-%m-%d"), :warning) %></li>
         <% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => ass.assoziation.id).count == 0 %>
@@ -53,13 +53,13 @@
     <% ding_zwei = ass.ding_zwei %>
     <li><ul class="list-inline">
         <li><%= link_to ding_eins do %>
-          <%= fa_icon(ding_eins.get_symbol) %> <%= ding_eins.name %>
+          <%= fa_icon(ding_eins.get_symbol(current_user)) %> <%= ding_eins.name %>
           <% end %></li>
         <li><%= link_to ass do %>
             <%= fa_icon("long-arrow-right") %>
           <% end %></li>
         <li><%= link_to ding_zwei do %>
-          <%= fa_icon(ding_zwei.get_symbol) %> <%= ding_zwei.name %>
+          <%= fa_icon(ding_zwei.get_symbol(current_user)) %> <%= ding_zwei.name %>
           <% end %></li>
         <li><%= badge(ass.created_at.strftime("%Y-%m-%d"), :warning) %></li>
         <li>
@@ -87,13 +87,13 @@
     <% ding_zwei = ass.ding_zwei %>
     <li><ul class="list-inline">
         <li><%= link_to ding_eins do %>
-          <%= fa_icon(ding_eins.get_symbol) %> <%= ding_eins.name %>
+          <%= fa_icon(ding_eins.get_symbol(current_user)) %> <%= ding_eins.name %>
           <% end %></li>
         <li><%= link_to ass do %>
             <%= fa_icon("long-arrow-right") %>
           <% end %></li>
         <li><%= link_to ding_zwei do %>
-          <%= fa_icon(ding_zwei.get_symbol) %>  <%= ding_zwei.name %>
+          <%= fa_icon(ding_zwei.get_symbol(current_user)) %>  <%= ding_zwei.name %>
           <% end %></li>
         <li><%= badge(ass.count.to_s + " mal", :warning) %></li>
         <li>
@@ -118,13 +118,13 @@
       <ul class="list-inline">
 
         <li><%= link_to ass.ding_eins do %>
-          <%= fa_icon(ass.ding_eins.get_symbol) %> <%= ass.ding_eins.name %>
+          <%= fa_icon(ass.ding_eins.get_symbol(current_user)) %> <%= ass.ding_eins.name %>
           <% end %></li>
         <li><%= link_to ass do %>
             <%= fa_icon("long-arrow-right") %>
           <% end %></li>
         <li><%= link_to ass.ding_zwei do%>
-          <%= fa_icon(ass.ding_zwei.get_symbol) %> <%= ass.ding_zwei.name %>
+          <%= fa_icon(ass.ding_zwei.get_symbol(current_user)) %> <%= ass.ding_zwei.name %>
           <% end %></li>
       </ul>
   </li>
