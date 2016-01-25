@@ -26,14 +26,13 @@ class DingsController < ApplicationController
 
 	def autocomplete_ding_name
 		term = params[:term]
-		query = 'SELECT dings.id,ding_translations.name FROM dings JOIN ding_translations
-			ON (dings.id=ding_translations.ding_id)
-			WHERE dings.published = "t"
-			AND ding_translations.locale = "' + params[:locale] + '" 
-			AND ding_translations.name LIKE "' + term + '%"
-			ORDER BY ding_translations.name'
-		puts query
-		dings = Ding.connection.select_all(query)
+
+		dings = Ding.with_translations
+			.joins(:assoziations => :user_assoziations)
+			.where("dings.published = 't' OR user_assoziations.user_id = ?", current_user.id)
+			.where('name LIKE ?', term + '%')
+			.order(:name).distinct
+
 		render :json => dings.map { |ding| {:id => ding["id"], :label => ding["name"], :value => ding["name"]} }
 	end
 
@@ -56,44 +55,51 @@ class DingsController < ApplicationController
 
 	def show
 		@ding = Ding.find(params[:id])
-		@has_ding_typ = @ding.ding_has_typs.where(:user => current_user).first
-		if not @has_ding_typ
-			@has_ding_typ = DingHasTyp.new(:ding => @ding, :user => current_user, :ding_typ => DingTyp.find_by_name('Ding'))
-		end
-		@ding_typ = @has_ding_typ.ding_typ
 
-		if @ding_typ.name == 'URL'
-			begin
-				@page_preview = LinkThumbnailer.generate(@ding.name)
-			rescue
+		# make sure, that the current user is allowed to show this ding;
+		# if it is non-published, the user needs to have at least one assoziation to it;
+		@users = UserAssoziation.where(:assoziation_id => Assoziation.where('ding_eins_id = ? OR ding_zwei_id = ?', @ding.id, @ding.id)).select(:user_id).distinct.collect {|x| x.user_id}
+		@can_access = @ding.published || (@users.include?(current_user.id))
+		
+		if @can_access
+			@has_ding_typ = @ding.ding_has_typs.where(:user => current_user).first
+			if not @has_ding_typ
+				@has_ding_typ = DingHasTyp.new(:ding => @ding, :user => current_user, :ding_typ => DingTyp.find_by_name('Ding'))
 			end
-		elsif @ding_typ.name == 'Todo List' or @ding_typ.name == 'Todo List Done'
-			@todos = @ding.assoziierte_dinge(current_user).select {|d| Ding.find(d[0]).ding_typ(current_user).name == 'Todo' or Ding.find(d[0]).ding_typ(current_user).name == 'Todo List' }
-			@done_todos = @ding.assoziierte_dinge(current_user).select {|d| Ding.find(d[0]).ding_typ(current_user).name == 'Todo Done' or Ding.find(d[0]).ding_typ(current_user).name == 'Todo List Done' }
-	  		if @todos.count+@done_todos.count > 0
-				@perc_finished = (@done_todos.count.to_f/(@todos.count+@done_todos.count)*100).to_i
+			@ding_typ = @has_ding_typ.ding_typ
+
+			if @ding_typ.name == 'URL'
+				begin
+					@page_preview = LinkThumbnailer.generate(@ding.name)
+				rescue
+				end
+			elsif @ding_typ.name == 'Todo List' or @ding_typ.name == 'Todo List Done'
+				@todos = @ding.assoziierte_dinge(current_user).select {|d| Ding.find(d[0]).ding_typ(current_user).name == 'Todo' or Ding.find(d[0]).ding_typ(current_user).name == 'Todo List' }
+				@done_todos = @ding.assoziierte_dinge(current_user).select {|d| Ding.find(d[0]).ding_typ(current_user).name == 'Todo Done' or Ding.find(d[0]).ding_typ(current_user).name == 'Todo List Done' }
+		  		if @todos.count+@done_todos.count > 0
+					@perc_finished = (@done_todos.count.to_f/(@todos.count+@done_todos.count)*100).to_i
+				end
+				@sublistof = Assoziation.joins(:user_assoziations, 
+						:ding_eins => {:ding_has_typs => :ding_typ})
+					.where(:ding_zwei => @ding)
+					.where('ding_typs.name = ? OR ding_typs.name = ?', 'Todo List', 'Todo List Done')
+			elsif @ding_typ.name == 'Todo' or @ding_typ.name == 'Todo Done'
+				@todoof = Assoziation.joins(:user_assoziations,
+						:ding_eins => {:ding_has_typs => :ding_typ})
+					.where(:ding_zwei => @ding)
+					.where('ding_typs.name = ? OR ding_typs.name = ?', 'Todo List', 'Todo List Done')
 			end
-			@sublistof = Assoziation.joins(:user_assoziations, 
-					:ding_eins => {:ding_has_typs => :ding_typ})
-				.where(:ding_zwei => @ding)
-				.where('ding_typs.name = ? OR ding_typs.name = ?', 'Todo List', 'Todo List Done')
-		elsif @ding_typ.name == 'Todo' or @ding_typ.name == 'Todo Done'
-			@todoof = Assoziation.joins(:user_assoziations,
-					:ding_eins => {:ding_has_typs => :ding_typ})
-				.where(:ding_zwei => @ding)
-				.where('ding_typs.name = ? OR ding_typs.name = ?', 'Todo List', 'Todo List Done')
+
+			if not @ding.published
+				@can_toggle_publish = true
+			else
+				@users = UserAssoziation.where(:assoziation_id => Assoziation.where('ding_eins_id = ? OR ding_zwei_id = ?', @ding.id, @ding.id)).select(:user_id).distinct.collect {|x| x.user_id}
+				@can_toggle_publish = (@users.count == 1 and @users.first == current_user.id)
+			end
+
+			#potential new assoziation
+			@assoziation = Assoziation.new
 		end
-
-		if not @ding.published
-			@can_toggle_publish = true
-		else
-			@users = UserAssoziation.where(:assoziation_id => Assoziation.where('ding_eins_id = ? OR ding_zwei_id = ?', @ding.id, @ding.id)).select(:user_id).distinct.collect {|x| x.user_id}
-
-			@can_toggle_publish = (@users.count == 1 and @users.first == current_user.id)
-		end
-
-		#potential new assoziation
-		@assoziation = Assoziation.new
 	end
 
 	def new

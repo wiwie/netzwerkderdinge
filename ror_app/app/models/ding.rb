@@ -60,11 +60,13 @@ class Ding < ActiveRecord::Base
 		return "cube"
 	end
 
-	def self.search(search)
+	def self.search(search, user)
 	  if search
-	    with_translations.where('name LIKE ?', "%#{search}%")
+	    with_translations.joins(:assoziations => :user_assoziations).where('name LIKE ?', "%#{search}%")
+	    	.where("dings.published = 't' OR user_assoziations.user_id = ?", user.id).distinct
 	  else
-	    with_translations
+	    with_translations.joins(:assoziations => :user_assoziations)
+	    	.where("dings.published = 't' OR user_assoziations.user_id = ?", user.id).distinct
 	  end
 	end
 

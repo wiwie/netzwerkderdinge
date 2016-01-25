@@ -1,289 +1,295 @@
 <div class="page-header">
-  <h1>Ding</h1>
+	<h1>Ding</h1>
 </div>
-<% if @ding.ding_typ(current_user).name == 'Image' %>
-	<div class="jumbotron image-jumbotron" style="background-image: url('<%= @ding.name %>');">
-<% else %>
-	<div class="jumbotron assoz-jumbotron">
-<% end %>
-  <div class="h1">
-  	<% if not @ding.published %><i><% end %>
-  	<%= fa_icon(@ding.get_symbol(current_user)) %>
-	<% if @ding.ding_typ(current_user).name != 'Ding' or @ding.has_translation(:name, params[:locale]) %>
-		<%= best_in_place @ding, :name, :as => :input %>
+<% if @can_access %>
+	<% if @ding.ding_typ(current_user).name == 'Image' %>
+		<div class="jumbotron image-jumbotron" style="background-image: url('<%= @ding.name %>');">
 	<% else %>
-		&lt;???&gt;
+		<div class="jumbotron assoz-jumbotron">
 	<% end %>
-	<% if not @ding.published %></i><% end %>
-  </div>
-  <%#= form_for @has_ding_typ do |f| %>
-	<div class="h2">Typ: 
-		<%#= @ding.ding_typ(current_user).name %>
-		<%#= collection_select(:ding_has_typ, :ding_typ_id, DingTyp.all, :id, :name) %>
-		<%#= f.submit %>
-	<%= best_in_place @has_ding_typ, :ding_typ_id, :as => :select, :collection => Hash[DingTyp.all.map {|x| [x.id, x.name]}], :classes => 'reload_on_success' %>
-	</div>
-	<%# end %>
-	<% if @can_toggle_publish %>
-	<div class="h2">Öffentlich?:
-	<%= best_in_place @ding, :published, :as => :checkbox, :collection => [raw("<i class='fa fa-square-o'></i>"), raw("<i class='fa fa-check-square-o'></i>")] %>
-	</div>
-	<% end %>
-</div>
-<% if @ding.ding_typ(current_user).name == 'Ding' and not @ding.has_translation(:name, params[:locale]) %>
-	<%= I18n.t("dings.show.für_den_namen_dieses_dings_wurde_noch_keine_Übersetzung_für_deine_sprache_hinterlegt_bitte_nutze_das_textfeld_um_deine_Übersetzung_hinzuzufügen_es_folgen_ein_paar_Übersetzungen_in_anderen_sprachen") %>
-	<ul>
-		<% if @ding.name_de %><li>Deutsch: <%= @ding.name_de %></li><% end %>
-		<% if @ding.name_en %><li>English: <%= @ding.name_en %></li><% end %>
-		<% if @ding.name_dk %><li>Dansk: <%= @ding.name_dk %></li><% end %>
-	</ul>
-	<%= form_for @ding, :url => ding_add_translation_path(@ding), :method => :post do |f| %>
-	  <%= hidden_field_tag :locale, params[:locale] %>
-	  <%= f.label I18n.t("dings.show.ding") %><br>
-	  <%= f.text_field :name, :value => '' %>
-	  <%= f.submit I18n.t("dings.show.value") => 'Add Translation' %>
-	<% end %>
-<% end %>
-
-<% if current_user.favorits.where(:ding_id => @ding.id).count == 0 %>
-<%= fa_icon('star-o') %> <%= link_to (url = '#'), :onclick => 'add_favorit_for_curr_user(' + current_user.id.to_s + ', ' + @ding.id.to_s + ');' do %>
-			            zu Favoriten <%= I18n.t("dings.show.hinzufügen") %>
-			          <% end %>
-<% else %>
-<%= fa_icon('star') %> <%= link_to (url = '#'), :onclick => 'remove_favorit_for_curr_user(' + current_user.id.to_s + ', ' + @ding.id.to_s + ');' do %>
-			            von Favoriten <%= I18n.t("dings.show.löschen") %>
-			          <% end %>
-<% end %>
-
-<% if @ding.name.start_with?('http') %>
-	<br>
-	<%= fa_icon("external-link") %>
-	<%= link_to @ding.name, target: "_blank" do %>
-		Open URL
-	<% end %>
-<% end %>
-
-<% if @ding.ding_typ(current_user).name == 'URL' %>
-	<% if @page_preview %>
-		<h2>URL Info</h2>
-		<div class="list-group">
-		  <a href="#" class="list-group-item">
-		    <h4 class="list-group-item-heading">Page Title</h4>
-		    <p class="list-group-item-text"><%= @page_preview.title %></p>
-		  </a>
-		  <a href="#" class="list-group-item">
-		    <h4 class="list-group-item-heading">Page Description</h4>
-		    <p class="list-group-item-text"><%= @page_preview.description %></p>
-		  </a>
-		  <% if @page_preview.images.count > 0 %>
-		  <a href="#" class="list-group-item">
-		    <h4 class="list-group-item-heading">Image</h4>
-		    <p class="list-group-item-text">
-		    	<%= image_tag @page_preview.images.first.src.to_s, :height => '128' %>
-		    </p>
-		  </a>
-		  <% end %>
-		</div>
-	<% end %>
-<% elsif  @ding.ding_typ(current_user).name == 'Image' %>
-	<h2>Eingebettetes Bild</h2>
-	<%= link_to @ding.name, {:class => 'fancybox'} do %>
-		<img src="<%= @ding.name %>" alt="<%= @ding.name %>" style="height:240px;">
-	<% end %>
-<% elsif  @ding.ding_typ(current_user).name == 'Video' %>
-	<h2>Eingebettetes Video</h2>
-	<div class="embed-responsive embed-responsive-16by9">
-	  <iframe class="embed-responsive-item" src="<%= @ding.get_video_link %>" allowfullscreen></iframe>
-	</div>
-<% elsif  @ding.ding_typ(current_user).name == 'Quote' %>
-	<h2>Zitat</h2>
-	<blockquote>
-		<% quote = @ding.name.scan(/"([^"]*)"/)[0][0] %>
-		<% author = @ding.name.rpartition(',').last %>
-		<p><%= quote %></p>
-		<footer><%= author %></footer>
-	</blockquote>
-<% elsif  @ding.ding_typ(current_user).name == 'Todo List' or @ding.ding_typ(current_user).name == 'Todo List Done' %>
-	<h2>Diese Liste ist Teil der folgenden Todo Listen</h2>
-	<ul class="nav nav-list">
-		<% @sublistof.each do |ass| %>
-			<% ding = ass.ding_eins %>
-			<li>
-			    <ul class="list-inline">
-	        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol(current_user)) %></span></li>
-	        		<li><%= link_to ding.name, ding %></li>
-			        <li>(<%= link_to ass do %><span style="vertical-align:middle"><%= fa_icon(:link) %></span><% end %>)</li>
-			        <li><%= badge(ass.user_assoziations.count.to_s + " mal", :warning) %></li>
-			        <% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => ass.id).count == 0 %>
-			        <li>
-			          <%= link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + ass.id.to_s + ');' do %>
-			            <%= fa_icon(:plus) %>
-			          <% end %>
-			        </li>
-			        <% end %>
-			    </ul>
-			</li>
+	  <div class="h1">
+	  	<% if not @ding.published %><i><% end %>
+	  	<%= fa_icon(@ding.get_symbol(current_user)) %>
+		<% if @ding.ding_typ(current_user).name != 'Ding' or @ding.has_translation(:name, params[:locale]) %>
+			<%= best_in_place @ding, :name, :as => :input %>
+		<% else %>
+			&lt;???&gt;
 		<% end %>
-	</ul>
-	<h2>Todo Liste Fortschritt</h2>
-	  	<% if @todos.count+@done_todos.count > 0 %>
-	<div class="progress">
-	  <div class="progress-bar" role="progressbar" aria-valuenow="<%= @perc_finished %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= @perc_finished %>%;">
-	    <%= @perc_finished %>% (<%= @done_todos.count %>/<%= @todos.count+@done_todos.count %>)
+		<% if not @ding.published %></i><% end %>
 	  </div>
-	</div>
-	    <% else %>
-	    	Diese Todo Liste hat keine Einträge.
-	    <% end %>
-<% elsif  @ding.ding_typ(current_user).name == 'Todo' or @ding.ding_typ(current_user).name == 'Todo Done' %>
-	<h2>Dieses Todo ist Teil der folgenden Todo Listen</h2>
-	<ul class="nav nav-list">
-		<% @todoof.each do |ass| %>
-			<% ding = ass.ding_eins %>
-			<li>
-			    <ul class="list-inline">
-	        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol(current_user)) %></span></li>
-	        		<li><%= link_to ding.name, ding %></li>
-			        <li>(<%= link_to ass do %><span style="vertical-align:middle"><%= fa_icon(:link) %></span><% end %>)</li>
-			        <li><%= badge(ass.user_assoziations.count.to_s + " mal", :warning) %></li>
-			        <% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => ass.id).count == 0 %>
-			        <li>
-			          <%= link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + ass.id.to_s + ');' do %>
-			            <%= fa_icon(:plus) %>
-			          <% end %>
-			        </li>
-			        <% end %>
-			    </ul>
-			</li>
+	  <%#= form_for @has_ding_typ do |f| %>
+		<div class="h2">Typ: 
+			<%#= @ding.ding_typ(current_user).name %>
+			<%#= collection_select(:ding_has_typ, :ding_typ_id, DingTyp.all, :id, :name) %>
+			<%#= f.submit %>
+		<%= best_in_place @has_ding_typ, :ding_typ_id, :as => :select, :collection => Hash[DingTyp.all.map {|x| [x.id, x.name]}], :classes => 'reload_on_success' %>
+		</div>
+		<%# end %>
+		<% if @can_toggle_publish %>
+		<div class="h2">Öffentlich?:
+		<%= best_in_place @ding, :published, :as => :checkbox, :collection => [raw("<i class='fa fa-square-o'></i>"), raw("<i class='fa fa-check-square-o'></i>")] %>
+		</div>
 		<% end %>
-	</ul>
-<% end %>
+	</div>
+	<% if @ding.ding_typ(current_user).name == 'Ding' and not @ding.has_translation(:name, params[:locale]) %>
+		<%= I18n.t("dings.show.für_den_namen_dieses_dings_wurde_noch_keine_Übersetzung_für_deine_sprache_hinterlegt_bitte_nutze_das_textfeld_um_deine_Übersetzung_hinzuzufügen_es_folgen_ein_paar_Übersetzungen_in_anderen_sprachen") %>
+		<ul>
+			<% if @ding.name_de %><li>Deutsch: <%= @ding.name_de %></li><% end %>
+			<% if @ding.name_en %><li>English: <%= @ding.name_en %></li><% end %>
+			<% if @ding.name_dk %><li>Dansk: <%= @ding.name_dk %></li><% end %>
+		</ul>
+		<%= form_for @ding, :url => ding_add_translation_path(@ding), :method => :post do |f| %>
+		  <%= hidden_field_tag :locale, params[:locale] %>
+		  <%= f.label I18n.t("dings.show.ding") %><br>
+		  <%= f.text_field :name, :value => '' %>
+		  <%= f.submit I18n.t("dings.show.value") => 'Add Translation' %>
+		<% end %>
+	<% end %>
 
-<h2><%= I18n.t("dings.show.beschreibung") %></h2>
-<% if not @ding.description.nil? %>
-<%= @ding.description %>
-<% else %>
-<%= I18n.t("dings.show.bislang_keine_beschreibung_vorhanden") %>
-<% end %>
+	<% if current_user.favorits.where(:ding_id => @ding.id).count == 0 %>
+	<%= fa_icon('star-o') %> <%= link_to (url = '#'), :onclick => 'add_favorit_for_curr_user(' + current_user.id.to_s + ', ' + @ding.id.to_s + ');' do %>
+				            zu Favoriten <%= I18n.t("dings.show.hinzufügen") %>
+				          <% end %>
+	<% else %>
+	<%= fa_icon('star') %> <%= link_to (url = '#'), :onclick => 'remove_favorit_for_curr_user(' + current_user.id.to_s + ', ' + @ding.id.to_s + ');' do %>
+				            von Favoriten <%= I18n.t("dings.show.löschen") %>
+				          <% end %>
+	<% end %>
 
-<h2><%= I18n.t("dings.show.dieses_ding_wurde_mit_den_folgenden_dingen_assoziiert") %></h2>
-	<ul class="nav nav-list">
+	<% if @ding.name.start_with?('http') %>
+		<br>
+		<%= fa_icon("external-link") %>
+		<%= link_to @ding.name, target: "_blank" do %>
+			Open URL
+		<% end %>
+	<% end %>
+
+	<% if @ding.ding_typ(current_user).name == 'URL' %>
+		<% if @page_preview %>
+			<h2>URL Info</h2>
+			<div class="list-group">
+			  <a href="#" class="list-group-item">
+			    <h4 class="list-group-item-heading">Page Title</h4>
+			    <p class="list-group-item-text"><%= @page_preview.title %></p>
+			  </a>
+			  <a href="#" class="list-group-item">
+			    <h4 class="list-group-item-heading">Page Description</h4>
+			    <p class="list-group-item-text"><%= @page_preview.description %></p>
+			  </a>
+			  <% if @page_preview.images.count > 0 %>
+			  <a href="#" class="list-group-item">
+			    <h4 class="list-group-item-heading">Image</h4>
+			    <p class="list-group-item-text">
+			    	<%= image_tag @page_preview.images.first.src.to_s, :height => '128' %>
+			    </p>
+			  </a>
+			  <% end %>
+			</div>
+		<% end %>
+	<% elsif  @ding.ding_typ(current_user).name == 'Image' %>
+		<h2>Eingebettetes Bild</h2>
+		<%= link_to @ding.name, {:class => 'fancybox'} do %>
+			<img src="<%= @ding.name %>" alt="<%= @ding.name %>" style="height:240px;">
+		<% end %>
+	<% elsif  @ding.ding_typ(current_user).name == 'Video' %>
+		<h2>Eingebettetes Video</h2>
+		<div class="embed-responsive embed-responsive-16by9">
+		  <iframe class="embed-responsive-item" src="<%= @ding.get_video_link %>" allowfullscreen></iframe>
+		</div>
+	<% elsif  @ding.ding_typ(current_user).name == 'Quote' %>
+		<h2>Zitat</h2>
+		<blockquote>
+			<% quote = @ding.name.scan(/"([^"]*)"/)[0][0] %>
+			<% author = @ding.name.rpartition(',').last %>
+			<p><%= quote %></p>
+			<footer><%= author %></footer>
+		</blockquote>
+	<% elsif  @ding.ding_typ(current_user).name == 'Todo List' or @ding.ding_typ(current_user).name == 'Todo List Done' %>
+		<h2>Diese Liste ist Teil der folgenden Todo Listen</h2>
+		<ul class="nav nav-list">
+			<% @sublistof.each do |ass| %>
+				<% ding = ass.ding_eins %>
+				<li>
+				    <ul class="list-inline">
+		        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol(current_user)) %></span></li>
+		        		<li><%= link_to ding.name, ding %></li>
+				        <li>(<%= link_to ass do %><span style="vertical-align:middle"><%= fa_icon(:link) %></span><% end %>)</li>
+				        <li><%= badge(ass.user_assoziations.count.to_s + " mal", :warning) %></li>
+				        <% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => ass.id).count == 0 %>
+				        <li>
+				          <%= link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + ass.id.to_s + ');' do %>
+				            <%= fa_icon(:plus) %>
+				          <% end %>
+				        </li>
+				        <% end %>
+				    </ul>
+				</li>
+			<% end %>
+		</ul>
+		<h2>Todo Liste Fortschritt</h2>
+		  	<% if @todos.count+@done_todos.count > 0 %>
+		<div class="progress">
+		  <div class="progress-bar" role="progressbar" aria-valuenow="<%= @perc_finished %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= @perc_finished %>%;">
+		    <%= @perc_finished %>% (<%= @done_todos.count %>/<%= @todos.count+@done_todos.count %>)
+		  </div>
+		</div>
+		    <% else %>
+		    	Diese Todo Liste hat keine Einträge.
+		    <% end %>
+	<% elsif  @ding.ding_typ(current_user).name == 'Todo' or @ding.ding_typ(current_user).name == 'Todo Done' %>
+		<h2>Dieses Todo ist Teil der folgenden Todo Listen</h2>
+		<ul class="nav nav-list">
+			<% @todoof.each do |ass| %>
+				<% ding = ass.ding_eins %>
+				<li>
+				    <ul class="list-inline">
+		        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol(current_user)) %></span></li>
+		        		<li><%= link_to ding.name, ding %></li>
+				        <li>(<%= link_to ass do %><span style="vertical-align:middle"><%= fa_icon(:link) %></span><% end %>)</li>
+				        <li><%= badge(ass.user_assoziations.count.to_s + " mal", :warning) %></li>
+				        <% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => ass.id).count == 0 %>
+				        <li>
+				          <%= link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + ass.id.to_s + ');' do %>
+				            <%= fa_icon(:plus) %>
+				          <% end %>
+				        </li>
+				        <% end %>
+				    </ul>
+				</li>
+			<% end %>
+		</ul>
+	<% end %>
+
+	<h2><%= I18n.t("dings.show.beschreibung") %></h2>
+	<% if not @ding.description.nil? %>
+	<%= @ding.description %>
+	<% else %>
+	<%= I18n.t("dings.show.bislang_keine_beschreibung_vorhanden") %>
+	<% end %>
+
+	<h2><%= I18n.t("dings.show.dieses_ding_wurde_mit_den_folgenden_dingen_assoziiert") %></h2>
+		<ul class="nav nav-list">
+			<% @ding.assoziierte_dinge(current_user).each do |anderes_ding, ass| %>
+				<% ding = Ding.find(anderes_ding) %>
+				<li>
+				    <ul class="list-inline">
+		        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol(current_user)) %></span></li>
+		        		<li>
+		        			<% if not ding.published %><i><% end %>
+		        			<%= link_to ding.name, ding %>
+		        			<% if not ding.published %></i><% end %>
+		        		</li>
+				        <li>(<%= link_to ass do %><span style="vertical-align:middle"><%= fa_icon(:link) %></span><% end %>)</li>
+				        <li><%= badge(ass.user_assoziations.count.to_s + " mal", :warning) %></li>
+				        <% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => ass.id).count == 0 %>
+				        <li>
+				          <%= link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + ass.id.to_s + ');' do %>
+				            <%= fa_icon(:plus) %>
+				          <% end %>
+				        </li>
+				        <% end %>
+				    </ul>
+				</li>
+			<% end %>
+		</ul>
+
+
+	<h2><%= I18n.t("dings.show.womit_assoziierst_du_dieses_ding") %></h2>
+	<%= form_for @assoziation, :url => new_assoziation_path(), :method => :get do |f| %>
+	  <%= f.label I18n.t("dings.show.ding") %><br>
+	  <%= hidden_field_tag :ding_eins_id, @ding.id %>
+	  <%= f.autocomplete_field :ding_zwei_id, autocomplete_ding_name_dings_path, :id_element => '#selected_ding_zwei_id' %>
+	  <%= f.label "Publish?" %>
+	  <%= check_box :user_assoziation, :published, {:checked => true} %>
+	  <%= f.label "Assoziiere in beide Richtungen?" %>
+	  <%= check_box :assoziation, :symmetric, {:checked => true} %>
+	  <%= hidden_field_tag :selected_ding_zwei_id %><br>
+	  <%= f.submit %>
+	<% end %>
+
+
+	<h2>Nachbarschafts-Graph</h2>
+	<style type="text/css">
+		svg {
+			width: 90%;
+			height: 500px;
+		}
+
+		#graph {
+			width: 90%;
+			height: 500px;
+			background-color: #f7f9f9;
+		}
+	</style>
+	<div id="graph"></div>
+	<script type="text/javascript">
+		var graph = Viva.Graph.graph();
+		var data = {label: '<%= @ding.name %>', size: <%= @ding.assoziierte_dinge(current_user).count %>, url: '<%= url_for(controller: :dings, action: :show, id: @ding.id, only_path: false) %>'};
+		graph.addNode(0, data);
+
+		<% i = 1 %>
 		<% @ding.assoziierte_dinge(current_user).each do |anderes_ding, ass| %>
 			<% ding = Ding.find(anderes_ding) %>
-			<li>
-			    <ul class="list-inline">
-	        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol(current_user)) %></span></li>
-	        		<li>
-	        			<% if not ding.published %><i><% end %>
-	        			<%= link_to ding.name, ding %>
-	        			<% if not ding.published %></i><% end %>
-	        		</li>
-			        <li>(<%= link_to ass do %><span style="vertical-align:middle"><%= fa_icon(:link) %></span><% end %>)</li>
-			        <li><%= badge(ass.user_assoziations.count.to_s + " mal", :warning) %></li>
-			        <% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => ass.id).count == 0 %>
-			        <li>
-			          <%= link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + ass.id.to_s + ');' do %>
-			            <%= fa_icon(:plus) %>
-			          <% end %>
-			        </li>
-			        <% end %>
-			    </ul>
-			</li>
+			<% if ass.user_assoziations.count > 0 %>
+				data = {label: '<%= ding.name %>', size: <%= ding.assoziierte_dinge(current_user).count %>, url: '<%= url_for(controller: :dings, action: :show, id: ding.id, only_path: false) %>'};
+				graph.addNode(<%= i %>, data);
+				graph.addLink(0, <%= i %>);
+		    <% end %>
+		    <% i = i + 1 %>
 		<% end %>
-	</ul>
 
+		var graphics = Viva.Graph.View.svgGraphics();
+		graphics.node(function(node) {
+			console.log(node);
+	       // The function is called every time renderer needs a ui to display node
+	       var link = Viva.Graph.svg('a')
+	             .link(node.data.url);
+	       var circle = Viva.Graph.svg('circle')
+	             .attr('r', 5+Math.log(node.data.size))
+	             .attr('fill', '#428bca')
+	             .attr('stroke', '#FFFFFF')
+	             .attr('stroke-width', '2px');
+	       link.append(circle);
+	             
+			var text = Viva.Graph.svg('text')
+				.attr('style', 'fill: #000000;')
+				.attr('opacity','1')
+			    .text(node.data.label);
+			var ui = Viva.Graph.svg("g");
+			ui.append(link);
+			//ui.append(circle);
+			ui.append(text);
+			return ui;
+	    })
+	    .placeNode(function(nodeUI, pos){
+	        // Shift image to let links go to the center:
+			var circle = nodeUI.childNodes[0].childNodes[0];
+			var radius = Number(circle.attr('r'));
+			var text = nodeUI.childNodes[1];
 
-<h2><%= I18n.t("dings.show.womit_assoziierst_du_dieses_ding") %></h2>
-<%= form_for @assoziation, :url => new_assoziation_path(), :method => :get do |f| %>
-  <%= f.label I18n.t("dings.show.ding") %><br>
-  <%= hidden_field_tag :ding_eins_id, @ding.id %>
-  <%= f.autocomplete_field :ding_zwei_id, autocomplete_ding_name_dings_path, :id_element => '#selected_ding_zwei_id' %>
-  <%= f.label "Publish?" %>
-  <%= check_box :user_assoziation, :published, {:checked => true} %>
-  <%= f.label "Assoziiere in beide Richtungen?" %>
-  <%= check_box :assoziation, :symmetric, {:checked => true} %>
-  <%= hidden_field_tag :selected_ding_zwei_id %><br>
-  <%= f.submit %>
+			circle.attr('cx', pos.x).attr('cy', pos.y);
+			text.attr('x', pos.x + radius + 5).attr('y', pos.y);
+	    });
+
+						
+		layout = Viva.Graph.Layout.forceDirected(graph, {
+		    springLength : 10,
+		    springCoeff : 0.00005,
+		    dragCoeff : 0.02,
+		    gravity : -5,
+		    stableThreshold: graph.getNodesCount()
+		});
+
+		var renderer = Viva.Graph.View.renderer(graph, {
+			layout: layout,
+			graphics: graphics,
+			interactive: 'node drag',
+			container: document.getElementById('graph')
+		});
+		renderer.run();
+	</script>
+<% else %>
+	<div class="alert alert-warning" role="alert">
+	  Du hast keinen Zugriff auf dieses Ding.
+	</div>
 <% end %>
-
-
-<h2>Nachbarschafts-Graph</h2>
-<style type="text/css">
-	svg {
-		width: 90%;
-		height: 500px;
-	}
-
-	#graph {
-		width: 90%;
-		height: 500px;
-		background-color: #f7f9f9;
-	}
-</style>
-<div id="graph"></div>
-<script type="text/javascript">
-	var graph = Viva.Graph.graph();
-	var data = {label: '<%= @ding.name %>', size: <%= @ding.assoziierte_dinge(current_user).count %>, url: '<%= url_for(controller: :dings, action: :show, id: @ding.id, only_path: false) %>'};
-	graph.addNode(0, data);
-
-	<% i = 1 %>
-	<% @ding.assoziierte_dinge(current_user).each do |anderes_ding, ass| %>
-		<% ding = Ding.find(anderes_ding) %>
-		<% if ass.user_assoziations.count > 0 %>
-			data = {label: '<%= ding.name %>', size: <%= ding.assoziierte_dinge(current_user).count %>, url: '<%= url_for(controller: :dings, action: :show, id: ding.id, only_path: false) %>'};
-			graph.addNode(<%= i %>, data);
-			graph.addLink(0, <%= i %>);
-	    <% end %>
-	    <% i = i + 1 %>
-	<% end %>
-
-	var graphics = Viva.Graph.View.svgGraphics();
-	graphics.node(function(node) {
-		console.log(node);
-       // The function is called every time renderer needs a ui to display node
-       var link = Viva.Graph.svg('a')
-             .link(node.data.url);
-       var circle = Viva.Graph.svg('circle')
-             .attr('r', 5+Math.log(node.data.size))
-             .attr('fill', '#428bca')
-             .attr('stroke', '#FFFFFF')
-             .attr('stroke-width', '2px');
-       link.append(circle);
-             
-		var text = Viva.Graph.svg('text')
-			.attr('style', 'fill: #000000;')
-			.attr('opacity','1')
-		    .text(node.data.label);
-		var ui = Viva.Graph.svg("g");
-		ui.append(link);
-		//ui.append(circle);
-		ui.append(text);
-		return ui;
-    })
-    .placeNode(function(nodeUI, pos){
-        // Shift image to let links go to the center:
-		var circle = nodeUI.childNodes[0].childNodes[0];
-		var radius = Number(circle.attr('r'));
-		var text = nodeUI.childNodes[1];
-
-		circle.attr('cx', pos.x).attr('cy', pos.y);
-		text.attr('x', pos.x + radius + 5).attr('y', pos.y);
-    });
-
-					
-	layout = Viva.Graph.Layout.forceDirected(graph, {
-	    springLength : 10,
-	    springCoeff : 0.00005,
-	    dragCoeff : 0.02,
-	    gravity : -5,
-	    stableThreshold: graph.getNodesCount()
-	});
-
-	var renderer = Viva.Graph.View.renderer(graph, {
-		layout: layout,
-		graphics: graphics,
-		interactive: 'node drag',
-		container: document.getElementById('graph')
-	});
-	renderer.run();
-</script>
