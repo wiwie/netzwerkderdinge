@@ -8,7 +8,6 @@ class DingHasTypsController < ApplicationController
 	  respond_to do |format|
 		if params[:ding_has_typ].has_key?(:ding_typ_id)
 	  	  if @ding_has_typ.update_attribute(:ding_typ_id, params[:ding_has_typ][:ding_typ_id].to_i)
-		    @ding.save
 		    format.html { redirect_to(@ding, :notice => 'User was successfully updated.') }
 		    format.json { respond_with_bip(@ding_has_typ) }
 		  end
