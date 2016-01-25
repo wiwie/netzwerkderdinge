@@ -58,7 +58,7 @@ class DingsController < ApplicationController
 		@ding = Ding.find(params[:id])
 		@has_ding_typ = @ding.ding_has_typs.where(:user => current_user).first
 		if not @has_ding_typ
-			@has_ding_typ = DingHasTyp.new(:ding => @ding, :user => current_user, :ding_typ => Ding.find_by_name('Ding'))
+			@has_ding_typ = DingHasTyp.new(:ding => @ding, :user => current_user, :ding_typ => DingTyp.find_by_name('Ding'))
 		end
 		@ding_typ = @has_ding_typ.ding_typ
 

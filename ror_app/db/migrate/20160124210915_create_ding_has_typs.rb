@@ -9,7 +9,7 @@ class CreateDingHasTyps < ActiveRecord::Migration
     end
     add_index :ding_has_typs, [:ding_id, :ding_typ_id, :user_id], :unique => true, :name => :ding_has_typs_index
     Ding.all.each do |ding|
-    	DingHasTyp.create(ding: ding, ding_typ: ding.ding_typ, user: User.find(1))
+    	DingHasTyp.create(ding_id: ding.id, ding_typ_id: ding.read_attribute(:ding_typ_id), user_id: User.find(1).id)
     end
   end
 
