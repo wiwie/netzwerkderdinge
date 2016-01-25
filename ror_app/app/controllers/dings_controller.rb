@@ -62,10 +62,10 @@ class DingsController < ApplicationController
 		@can_access = @ding.published || (@users.include?(current_user.id))
 		
 		if @can_access
-			@has_ding_typ = @ding.ding_has_typs.where(:user => current_user).first_or_create
-			#if not @has_ding_typ
-			#	@has_ding_typ = DingHasTyp.new(:ding => @ding, :user => current_user, :ding_typ => DingTyp.find_by_name('Ding'))
-			#end
+			@has_ding_typ = @ding.ding_has_typs.where(:user => current_user).first
+			if not @has_ding_typ
+				@has_ding_typ = DingHasTyp.create(:ding => @ding, :user => current_user, :ding_typ => DingTyp.find_by_name('Ding'))
+			end
 			@ding_typ = @has_ding_typ.ding_typ
 
 			if @ding_typ.name == 'URL'
