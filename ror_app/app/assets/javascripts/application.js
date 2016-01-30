@@ -116,10 +116,10 @@ function renderGraph(graph, containerId) {
 
             
     layout = Viva.Graph.Layout.forceDirected(graph, {
-        springLength : 10,
-        springCoeff : 0.00005,
+        springLength : 5,
+        springCoeff : 0.0005,
         dragCoeff : 0.02,
-        gravity : -5,
+        gravity : -4,
         stableThreshold: graph.getNodesCount()
     });
 
