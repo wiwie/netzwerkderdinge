@@ -1,27 +1,11 @@
 <h2>Deine Assoziationen <small>neueste zuerst</small></h2>
 
-<ul class="nav nav-list">
+<ul class="list-unstyled list-assoziation">
 <% @all_asses.each do |userass| %>
   <% ass = userass.assoziation %>
-  <li>
-      <ul class="list-inline">
-
-        <li><%= link_to ass.ding_eins do %>
-          <%= fa_icon(ass.ding_eins.get_symbol(current_user)) %> <%= ass.ding_eins.name %>
-          <% end %></li>
-        <li><%= link_to userass do %>
-            <%= fa_icon(:link) %>
-          <% end %></li>
-        <li><%= link_to ass.ding_zwei do%>
-          <%= fa_icon(ass.ding_zwei.get_symbol(current_user)) %> <%= ass.ding_zwei.name %>
-          <% end %></li>
-        <li><%= badge(ass.created_at.strftime("%Y-%m-%d"), :warning) %></li>
-        <li>
-          <%= link_to (url = '#'), :onclick => 'remove_asso_for_curr_user(' + ass.id.to_s + ');' do %>
-            <%= fa_icon(:minus) %>
-          <% end %>
-        </li>
-      </ul>
+  <li><%= assoziation_to_html(ass, {
+    badge_text: ass.created_at.strftime("%Y-%m-%d"),
+    button_classes: nil}) %>
   </li>
 <% end %>
 </ul>

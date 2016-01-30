@@ -3,45 +3,25 @@
 </div>
 
 <h2><%= I18n.t("dings.index.meist_assoziierte_dinge") %></h2>
-<ul class="nav nav-list">
+<ul class="list-unstyled list-ding">
 <% @pop_dings.each do |pop_ding| %>
 	<% ding = Ding.find(pop_ding["ding_id"]) %>
-	<li>
-	    <ul class="list-inline">
-	        <li><%= link_to ding do %>
-	        	<%= fa_icon(ding.get_symbol(current_user)) %> <%= ding.name %>
-	        	<% end %></li>
-	        <li><span class="badge"><%= pop_ding["count"] %> <%= fa_icon(:link) %></span></li>
-	    </ul>
-	</li>
+	<li><%= ding_to_html(ding, {:badge_text => pop_ding["count"].to_s, :badge_icon => :link}) %></li>
 <% end %>
 </ul>
 
 <h2><%= I18n.t("dings.index.neueste_dinge") %></h2>
-<ul class="nav nav-list">
+<ul class="list-unstyled list-ding">
 <% @newest_dings.each do |ding| %>
-	<li>
-	    <ul class="list-inline">
-	        <li><%= link_to ding do %>
-	        	<%= fa_icon(ding.get_symbol(current_user)) %> <%= ding.name %>
-	        	<% end %></li>
-	        <li><%= badge(ding.created_at.strftime("%Y-%m-%d")) %></li>
-	    </ul>
-	</li>
+	<li><%= ding_to_html(ding, {:badge_text => ding.created_at.strftime("%Y-%m-%d")}) %></li>
 <% end %>
 </ul>
 
 <a name="all"></a>
 <h2>Stöbern</h2>
-<ul class="nav nav-list">
+<ul class="list-unstyled list-ding">
 <% @all_dings.each do |ding| %>
-	<li>
-	    <ul class="list-inline">
-	        <li><%= link_to ding do %>
-	        	<%= fa_icon(ding.get_symbol(current_user)) %> <%= ding.name %>
-	        	<% end %></li>
-	    </ul>
-	</li>
+	<li><%= ding_to_html(ding) %></li>
 <% end %>
 </ul>
 <%= will_paginate @all_dings, {:params => {anchor: 'all'}} %>

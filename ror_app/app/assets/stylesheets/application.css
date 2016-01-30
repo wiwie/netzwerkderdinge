@@ -20,13 +20,13 @@
 @import 'base/epiceditor'; 
 
 .welcome-jumbotron {
-	background-image: url("/assets/netding_banner.png");
-    background-size: cover;
+	/*background-image: url("/assets/netding_banner.png");
+    background-size: cover;*/
 }
 
 .assoz-jumbotron {
-	background-image: url("/assets/netding_assoz.png");
-    background-size: cover;
+	/*background-image: url("/assets/netding_assoz.png");
+    background-size: cover;*/
 }
 
 .image-jumbotron {
@@ -36,4 +36,36 @@
 .image-jumbotron {
 	color: #fff;
 	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.btn-ding {
+	padding: 0px 0px;
+}
+
+.btn-ding > .list-inline {
+	margin-left: 0px;
+}
+
+.list-ding > li {
+	padding-bottom: 3px;
+}
+
+.btn-assoziation {
+	padding: 3px 5px;
+}
+
+
+
+.btn-assoziation > .list-inline > li {
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+.list-assoziation > li {
+	padding-bottom: 3px;
+}
+
+.list-assoziation > li > a > .list-inline > li {
+	padding-left: 2px;
+	padding-right: 2px;
 }

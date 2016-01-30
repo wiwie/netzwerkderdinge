@@ -2215,7 +2215,7 @@ select[multiple].input-lg {
     font-size: 13px;
   }
 }
-.btn {
+/*.btn {
   display: inline-block;
   margin-bottom: 0;
   font-weight: normal;
@@ -2271,8 +2271,8 @@ fieldset[disabled] .btn {
 a.btn.disabled,
 fieldset[disabled] a.btn {
   pointer-events: none;
-}
-.btn-default {
+}*/
+/*.btn-default {
   color: #ffffff;
   background-color: #222222;
   border-color: #222222;
@@ -2646,7 +2646,7 @@ fieldset[disabled] .btn-link:hover,
 fieldset[disabled] .btn-link:focus {
   color: #999999;
   text-decoration: none;
-}
+}*/
 .btn-lg,
 .btn-group-lg > .btn {
   padding: 18px 30px;

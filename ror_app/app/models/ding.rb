@@ -14,25 +14,12 @@ class Ding < ActiveRecord::Base
 	end
 
 	def assoziierte_dinge(user)
-		#puts self.assoziations.joins(:user_assoziations).where(
-		#	'user_assoziations.published = ? OR user_assoziations.user_id = ?', true, user.id)
-
 		hash = Hash[*Assoziation.joins(:user_assoziations).where(
 			:ding_eins_id => self.id).where(
 			'user_assoziations.published = ? OR user_assoziations.user_id = ?', true, user.id).map{ 
 				|ass| [ass.ding_zwei_id, ass] }.flatten].sort_by {|x| [-x[1].user_assoziations.count, Ding.find(x[0]).name.nil? ? '' : Ding.find(x[0]).name.downcase] }
 		puts hash
 		return hash
-
-
-		#asses1 = Hash[*Assoziation.joins(:user_assoziations).where(
-		#	:ding_eins_id => self.id).where('user_assoziations.published = ? OR user_assoziations.user_id = ?', true, user.id).map{ |ass| [ass.ding_zwei_id, ass] }.flatten]
-		#asses2 = Hash[*Assoziation.joins(:user_assoziations).where(
-		#	:ding_zwei_id => self.id).where('user_assoziations.published = ? OR user_assoziations.user_id = ?', true, user.id).map{ |ass| [ass.ding_eins_id, ass] }.flatten]
-		#merged = asses1.merge(asses2) {
-		#	|key, val1, val2| val1 + val2
-		#	}
-		#return merged.sort_by {|x| [-x[1].user_assoziations.count, Ding.find(x[0]).name.nil? ? '' : Ding.find(x[0]).name.downcase] }
 	end
 
 	def get_symbol(user)

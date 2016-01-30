@@ -1,11 +1,11 @@
-<div class="page-header">
+<!--<div class="page-header">
 	<h1>Ding</h1>
-</div>
+</div>-->
 <% if @can_access %>
 	<% if @ding.ding_typ(current_user).name == 'Image' %>
-		<div class="jumbotron image-jumbotron" style="background-image: url('<%= @ding.name %>');">
+		<div class="page-header image-jumbotron" style="background-image: url('<%= @ding.name %>');">
 	<% else %>
-		<div class="jumbotron assoz-jumbotron">
+		<div class="page-header assoz-jumbotron">
 	<% end %>
 	  <div class="h1">
 	  	<% if not @ding.published %><i><% end %>
@@ -17,15 +17,15 @@
 		<% end %>
 		<% if not @ding.published %></i><% end %>
 	  </div>
-		<div class="h2">Typ: 
+	</div>
+		<div class="h4">Typ: 
 		<%= best_in_place @has_ding_typ, :ding_typ_id, :as => :select, :collection => Hash[DingTyp.all.map {|x| [x.id, x.name]}], :classes => 'reload_on_success' %>
 		</div>
 		<% if @can_toggle_publish %>
-		<div class="h2">Öffentlich?:
+		<div class="h4">Öffentlich?:
 		<%= best_in_place @ding, :published, :as => :checkbox, :collection => [raw("<i class='fa fa-square-o'></i>"), raw("<i class='fa fa-check-square-o'></i>")] %>
 		</div>
 		<% end %>
-	</div>
 	<% if @ding.ding_typ(current_user).name == 'Ding' and not @ding.has_translation(:name, params[:locale]) %>
 		<%= I18n.t("dings.show.für_den_namen_dieses_dings_wurde_noch_keine_Übersetzung_für_deine_sprache_hinterlegt_bitte_nutze_das_textfeld_um_deine_Übersetzung_hinzuzufügen_es_folgen_ein_paar_Übersetzungen_in_anderen_sprachen") %>
 		<ul>
@@ -58,6 +58,20 @@
 			Open URL
 		<% end %>
 	<% end %>
+
+	<h2><%= I18n.t("dings.show.womit_assoziierst_du_dieses_ding") %></h2>
+	<%= form_for @assoziation, :url => new_assoziation_path(), :method => :get do |f| %>
+	  <%= f.label I18n.t("dings.show.ding") %><br>
+	  <%= hidden_field_tag :ding_eins_id, @ding.id %>
+	  <%= f.autocomplete_field :ding_zwei_id, autocomplete_ding_name_dings_path, :id_element => '#selected_ding_zwei_id' %>
+	  <%= f.label "Publish?" %>
+	  <%= check_box :user_assoziation, :published, {:checked => @ding.published} %>
+	  <%= f.label "Assoziiere in beide Richtungen?" %>
+	  <%= check_box :assoziation, :symmetric, {:checked => true} %>
+	  <%= hidden_field_tag :selected_ding_zwei_id %><br>
+	  <%= f.submit %>
+	<% end %>
+
 
 	<% if @ding.ding_typ(current_user).name == 'URL' %>
 		<% if @page_preview %>
@@ -155,46 +169,6 @@
 		</ul>
 	<% end %>
 
-	<h2><%= I18n.t("dings.show.beschreibung") %></h2>
-	<div id="descr">
-	<%# if not @ding.description.nil? %>
-	<%#= @ding.description %>
-	<%= best_in_place @ding, :description, :as => :textarea, :classes => 'reload_on_success' %>
-	<%# else %>
-	<%#= I18n.t("dings.show.bislang_keine_beschreibung_vorhanden") %>
-	<%# end %>
-	</div>
-
-	<% if @ding.ding_typ(current_user).name == 'Markdown' %>
-	<h2>Markdown</h2>
-	<div id="content"></div>
-	  <script>
-		marked.setOptions({
-		  renderer: new marked.Renderer(),
-		  gfm: true,
-		  tables: true,
-		  breaks: true,
-		  pedantic: false,
-		  sanitize: true,
-		  smartLists: true,
-		  smartypants: true
-		});
-
-	    document.getElementById('content').innerHTML =
-	      marked($('#descr').text());
-	  </script>
-	 <% end %>
-
-	<% if @ding.ding_typ(current_user).name == 'LaTeX' %>
-	<h2>LaTeX</h2>
-	<img src="<%= url_for(:action => :description_as_png, :ding_id => @ding.id,:format => :png)%>">
-	<% end %>
-
-	<% if @ding.ding_typ(current_user).name == 'R' %>
-	<h2>R</h2>
-	<img src="<%= url_for(:action => :r_plot, :ding_id => @ding.id,:format => :png)%>">
-	<% end %>
-
 	<h2><%= I18n.t("dings.show.dieses_ding_wurde_mit_den_folgenden_dingen_assoziiert") %></h2>
 		<ul class="nav nav-list">
 			<% @ding.assoziierte_dinge(current_user).each do |anderes_ding, ass| %>
@@ -220,21 +194,6 @@
 				</li>
 			<% end %>
 		</ul>
-
-
-	<h2><%= I18n.t("dings.show.womit_assoziierst_du_dieses_ding") %></h2>
-	<%= form_for @assoziation, :url => new_assoziation_path(), :method => :get do |f| %>
-	  <%= f.label I18n.t("dings.show.ding") %><br>
-	  <%= hidden_field_tag :ding_eins_id, @ding.id %>
-	  <%= f.autocomplete_field :ding_zwei_id, autocomplete_ding_name_dings_path, :id_element => '#selected_ding_zwei_id' %>
-	  <%= f.label "Publish?" %>
-	  <%= check_box :user_assoziation, :published, {:checked => true} %>
-	  <%= f.label "Assoziiere in beide Richtungen?" %>
-	  <%= check_box :assoziation, :symmetric, {:checked => true} %>
-	  <%= hidden_field_tag :selected_ding_zwei_id %><br>
-	  <%= f.submit %>
-	<% end %>
-
 
 	<h2>Nachbarschafts-Graph</h2>
 	<style type="text/css">
@@ -316,6 +275,46 @@
 		});
 		renderer.run();
 	</script>
+
+	<h2><%= I18n.t("dings.show.beschreibung") %></h2>
+	<div id="descr">
+	<%# if not @ding.description.nil? %>
+	<%#= @ding.description %>
+	<%= best_in_place @ding, :description, :as => :textarea, :classes => 'reload_on_success' %>
+	<%# else %>
+	<%#= I18n.t("dings.show.bislang_keine_beschreibung_vorhanden") %>
+	<%# end %>
+	</div>
+
+	<% if @ding.ding_typ(current_user).name == 'Markdown' %>
+	<h2>Markdown</h2>
+	<div id="content"></div>
+	  <script>
+		marked.setOptions({
+		  renderer: new marked.Renderer(),
+		  gfm: true,
+		  tables: true,
+		  breaks: true,
+		  pedantic: false,
+		  sanitize: true,
+		  smartLists: true,
+		  smartypants: true
+		});
+
+	    document.getElementById('content').innerHTML =
+	      marked($('#descr').text());
+	  </script>
+	 <% end %>
+
+	<% if @ding.ding_typ(current_user).name == 'LaTeX' %>
+	<h2>LaTeX</h2>
+	<img src="<%= url_for(:action => :description_as_png, :ding_id => @ding.id,:format => :png)%>">
+	<% end %>
+
+	<% if @ding.ding_typ(current_user).name == 'R' %>
+	<h2>R</h2>
+	<img src="<%= url_for(:action => :r_plot, :ding_id => @ding.id,:format => :png)%>">
+	<% end %>
 <% else %>
 	<div class="alert alert-warning" role="alert">
 	  Du hast keinen Zugriff auf dieses Ding.

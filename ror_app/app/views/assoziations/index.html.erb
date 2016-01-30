@@ -17,27 +17,11 @@
 <h2><%= I18n.t("assoziations.index.neueste_assoziationen") %></h2>
 <% end %>
  
-<ul class="nav nav-list">
+<ul class="list-unstyled list-assoziation">
 <% @asses.each do |ass| %>
-    <li><ul class="list-inline">
-        <li><%= link_to ass.assoziation.ding_eins do %>
-          <%= fa_icon(ass.assoziation.ding_eins.get_symbol(current_user)) %> <%= ass.assoziation.ding_eins.name %>
-          <% end %></li>
-        <li><%= link_to ass do %>
-            <%= fa_icon("long-arrow-right") %>
-          <% end %></li>
-        <li><%= link_to ass.assoziation.ding_zwei do%>
-          <%= fa_icon(ass.assoziation.ding_zwei.get_symbol(current_user)) %> <%= ass.assoziation.ding_zwei.name %>
-          <% end %></li>
-        <li><%= badge(ass.created_at.strftime("%Y-%m-%d"), :warning) %></li>
-        <% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => ass.assoziation.id).count == 0 %>
-        <li>
-          <%= link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + ass.assoziation.id.to_s + ');' do %>
-            <%= fa_icon(:plus) %>
-          <% end %>
-        </li>
-        <% end %>
-    </ul></li>
+  <li><%= assoziation_to_html(ass.assoziation, {
+    badge_text: ass.created_at.strftime("%Y-%m-%d"),
+    button_classes: nil}) %></li>
 <% end %>
 </ul>
 <% if params.has_key?(:user_id) %>
@@ -46,28 +30,12 @@
 <h2><%= I18n.t("assoziations.index.neueste_unbekannte_assoziationen") %></h2>
 <% end %>
 <% if @new_unknown_asses.count > 0 %>
-  <ul class="nav nav-list">
+  <ul class="list-unstyled list-assoziation">
   <% @new_unknown_asses.each do |userass| %>
     <% ass = Assoziation.find(userass["assoziation_id"].to_i) %>
-    <% ding_eins = ass.ding_eins %>
-    <% ding_zwei = ass.ding_zwei %>
-    <li><ul class="list-inline">
-        <li><%= link_to ding_eins do %>
-          <%= fa_icon(ding_eins.get_symbol(current_user)) %> <%= ding_eins.name %>
-          <% end %></li>
-        <li><%= link_to ass do %>
-            <%= fa_icon("long-arrow-right") %>
-          <% end %></li>
-        <li><%= link_to ding_zwei do %>
-          <%= fa_icon(ding_zwei.get_symbol(current_user)) %> <%= ding_zwei.name %>
-          <% end %></li>
-        <li><%= badge(ass.created_at.strftime("%Y-%m-%d"), :warning) %></li>
-        <li>
-          <%= link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + ass.id.to_s + ');' do %>
-            <%= fa_icon(:plus) %>
-          <% end %>
-        </li>
-    </ul></li>
+    <li><%= assoziation_to_html(ass, {
+      badge_text: ass.created_at.strftime("%Y-%m-%d"),
+      button_classes: nil}) %></li>
   <% end %>
 </ul>
 <% else %>
@@ -83,25 +51,11 @@
   <ul class="nav nav-list">
   <% @new_asses.each do |userass| %>
     <% ass = Assoziation.find(userass["assoziation_id"].to_i) %>
-    <% ding_eins = ass.ding_eins %>
-    <% ding_zwei = ass.ding_zwei %>
-    <li><ul class="list-inline">
-        <li><%= link_to ding_eins do %>
-          <%= fa_icon(ding_eins.get_symbol(current_user)) %> <%= ding_eins.name %>
-          <% end %></li>
-        <li><%= link_to ass do %>
-            <%= fa_icon("long-arrow-right") %>
-          <% end %></li>
-        <li><%= link_to ding_zwei do %>
-          <%= fa_icon(ding_zwei.get_symbol(current_user)) %>  <%= ding_zwei.name %>
-          <% end %></li>
-        <li><%= badge(ass.count.to_s + " mal", :warning) %></li>
-        <li>
-          <%= link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + ass.id.to_s + ');' do %>
-            <%= fa_icon(:plus) %>
-          <% end %>
-        </li>
-    </ul></li>
+    <li>
+      <%= assoziation_to_html(ass, {
+        badge_text: ass.count.to_s + " mal",
+        button_classes: nil}) %>
+    </li>
   <% end %>
 </ul>
 <% else %>
@@ -115,18 +69,8 @@
 <ul class="nav nav-list">
 <% @all_asses.each do |ass| %>
   <li>
-      <ul class="list-inline">
-
-        <li><%= link_to ass.ding_eins do %>
-          <%= fa_icon(ass.ding_eins.get_symbol(current_user)) %> <%= ass.ding_eins.name %>
-          <% end %></li>
-        <li><%= link_to ass do %>
-            <%= fa_icon("long-arrow-right") %>
-          <% end %></li>
-        <li><%= link_to ass.ding_zwei do%>
-          <%= fa_icon(ass.ding_zwei.get_symbol(current_user)) %> <%= ass.ding_zwei.name %>
-          <% end %></li>
-      </ul>
+    <%= assoziation_to_html(ass, {
+        button_classes: nil}) %>
   </li>
 <% end %>
 </ul>
