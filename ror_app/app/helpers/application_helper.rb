@@ -33,8 +33,10 @@ module ApplicationHelper
 
 		if ding.published
 			name = ding.name || ""
+			name = name.truncate(25)
 		else
-			name = ("<i>" + (ding.name || "") + "</i>")
+			name = ding.name || ""
+			name = ("<i>" + (name.truncate(25) || "") + "</i>")
 		end
 
 		#link_text += "</b>".html_safe
