@@ -38,6 +38,13 @@ class UserAssoziationsController < ApplicationController
 	end
 
 	def index
-		@all_asses = current_user.user_assoziations.paginate(:page => params[:page], :per_page => 20).order("created_at DESC")
+		@user = User.find(params[:user_id])
+		if current_user == @user
+			@all_asses = @user.user_assoziations.paginate(:page => params[:page], :per_page => 20).order("created_at DESC")
+			@graph_asses = @user.user_assoziations.joins(:assoziation => :ding_eins, :assoziation => :ding_zwei)
+		else
+			@all_asses = @user.user_assoziations.where(:published => true).paginate(:page => params[:page], :per_page => 20).order("created_at DESC")
+			@graph_asses = @user.user_assoziations.where(:published => true).joins(:assoziation => :ding_eins, :assoziation => :ding_zwei)
+		end
 	end
 end

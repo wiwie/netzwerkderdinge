@@ -1,4 +1,21 @@
-<h2>Deine Assoziationen <small>neueste zuerst</small></h2>
+<style type="text/css">
+	svg {
+		width: 100%;
+		height: 600px;
+	}
+
+	#user_graph {
+		width: 100%;
+		height: 600px;
+		background-color: #f7f9f9;
+	}
+</style>
+
+<% if current_user == @user %>
+<h2 id="all">Deine Assoziationen <small>neueste zuerst</small></h2>
+<% else %>
+<h2 id="all">Assoziationen von Benutzer <%= @user.email %> <small>neueste zuerst</small></h2>
+<% end %>
 
 <ul class="list-unstyled list-assoziation">
 <% @all_asses.each do |userass| %>
@@ -10,3 +27,31 @@
 <% end %>
 </ul>
 <%= will_paginate @all_asses, {:params => {anchor: 'all'}} %>
+
+<h2>Assoziations-Graph</h2>
+<div id="user_graph"></div>
+  <script type="text/javascript">
+    var graph = Viva.Graph.graph();
+    var data;
+
+    <% nodes = {} %>
+    <% @graph_asses.each do |userass| %>
+      <% ding_eins = userass.assoziation.ding_eins %>
+        <% if not nodes.has_key?(ding_eins.id) %>
+          data = {label: '<%= ding_eins.name %>', size: 1, url: '<%= url_for(controller: :dings, action: :show, id: ding_eins.id, only_path: false) %>'};
+          graph.addNode(<%= ding_eins.id %>, data);
+          <% nodes[ding_eins.id] = true %>
+        <% end %>
+
+      <% ding_zwei = userass.assoziation.ding_zwei %>
+        <% if not nodes.has_key?(ding_zwei.id) %>
+          data = {label: '<%= ding_zwei.name %>', size: 1, url: '<%= url_for(controller: :dings, action: :show, id: ding_zwei.id, only_path: false) %>'};
+          graph.addNode(<%= ding_zwei.id %>, data);
+          <% nodes[ding_zwei.id] = true %>
+        <% end %>
+
+        graph.addLink(<%= ding_eins.id %>, <%= ding_zwei.id %>);
+    <% end %>
+    renderGraph(graph, 'user_graph');
+  </script>
+</div>

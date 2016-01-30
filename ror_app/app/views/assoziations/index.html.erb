@@ -62,14 +62,14 @@
     <% @asses.each do |ass| %>
       <% ding_eins = ass.assoziation.ding_eins %>
         <% if not nodes.has_key?(ding_eins.id) %>
-          data = {label: '<%= ding_eins.name %>', size: <%= ding_eins.assoziierte_dinge(current_user).count %>, url: '<%= url_for(controller: :dings, action: :show, id: ding_eins.id, only_path: false) %>'};
+          data = {label: '<%= ding_eins.name %>', size: 1, url: '<%= url_for(controller: :dings, action: :show, id: ding_eins.id, only_path: false) %>'};
           graph.addNode(<%= ding_eins.id %>, data);
           <% nodes[ding_eins.id] = true %>
         <% end %>
 
       <% ding_zwei = ass.assoziation.ding_zwei %>
         <% if not nodes.has_key?(ding_zwei.id) %>
-          data = {label: '<%= ding_zwei.name %>', size: <%= ding_zwei.assoziierte_dinge(current_user).count %>, url: '<%= url_for(controller: :dings, action: :show, id: ding_zwei.id, only_path: false) %>'};
+          data = {label: '<%= ding_zwei.name %>', size: 1, url: '<%= url_for(controller: :dings, action: :show, id: ding_zwei.id, only_path: false) %>'};
           graph.addNode(<%= ding_zwei.id %>, data);
           <% nodes[ding_zwei.id] = true %>
         <% end %>
@@ -110,14 +110,14 @@
         <% ass = Assoziation.find(userass["assoziation_id"].to_i) %>
         <% ding_eins = ass.ding_eins %>
           <% if not nodes.has_key?(ding_eins.id) %>
-            data = {label: '<%= ding_eins.name %>', size: <%= ding_eins.assoziierte_dinge(current_user).count %>, url: '<%= url_for(controller: :dings, action: :show, id: ding_eins.id, only_path: false) %>'};
+            data = {label: '<%= ding_eins.name %>', size: 1, url: '<%= url_for(controller: :dings, action: :show, id: ding_eins.id, only_path: false) %>'};
             graph.addNode(<%= ding_eins.id %>, data);
             <% nodes[ding_eins.id] = true %>
           <% end %>
 
         <% ding_zwei = ass.ding_zwei %>
           <% if not nodes.has_key?(ding_zwei.id) %>
-            data = {label: '<%= ding_zwei.name %>', size: <%= ding_zwei.assoziierte_dinge(current_user).count %>, url: '<%= url_for(controller: :dings, action: :show, id: ding_zwei.id, only_path: false) %>'};
+            data = {label: '<%= ding_zwei.name %>', size: 1, url: '<%= url_for(controller: :dings, action: :show, id: ding_zwei.id, only_path: false) %>'};
             graph.addNode(<%= ding_zwei.id %>, data);
             <% nodes[ding_zwei.id] = true %>
           <% end %>
@@ -162,14 +162,14 @@
           <% ass = Assoziation.find(userass["assoziation_id"].to_i) %>
           <% ding_eins = ass.ding_eins %>
             <% if not nodes.has_key?(ding_eins.id) %>
-              data = {label: '<%= ding_eins.name %>', size: <%= ding_eins.assoziierte_dinge(current_user).count %>, url: '<%= url_for(controller: :dings, action: :show, id: ding_eins.id, only_path: false) %>'};
+              data = {label: '<%= ding_eins.name %>', size: 1, url: '<%= url_for(controller: :dings, action: :show, id: ding_eins.id, only_path: false) %>'};
               graph.addNode(<%= ding_eins.id %>, data);
               <% nodes[ding_eins.id] = true %>
             <% end %>
 
           <% ding_zwei = ass.ding_zwei %>
             <% if not nodes.has_key?(ding_zwei.id) %>
-              data = {label: '<%= ding_zwei.name %>', size: <%= ding_zwei.assoziierte_dinge(current_user).count %>, url: '<%= url_for(controller: :dings, action: :show, id: ding_zwei.id, only_path: false) %>'};
+              data = {label: '<%= ding_zwei.name %>', size: 1, url: '<%= url_for(controller: :dings, action: :show, id: ding_zwei.id, only_path: false) %>'};
               graph.addNode(<%= ding_zwei.id %>, data);
               <% nodes[ding_zwei.id] = true %>
             <% end %>
@@ -197,4 +197,9 @@
 <% end %>
 </ul>
 <%= will_paginate @all_asses, {:params => {anchor: 'all'}} %>
+<% end %>
+
+<% if params.has_key?(:user_id) %>
+<h2>Alle Assoziationen</h2>
+Alle Assoziationen des Benutzers kannst du <%= link_to 'hier', user_assoziations_path(user_id: params[:user_id]) %> sehen.
 <% end %>
