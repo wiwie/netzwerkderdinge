@@ -97,7 +97,7 @@ function renderGraph(graph, containerId) {
       var text = Viva.Graph.svg('text')
         .attr('style', 'fill: #000000;')
         .attr('opacity','1')
-          .text(node.data.label);
+          .text(decodeEntities(node.data.label));
       var ui = Viva.Graph.svg("g");
       ui.append(link);
       //ui.append(circle);
@@ -131,3 +131,23 @@ function renderGraph(graph, containerId) {
     });
     renderer.run();
 }
+
+var decodeEntities = (function() {
+  // this prevents any overhead from creating the object each time
+  var element = document.createElement('div');
+
+  function decodeHTMLEntities (str) {
+    if(str && typeof str === 'string') {
+      // strip script/html tags
+      str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+      str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+      element.innerHTML = str;
+      str = element.textContent;
+      element.textContent = '';
+    }
+
+    return str;
+  }
+
+  return decodeHTMLEntities;
+})();
