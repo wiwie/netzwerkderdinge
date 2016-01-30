@@ -115,8 +115,9 @@ module ApplicationHelper
 			link_text += ("<li>" + badge(badge_text.html_safe, :warning) + "</li>").html_safe
 		end
 
-		user_has_ass = UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => assoziation.id).count > 0
-		user_add_remove_link = link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + assoziation.id.to_s + ');' do
+		user_ass = UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => assoziation.id)
+		user_has_ass = user_ass.count > 0
+		user_add_remove_link = link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + user_ass.first.id.to_s + ');' do
 			if user_has_ass
           		fa_icon(:minus)
           	else
