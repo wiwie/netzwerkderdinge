@@ -72,10 +72,10 @@ de:
         other: "ungefähr %{count} Stunden"
       x_days:
         one: "1 Tag"
-        other: "%{count} Tage"
+        other: "%{count} Tagen"
       about_x_days:
         one: "ungefähr 1 Tag"
-        other: "ungefähr %{count} Tage"
+        other: "ungefähr %{count} Tagen"
       x_weeks:
         one: "1 Woche"
         other: "%{count} Wochen"
@@ -84,13 +84,13 @@ de:
         other: "ungefähr %{count} Wochen"
       x_months:
         one: "1 Monat"
-        other: "%{count} Monate"
+        other: "%{count} Monaten"
       about_x_months:
         one: "ungefähr 1 Monat"
-        other: "ungefähr %{count} Monate"
+        other: "ungefähr %{count} Monaten"
       x_years:
         one: "1 Jahr"
-        other: "%{count} Jahre"
+        other: "%{count} Jahren"
       about_x_years:
         one: "ungefähr 1 Jahr"
-        other: "ungefähr %{count} Jahre"
+        other: "ungefähr %{count} Jahren"
