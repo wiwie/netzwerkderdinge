@@ -5,7 +5,7 @@ class FavoritsController < ApplicationController
 		@ding_ids = current_user.favorits.select(:ding_id).collect { |a| a.ding_id	}
 		@favorit_asses = current_user.user_assoziations
 			.joins(:assoziation)
-			.where("assoziations.ding_eins_id IN ? OR assoziations.ding_zwei_id IN ?", @ding_ids, @ding_ids)
+			.where("assoziations.ding_eins_id IN (?) OR assoziations.ding_zwei_id IN (?)", @ding_ids, @ding_ids)
 
 		#potential new  favorit
 		@favorit = Favorit.new(:user => current_user)
