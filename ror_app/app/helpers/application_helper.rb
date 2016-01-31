@@ -19,7 +19,7 @@ module ApplicationHelper
 		link_text = "".html_safe
 
 		if button_classes
-			link_text += ("<button class=\"" + button_classes + "\" type=\"button\" title=\"" + (ding.name || "") + "\">").html_safe
+			link_text += ("<button class=\"" + button_classes + "\" type=\"button\" title=\"" + (h(ding.name) || "") + "\">").html_safe
 		end
 		if not only_list_items
 			link_text += "<ul class=\"list-inline\">".html_safe
