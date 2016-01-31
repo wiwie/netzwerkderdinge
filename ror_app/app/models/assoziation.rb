@@ -18,4 +18,20 @@ class Assoziation < ActiveRecord::Base
 	#	end
 	#end
 
+	trigger.name(:trigger_increase_indegree).after(:insert) do
+		"UPDATE dings SET indegree = indegree + 1 WHERE id = NEW.ding_zwei_id;"
+	end
+
+	trigger.name(:trigger_increase_outdegree).after(:insert) do
+		"UPDATE dings SET outdegree = outdegree + 1 WHERE id = NEW.ding_eins_id;"
+	end
+
+	trigger.name(:trigger_decrease_indegree).after(:delete) do
+		"UPDATE dings SET indegree = indegree - 1 WHERE id = OLD.ding_zwei_id;"
+	end
+
+	trigger.name(:trigger_decrease_oudegree).after(:delete) do
+		"UPDATE dings SET outdegree = outdegree - 1 WHERE id = OLD.ding_eins_id;"
+	end
+
 end

@@ -33,6 +33,10 @@ class UserAssoziationsController < ApplicationController
 		@userass = UserAssoziation.find params[:id]
 		if @userass.user == current_user
 			@userass.destroy
+			@ass = @userass.assoziation
+			if @ass.user_assoziations.count == 0
+				@ass.destroy
+			end
 			redirect_to(url_for(Assoziation), :notice => 'Association was successfully deleted.')
 		end
 	end

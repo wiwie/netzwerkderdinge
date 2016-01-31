@@ -35,14 +35,14 @@
     <% @favorit_asses.each do |userass| %>
       <% ding_eins = userass.assoziation.ding_eins %>
         <% if not nodes.has_key?(ding_eins.id) %>
-          data = {label: '<%= ding_eins.name.nil? ? "" : ding_eins.name.truncate(25) %>', size: 1, url: '<%= url_for(controller: :dings, action: :show, id: ding_eins.id, only_path: false) %>'};
+          data = {label: '<%= ding_eins.name.nil? ? "" : ding_eins.name.truncate(25) %>', size: <%= ding_eins.outdegree+ding_eins.indegree %>, url: '<%= url_for(controller: :dings, action: :show, id: ding_eins.id, only_path: false) %>'};
           graph.addNode(<%= ding_eins.id %>, data);
           <% nodes[ding_eins.id] = true %>
         <% end %>
 
       <% ding_zwei = userass.assoziation.ding_zwei %>
         <% if not nodes.has_key?(ding_zwei.id) %>
-          data = {label: '<%= ding_zwei.name.nil? ? "" : ding_zwei.name.truncate(25) %>', size: 1, url: '<%= url_for(controller: :dings, action: :show, id: ding_zwei.id, only_path: false) %>'};
+          data = {label: '<%= ding_zwei.name.nil? ? "" : ding_zwei.name.truncate(25) %>', size: <%= ding_zwei.outdegree+ding_zwei.indegree %>, url: '<%= url_for(controller: :dings, action: :show, id: ding_zwei.id, only_path: false) %>'};
           graph.addNode(<%= ding_zwei.id %>, data);
           <% nodes[ding_zwei.id] = true %>
         <% end %>

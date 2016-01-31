@@ -6,7 +6,7 @@
 <ul class="list-unstyled list-ding">
 <% @pop_dings.each do |pop_ding| %>
 	<% ding = Ding.find(pop_ding["ding_id"]) %>
-	<li><%= ding_to_html(ding, {:badge_text => pop_ding["count"].to_s, :badge_icon => :link}) %></li>
+	<li><%= ding_to_html(ding, {:badge_text => ding.outdegree.to_s, :badge_icon => :link}) %></li>
 <% end %>
 </ul>
 

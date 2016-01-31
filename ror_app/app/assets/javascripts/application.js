@@ -88,7 +88,7 @@ function renderGraph(graph, containerId) {
          var link = Viva.Graph.svg('a')
                .link(node.data.url);
          var circle = Viva.Graph.svg('circle')
-               .attr('r', 5+Math.log(node.data.size))
+               .attr('r', 10+2.5*Math.sqrt(node.data.size))
                .attr('fill', '#428bca')
                .attr('stroke', '#FFFFFF')
                .attr('stroke-width', '2px');

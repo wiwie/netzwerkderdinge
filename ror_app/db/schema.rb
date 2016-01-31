@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160125195734) do
+ActiveRecord::Schema.define(version: 20160131130602) do
 
   create_table "assoziations", force: :cascade do |t|
     t.integer  "ding_eins_id", null: false
@@ -62,6 +62,8 @@ ActiveRecord::Schema.define(version: 20160125195734) do
     t.string   "description"
     t.integer  "kategorie_id"
     t.boolean  "published",    default: false
+    t.integer  "indegree",     default: 0
+    t.integer  "outdegree",    default: 0
   end
 
   add_index "dings", ["kategorie_id"], name: "index_dings_on_kategorie_id"
@@ -113,5 +115,33 @@ ActiveRecord::Schema.define(version: 20160125195734) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+
+  create_trigger("trigger_increase_indegree", :generated => true, :compatibility => 1).
+      on("assoziations").
+      name("trigger_increase_indegree").
+      after(:insert) do
+    "UPDATE dings SET indegree = indegree + 1 WHERE id = NEW.ding_zwei_id;"
+  end
+
+  create_trigger("trigger_increase_outdegree", :generated => true, :compatibility => 1).
+      on("assoziations").
+      name("trigger_increase_outdegree").
+      after(:insert) do
+    "UPDATE dings SET outdegree = outdegree + 1 WHERE id = NEW.ding_eins_id;"
+  end
+
+  create_trigger("trigger_decrease_indegree", :generated => true, :compatibility => 1).
+      on("assoziations").
+      name("trigger_decrease_indegree").
+      after(:delete) do
+    "UPDATE dings SET indegree = indegree - 1 WHERE id = OLD.ding_zwei_id;"
+  end
+
+  create_trigger("trigger_decrease_oudegree", :generated => true, :compatibility => 1).
+      on("assoziations").
+      name("trigger_decrease_oudegree").
+      after(:delete) do
+    "UPDATE dings SET outdegree = outdegree - 1 WHERE id = OLD.ding_eins_id;"
+  end
 
 end

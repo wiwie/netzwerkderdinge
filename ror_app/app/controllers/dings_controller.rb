@@ -169,7 +169,8 @@ class DingsController < ApplicationController
 			#if we are unpublishing, make assoziationen consistent
 			if params[:ding][:published] == 'false'
 				# make sure that all assoziationen are from the current user (should be the case)
-				@userasses = UserAssoziation.where(:assoziation_id => Assoziation.where('ding_eins_id = ? OR ding_zwei_id = ?', @ding.id, @ding.id))
+				@userasses = UserAssoziation.where(
+					:assoziation_id => Assoziation.where('ding_eins_id = ? OR ding_zwei_id = ?', @ding.id, @ding.id))
 			    @users = @userasses.select(:user_id).distinct.collect {|x| x.user_id}
 			    # if we have more than the current user, we cannot unpublish the ding
 				if not (@users.count == 1 and @users.first == current_user.id)
@@ -191,7 +192,11 @@ class DingsController < ApplicationController
 				end
 			end
 	    else
-	      @new_ding = Ding.where(:name => params[:ding][:name]).first_or_create
+	      @new_ding = Ding.where(
+	      	:name => params[:ding][:name],
+	      	:published => @ding.published
+	      	).first_or_create
+	      # TODO: doesn't seem to work
 	      # take all assoziationen which contain that ding
 	      @all_asses_1 = Assoziation.joins(:user_assoziations).where(:ding_eins_id => @ding.id).where(:user_assoziations => {:user_id => current_user.id})
 	      @all_asses_1.each do |ass|
@@ -208,7 +213,8 @@ class DingsController < ApplicationController
 				:assoziation_id => ass.id)
 			@new_user_ass = UserAssoziation.find_or_create_by(
 				:user_id => current_user.id, 
-				:assoziation_id => @new_ass.id)
+				:assoziation_id => @new_ass.id,
+				:published => @user_ass.first.published)
 			@user_ass.destroy_all
 	      end
 	      @all_asses_2 = Assoziation.joins(:user_assoziations).where(:ding_zwei_id => @ding.id).where(:user_assoziations => {:user_id => current_user.id})
@@ -224,9 +230,12 @@ class DingsController < ApplicationController
 				:assoziation_id => ass.id)
 			@new_user_ass = UserAssoziation.find_or_create_by(
 				:user_id => current_user.id, 
-				:assoziation_id => @new_ass.id)
+				:assoziation_id => @new_ass.id,
+				:published => @user_ass.first.published)
 			@user_ass.destroy_all
 	      end
+	      # update the ding has typ for this user
+	      @ding.ding_has_typs.where(:user => current_user).update_all(ding_id: @new_ding.id)
 
 	      #.update_all(:assoziation_id => @new_ding.id)
 	      format.html { redirect_to(@new_ding, :notice => 'User was successfully updated.') }
