@@ -109,9 +109,11 @@
 		<h2>Zitat</h2>
 		<blockquote>
 			<% quote = @ding.name.scan(/"([^"]*)"/)[0][0] %>
-			<% author = @ding.name.rpartition(',').last %>
+			<% author = @ding.name.include?(",") ? @ding.name.rpartition(',').last : nil %>
 			<p><%= quote %></p>
+			<% if author %>
 			<footer><%= author %></footer>
+			<% end %>
 		</blockquote>
 	<% elsif  @ding.ding_typ(current_user).name == 'Todo List' or @ding.ding_typ(current_user).name == 'Todo List Done' %>
 		<h2>Diese Liste ist Teil der folgenden Todo Listen</h2>
