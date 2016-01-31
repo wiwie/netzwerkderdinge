@@ -42,6 +42,8 @@ class Ding < ActiveRecord::Base
 			return "circle-o"
 		elsif ding_typ.name == "Todo Done"
 			return "check-circle-o"
+		elsif ding_typ.name == "Habit"
+			return "tachometer"
 		end
 		
 		return "cube"
@@ -111,5 +113,51 @@ class Ding < ActiveRecord::Base
 			end
 			return DingTyp.find_by_name('Ding')
 		end
+	end
+
+	# TODO: what if we are no habit ding?
+	def get_habit_info(current_user)
+		@ding = self
+		@starttp_ass = Assoziation.joins(:user_assoziations, :ding_zwei => {:ding_has_typs => :ding_typ}).where(:ding_eins => @ding).where("ding_has_typs.user_id = ?", current_user.id).where("ding_typs.name = ?", 'Start Time Point')
+		@has_starttp = @starttp_ass.count > 0
+		if @has_starttp
+			@starttp_ding = @starttp_ass.first.ding_zwei
+		else
+			return nil
+		end
+
+		@timespan_ass = Assoziation.joins(:user_assoziations, :ding_zwei => {:ding_has_typs => :ding_typ}).where(:ding_eins => @ding).where("ding_has_typs.user_id = ?", current_user.id).where("ding_typs.name = ?", 'Time Span')
+		@has_timespan = @timespan_ass.count > 0
+		if @has_timespan
+			@timespan_ding = @timespan_ass.first.ding_zwei
+		else
+			return nil
+		end
+
+		if @timespan_ding.name.end_with?(" hour")
+			@ts = @timespan_ding.name.partition(" ").first.to_i.hours
+		elsif @timespan_ding.name.end_with?(" day")
+			@ts = @timespan_ding.name.partition(" ").first.to_i.days
+		elsif @timespan_ding.name.end_with?(" week")
+			@timespan_ding.name.partition(" ").first.to_i.weeks
+		elsif @timespan_ding.name.end_with?(" month")
+			@timespan_ding.name.partition(" ").first.to_i.months
+		elsif @timespan_ding.name.end_with?(" year")
+			@timespan_ding.name.partition(" ").first.to_i.years
+		end
+
+		@latest_time_done = Assoziation.joins(:user_assoziations, :ding_zwei => {:ding_has_typs => :ding_typ}).where(:ding_eins => @ding).where("ding_has_typs.user_id = ?", current_user.id).where("ding_typs.name = ?", 'Todo Done').order("dings.created_at")
+		@has_latest = @latest_time_done.count > 0
+		if @has_latest
+			@latest_ding = @latest_time_done.last.ding_zwei
+		else
+			@latest_ding = @starttp_ding
+		end
+		@latest_time = Time.strptime(@latest_ding.name, "%Y/%m/%d %H:%M")
+
+		@overdue = (Time.now - @latest_time)
+		@is_overdue = @overdue > @ts
+
+		return {is_overdue: @is_overdue, overdue: @overdue, ts: @ts, latest_time: @latest_time}
 	end
 end

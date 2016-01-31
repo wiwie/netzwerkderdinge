@@ -169,6 +169,34 @@
 				</li>
 			<% end %>
 		</ul>
+	<% elsif @ding.ding_typ(current_user).name == 'Habit' and @habit_info %>
+		<h2>Fälligkeit</h2>
+		<% if @habit_info[:is_overdue] %>
+			<div class="alert alert-warning" role="alert">
+				Dieses Habit ist seit <%= distance_of_time_in_words(@habit_info[:latest_time]+@habit_info[:ts],Time.now) %> überfällig.
+			</div>
+		<% else %>
+			<div class="alert alert-success" role="alert">
+				Dieses Habit ist das nächste mal fällig in <%= distance_of_time_in_words(Time.now,@habit_info[:latest_time]+@habit_info[:ts]) %>.
+			</div>
+		<% end %>
+	<% elsif @ding.ding_typ(current_user).name == 'Habit Collection' %>
+		<h2>Status der Habits</h2>
+		<ul class="list-unstyled list-ding">
+			<% @habits.each do |habit| %>
+				<% @habit_info = habit.get_habit_info(current_user) %>
+				<li><%= ding_to_html(habit) %>
+				<% if @habit_info[:is_overdue] %>
+					<span class="label label-warning">
+						Dieses Habit ist seit <%= distance_of_time_in_words(@habit_info[:latest_time]+@habit_info[:ts],Time.now) %> überfällig.
+					</span>
+				<% else %>
+					<span class="label label-success">
+						Dieses Habit ist das nächste mal fällig in <%= distance_of_time_in_words(Time.now,@habit_info[:latest_time]+@habit_info[:ts]) %>.
+					</span>
+				<% end %></li>
+			<% end %>
+		</ul>
 	<% end %>
 
 	<h2><%= I18n.t("dings.show.dieses_ding_wurde_mit_den_folgenden_dingen_assoziiert") %></h2>

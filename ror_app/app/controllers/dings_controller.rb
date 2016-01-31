@@ -96,6 +96,14 @@ class DingsController < ApplicationController
 						:ding_eins => {:ding_has_typs => :ding_typ})
 					.where(:ding_zwei => @ding)
 					.where('ding_typs.name = ? OR ding_typs.name = ?', 'Todo List', 'Todo List Done')
+			elsif @ding_typ.name == 'Habit'
+				@habit_info = @ding.get_habit_info(current_user)
+			elsif @ding_typ.name == 'Habit Collection'
+				@habits = Assoziation
+					.joins(:user_assoziations, :ding_zwei => {:ding_has_typs => :ding_typ})
+					.where(:ding_eins => @ding)
+					.where("ding_has_typs.user_id = ?", current_user.id)
+					.where("ding_typs.name = ?", 'Habit').collect {|ass| ass.ding_zwei}
 			end
 
 			if not @ding.published

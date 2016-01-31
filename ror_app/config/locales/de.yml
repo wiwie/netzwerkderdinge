@@ -59,3 +59,14 @@ de:
   layouts:
     application:
       sign_in: Einloggen
+  datetime:
+    distance_in_words:
+      less_than_x_minutes:
+        one: "weniger als eine Minute"
+        other: "weniger als %{count} Minuten"
+      x_minutes:
+        one: "1 Minute"
+        other: "%{count} Minuten"
+      about_x_hours:
+        one: "ungefähr 1 Stunde"
+        other: "ungefähr %{count} Stunden"
