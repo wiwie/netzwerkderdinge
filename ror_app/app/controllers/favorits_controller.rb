@@ -2,6 +2,11 @@ class FavoritsController < ApplicationController
 	def index
 		@favorits = current_user.favorits
 
+		@ding_ids = current_user.favorits.select(:ding_id).collect { |a| a.ding_id	}
+		@favorit_asses = current_user.user_assoziations
+			.joins(:assoziation)
+			.where("assoziations.ding_eins_id = ? OR assoziations.ding_zwei_id = ?", @ding_ids, @ding_ids)
+
 		#potential new  favorit
 		@favorit = Favorit.new(:user => current_user)
 	end
