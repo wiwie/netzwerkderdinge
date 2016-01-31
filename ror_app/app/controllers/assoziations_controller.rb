@@ -15,6 +15,10 @@ class AssoziationsController < ApplicationController
 				ding = Ding.where(:name => params[:assoziation][:ding_zwei_id]).first
 				if not ding
 					ding = Ding.where(:name => params[:assoziation][:ding_zwei_id]).create
+					DingHasTyp.create(
+						:ding => ding, 
+						:user => current_user,
+						:ding_typ => ding.guess_ding_typ_from_name)
 				end
 				ding.update_attribute(
 					:published,
@@ -52,6 +56,10 @@ class AssoziationsController < ApplicationController
 			@ding = Ding.where(:name => params[:assoziation][:ding_eins_id]).first
 			if not @ding
 				@ding = Ding.where(:name => params[:assoziation][:ding_eins_id]).create
+				DingHasTyp.create(
+					:ding => @ding, 
+					:user => current_user,
+					:ding_typ => @ding.guess_ding_typ_from_name)
 			end
 			@ding.update_attribute(:published,@ding.published ? true : params["user_assoziation"]["published"] == "1")
 			ding_eins_id = @ding.id
@@ -63,6 +71,10 @@ class AssoziationsController < ApplicationController
 			@ding = Ding.where(:name => params[:assoziation][:ding_zwei_id]).first
 			if not @ding
 				@ding = Ding.where(:name => params[:assoziation][:ding_zwei_id]).create
+				DingHasTyp.create(
+					:ding => @ding, 
+					:user => current_user,
+					:ding_typ => @ding.guess_ding_typ_from_name)
 			end
 			@ding.update_attribute(:published,@ding.published ? true : params["user_assoziation"]["published"] == "1")
 			ding_zwei_id = @ding.id

@@ -84,6 +84,8 @@ class Ding < ActiveRecord::Base
 			    	end
 			    end
 			    return DingTyp.find_by_name('URL')
+			elsif name.start_with? '"' and name.end_with? '"'
+				return DingTyp.find_by_name('Quote')
 			end
 		rescue
 		end
@@ -91,7 +93,9 @@ class Ding < ActiveRecord::Base
 	end
 
 	def after_initialize
+		puts "after_initialize"
 		if not ding_typ
+			puts "after_initialize 2"
 			write_attribute(:ding_typ_id, self.guess_ding_typ_from_name.id)
 		end
 	end
