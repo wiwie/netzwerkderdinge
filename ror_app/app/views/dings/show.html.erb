@@ -170,10 +170,13 @@
 	<% end %>
 
 	<h2><%= I18n.t("dings.show.dieses_ding_wurde_mit_den_folgenden_dingen_assoziiert") %></h2>
-		<ul class="nav nav-list">
+		<ul class="list-unstyled list-assoziation">
 			<% @ding.assoziierte_dinge(current_user).each do |anderes_ding, ass| %>
 				<% ding = Ding.find(anderes_ding) %>
-				<li>
+				<li><%= assoziation_to_html(ass, {
+					button_classes: nil,
+					badge_text: ass.user_assoziations.count.to_s + " mal"}) %></li>
+				<!--<li>
 				    <ul class="list-inline">
 		        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol(current_user)) %></span></li>
 		        		<li>
@@ -191,7 +194,7 @@
 				        </li>
 				        <% end %>
 				    </ul>
-				</li>
+				</li>-->
 			<% end %>
 		</ul>
 

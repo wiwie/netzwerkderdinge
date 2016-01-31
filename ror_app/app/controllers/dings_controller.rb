@@ -6,16 +6,23 @@ class DingsController < ApplicationController
 	
 	def index
 		st = ActiveRecord::Base.connection
+		#@pop_dings = st.execute('SELECT ding_id,SUM(count) count FROM
+		#		(SELECT ding_eins_id ding_id,count(*) as count 
+		#		FROM assoziations ass JOIN user_assoziations ua ON (ass.id=ua.assoziation_id)
+		#		WHERE published = "t"
+		#		GROUP BY ding_eins_id
+		#		UNION
+		#		SELECT ding_zwei_id ding_id,count(*) as count 
+		#		FROM assoziations ass JOIN user_assoziations ua ON (ass.id=ua.assoziation_id)
+		#		WHERE published = "t"
+		#		GROUP BY ding_zwei_id)
+		#		GROUP BY ding_id
+		#		ORDER BY count DESC LIMIT 10;')
 		@pop_dings = st.execute('SELECT ding_id,SUM(count) count FROM
 				(SELECT ding_eins_id ding_id,count(*) as count 
 				FROM assoziations ass JOIN user_assoziations ua ON (ass.id=ua.assoziation_id)
 				WHERE published = "t"
-				GROUP BY ding_eins_id
-				UNION
-				SELECT ding_zwei_id ding_id,count(*) as count 
-				FROM assoziations ass JOIN user_assoziations ua ON (ass.id=ua.assoziation_id)
-				WHERE published = "t"
-				GROUP BY ding_zwei_id)
+				GROUP BY ding_eins_id)
 				GROUP BY ding_id
 				ORDER BY count DESC LIMIT 10;')
 		st.close()
