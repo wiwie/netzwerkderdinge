@@ -15,6 +15,7 @@
 //= require twitter/bootstrap
 //= require jquery-ui/autocomplete
 //= require autocomplete-rails
+//= require jquery.ui.autocomplete.html.js
 //= require turbolinks
 //= require best_in_place
 //= require best_in_place.jquery-ui
@@ -30,6 +31,8 @@ $(document).ready(function() {
   $('.reload_on_success').bind("ajax:success", function(resp){
         location.reload();
       });
+  $( "#assoziation_ding_eins_id" ).autocomplete({ html: true });
+  $( "#assoziation_ding_zwei_id" ).autocomplete({ html: true });
 });
 
 function create_asso_for_curr_user(asso_id) {

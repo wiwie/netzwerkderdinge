@@ -42,7 +42,7 @@ class DingsController < ApplicationController
 			.where('name LIKE ?', term + '%')
 			.order(:name).distinct
 
-		render :json => dings.map { |ding| {:id => ding["id"], :label => ding["name"], :value => ding["name"]} }
+		render :json => dings.map { |ding| {:id => ding["id"], :label => "<i class='fa fa-" + ding.get_symbol(current_user) + "'></i> " + ding["name"], :value => ding["name"]} }
 	end
 
 	def has_translation(ding_id, attribute, locale)
@@ -135,12 +135,13 @@ class DingsController < ApplicationController
 	end
 
 	def r_plot
-		@ding = Ding.find(params[:ding_id])
-		file = Tempfile.new('foo')
+		# TODO
+		#@ding = Ding.find(params[:ding_id])
+		#file = Tempfile.new('foo')
 
-	    @@r.myplot.call(file.path, @ding.description.nil? ? '' : @ding.description)
+	    #@@r.myplot.call(file.path, @ding.description.nil? ? '' : @ding.description)
 
-	    send_file file, :type => "image/png", :disposition => "inline"
+	    #send_file file, :type => "image/png", :disposition => "inline"
 	  end
 
 	def create

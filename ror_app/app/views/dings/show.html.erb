@@ -305,11 +305,12 @@
 	<h2>LaTeX</h2>
 	<img src="<%= url_for(:action => :description_as_png, :ding_id => @ding.id,:format => :png)%>">
 	<% end %>
-
-	<% if @ding.ding_typ(current_user).name == 'R' %>
+<!--
+	<%# if @ding.ding_typ(current_user).name == 'R' %>
 	<h2>R</h2>
-	<img src="<%= url_for(:action => :r_plot, :ding_id => @ding.id,:format => :png)%>">
-	<% end %>
+	<img src="<%#= url_for(:action => :r_plot, :ding_id => @ding.id,:format => :png)%>">
+	<%# end %>
+-->
 <% else %>
 	<div class="alert alert-warning" role="alert">
 	  Du hast keinen Zugriff auf dieses Ding.

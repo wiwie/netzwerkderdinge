@@ -14,10 +14,11 @@ class ApplicationController < ActionController::Base
 	end
 
 	def init_r
-	    require 'rsruby'
-	    @@r = RSRuby.instance
-	    r_cmd = 'myplot = function(filename, r_text) {png(filename = filename);eval(parse(text=r_text));dev.off();};'
-	    puts r_cmd
-	    @@r.eval_R(r_cmd)
+		# TODO: huge segfault problems
+	    #require 'rsruby'
+	    #@@r = RSRuby.instance
+	    #r_cmd = 'myplot = function(filename, r_text) {png(filename = filename);eval(parse(text=r_text));dev.off();};'
+	    #puts r_cmd
+	    #@@r.eval_R(r_cmd)
 	end
 end

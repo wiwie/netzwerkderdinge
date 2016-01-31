@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160131205738) do
+ActiveRecord::Schema.define(version: 20160131222325) do
 
   create_table "assoziations", force: :cascade do |t|
     t.integer  "ding_eins_id", null: false

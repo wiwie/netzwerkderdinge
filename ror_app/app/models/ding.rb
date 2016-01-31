@@ -41,8 +41,14 @@ class Ding < ActiveRecord::Base
 			return "circle-o"
 		elsif ding_typ.name == "Todo Done"
 			return "check-circle-o"
+		elsif ding_typ.name == "Todo Skip"
+			return "dot-circle-o"
 		elsif ding_typ.name == "Habit"
 			return "tachometer"
+		elsif ding_typ.name == "Habit Collection"
+			return "tachometer"
+		elsif ding_typ.name == "Start Time Point"
+			return "clock-o"
 		end
 		
 		return "cube"
@@ -157,7 +163,7 @@ class Ding < ActiveRecord::Base
 			.joins(:user_assoziations, :ding_zwei => {:ding_has_typs => :ding_typ})
 			.where(:ding_eins => @ding)
 			.where("ding_has_typs.user_id = ?", current_user.id)
-			.where("ding_typs.name = ?", 'Todo Done')
+			.where("ding_typs.name = ? OR ding_typs.name = ?", 'Todo Done', 'Todo Skip')
 
 		@times_done = @times_done.sort_by {|x| x.ding_zwei.name}
 
