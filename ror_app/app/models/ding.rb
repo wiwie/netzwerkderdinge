@@ -18,7 +18,6 @@ class Ding < ActiveRecord::Base
 			:ding_eins_id => self.id).where(
 			'user_assoziations.published = ? OR user_assoziations.user_id = ?', true, user.id).map{ 
 				|ass| [ass.ding_zwei_id, ass] }.flatten].sort_by {|x| [-x[1].user_assoziations.count, Ding.find(x[0]).name.nil? ? '' : Ding.find(x[0]).name.downcase] }
-		puts hash
 		return hash
 	end
 
@@ -118,7 +117,11 @@ class Ding < ActiveRecord::Base
 	# TODO: what if we are no habit ding?
 	def get_habit_info(current_user)
 		@ding = self
-		@starttp_ass = Assoziation.joins(:user_assoziations, :ding_zwei => {:ding_has_typs => :ding_typ}).where(:ding_eins => @ding).where("ding_has_typs.user_id = ?", current_user.id).where("ding_typs.name = ?", 'Start Time Point')
+		@starttp_ass = Assoziation
+			.joins(:user_assoziations, :ding_zwei => {:ding_has_typs => :ding_typ})
+			.where(:ding_eins => @ding)
+			.where("ding_has_typs.user_id = ?", current_user.id)
+			.where("ding_typs.name = ?", 'Start Time Point')
 		@has_starttp = @starttp_ass.count > 0
 		if @has_starttp
 			@starttp_ding = @starttp_ass.first.ding_zwei
@@ -126,7 +129,11 @@ class Ding < ActiveRecord::Base
 			return nil
 		end
 
-		@timespan_ass = Assoziation.joins(:user_assoziations, :ding_zwei => {:ding_has_typs => :ding_typ}).where(:ding_eins => @ding).where("ding_has_typs.user_id = ?", current_user.id).where("ding_typs.name = ?", 'Time Span')
+		@timespan_ass = Assoziation
+			.joins(:user_assoziations, :ding_zwei => {:ding_has_typs => :ding_typ})
+			.where(:ding_eins => @ding)
+			.where("ding_has_typs.user_id = ?", current_user.id)
+			.where("ding_typs.name = ?", 'Time Span')
 		@has_timespan = @timespan_ass.count > 0
 		if @has_timespan
 			@timespan_ding = @timespan_ass.first.ding_zwei
@@ -146,10 +153,17 @@ class Ding < ActiveRecord::Base
 			@timespan_ding.name.partition(" ").first.to_i.years
 		end
 
-		@latest_time_done = Assoziation.joins(:user_assoziations, :ding_zwei => {:ding_has_typs => :ding_typ}).where(:ding_eins => @ding).where("ding_has_typs.user_id = ?", current_user.id).where("ding_typs.name = ?", 'Todo Done').order("dings.created_at")
-		@has_latest = @latest_time_done.count > 0
+		@times_done = Assoziation
+			.joins(:user_assoziations, :ding_zwei => {:ding_has_typs => :ding_typ})
+			.where(:ding_eins => @ding)
+			.where("ding_has_typs.user_id = ?", current_user.id)
+			.where("ding_typs.name = ?", 'Todo Done')
+
+		@times_done = @times_done.sort_by {|x| x.ding_zwei.name}
+
+		@has_latest = @times_done.count > 0
 		if @has_latest
-			@latest_ding = @latest_time_done.last.ding_zwei
+			@latest_ding = @times_done.last.ding_zwei
 		else
 			@latest_ding = @starttp_ding
 		end
@@ -158,6 +172,20 @@ class Ding < ActiveRecord::Base
 		@overdue = (Time.now - @latest_time)
 		@is_overdue = @overdue > @ts
 
-		return {is_overdue: @is_overdue, overdue: @overdue, ts: @ts, latest_time: @latest_time}
+		# how many times have we done the habit in time?
+		@streak = 0
+		comp_time = Time.now
+
+		@times_done.reverse.each do |ass|
+			next_time = Time.strptime(ass.ding_zwei.name, "%Y/%m/%d %H:%M")
+			time_diff = comp_time - next_time
+			if time_diff > @ts
+				break
+			end
+			comp_time = next_time
+			@streak += 1
+		end
+
+		return {is_overdue: @is_overdue, overdue: @overdue, ts: @ts, latest_time: @latest_time, streak: @streak}
 	end
 end

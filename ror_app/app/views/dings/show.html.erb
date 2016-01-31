@@ -170,13 +170,19 @@
 			<% end %>
 		</ul>
 	<% elsif @ding.ding_typ(current_user).name == 'Habit' and @habit_info %>
+		<% if @habit_info[:streak] > 1 %>
+		<h2>Streak</h2>
+		<div class="alert alert-success" role="alert">
+			<strong>Du hast einen <%= @habit_info[:streak] %>-Streak! Glückwunsch!</strong>
+		</div>
+		<% end %>
 		<h2>Fälligkeit</h2>
 		<% if @habit_info[:is_overdue] %>
 			<div class="alert alert-warning" role="alert">
 				Dieses Habit ist seit <%= distance_of_time_in_words(@habit_info[:latest_time]+@habit_info[:ts],Time.now) %> überfällig.
 			</div>
 		<% else %>
-			<div class="alert alert-success" role="alert">
+			<div class="alert alert-info" role="alert">
 				Dieses Habit ist das nächste mal fällig in <%= distance_of_time_in_words(Time.now,@habit_info[:latest_time]+@habit_info[:ts]) %>.
 			</div>
 		<% end %>
@@ -187,12 +193,13 @@
 				<% @habit_info = habit.get_habit_info(current_user) %>
 				<li><%= ding_to_html(habit) %>
 					<% if @habit_info %>
+						<span class="label label-success"><%= @habit_info[:streak] %>-Streak!</span>
 						<% if @habit_info[:is_overdue] %>
 							<span class="label label-warning">
 								Dieses Habit ist seit <%= distance_of_time_in_words(@habit_info[:latest_time]+@habit_info[:ts],Time.now) %> überfällig.
 							</span>
 						<% else %>
-							<span class="label label-success">
+							<span class="label label-info">
 								Dieses Habit ist das nächste mal fällig in <%= distance_of_time_in_words(Time.now,@habit_info[:latest_time]+@habit_info[:ts]) %>.
 							</span>
 						<% end %>
