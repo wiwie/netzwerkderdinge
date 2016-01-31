@@ -95,7 +95,7 @@ function renderGraph(graph, containerId) {
          link.append(circle);
                
       var text = Viva.Graph.svg('text')
-        .attr('style', 'fill: #000000;')
+        .attr('style', 'fill: #000000; font-size: ' + (10+2.5*Math.sqrt(node.data.size)) + ';')
         .attr('opacity','1')
           .text(decodeEntities(node.data.label));
       var ui = Viva.Graph.svg("g");
