@@ -152,11 +152,11 @@ class Ding < ActiveRecord::Base
 		elsif @timespan_ding.name.end_with?(" day")
 			@ts = @timespan_ding.name.partition(" ").first.to_i.days
 		elsif @timespan_ding.name.end_with?(" week")
-			@timespan_ding.name.partition(" ").first.to_i.days*7
+			@ts = @timespan_ding.name.partition(" ").first.to_i.weeks
 		elsif @timespan_ding.name.end_with?(" month")
-			@timespan_ding.name.partition(" ").first.to_i.months
+			@ts = @timespan_ding.name.partition(" ").first.to_i.months
 		elsif @timespan_ding.name.end_with?(" year")
-			@timespan_ding.name.partition(" ").first.to_i.years
+			@ts = @timespan_ding.name.partition(" ").first.to_i.years
 		end
 
 		@times_done = Assoziation
