@@ -189,20 +189,19 @@
 	<% elsif @ding.ding_typ(current_user).name == 'Habit Collection' %>
 		<h2>Status der Habits</h2>
 		<ul class="list-unstyled list-ding">
-			<% @habits.each do |habit| %>
-				<% @habit_info = habit.get_habit_info(current_user) %>
+			<% @habits.each do |habit, habit_info| %>
 				<li><%= ding_to_html(habit) %>
-					<% if @habit_info %>
-						<% if @habit_info[:streak] > 1 %>
-							<span class="label label-success"><%= @habit_info[:streak] %>-Streak!</span>
+					<% if habit_info %>
+						<% if habit_info[:streak] > 1 %>
+							<span class="label label-success"><%= habit_info[:streak] %>-Streak!</span>
 						<% end %>
-						<% if @habit_info[:is_overdue] %>
+						<% if habit_info[:is_overdue] %>
 							<span class="label label-warning">
-								seit <%= distance_of_time_in_words(@habit_info[:latest_time]+@habit_info[:ts],Time.now) %> überfällig.
+								seit <%= distance_of_time_in_words(habit_info[:latest_time]+habit_info[:ts],Time.now) %> überfällig
 							</span>
 						<% else %>
 							<span class="label label-info">
-								fällig in <%= distance_of_time_in_words(Time.now,@habit_info[:latest_time]+@habit_info[:ts]) %>.
+								fällig in <%= distance_of_time_in_words(Time.now,habit_info[:latest_time]+habit_info[:ts]) %>
 							</span>
 						<% end %>
 					<% end %>

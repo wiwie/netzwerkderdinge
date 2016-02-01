@@ -6,18 +6,6 @@ class DingsController < ApplicationController
 	
 	def index
 		st = ActiveRecord::Base.connection
-		#@pop_dings = st.execute('SELECT ding_id,SUM(count) count FROM
-		#		(SELECT ding_eins_id ding_id,count(*) as count 
-		#		FROM assoziations ass JOIN user_assoziations ua ON (ass.id=ua.assoziation_id)
-		#		WHERE published = "t"
-		#		GROUP BY ding_eins_id
-		#		UNION
-		#		SELECT ding_zwei_id ding_id,count(*) as count 
-		#		FROM assoziations ass JOIN user_assoziations ua ON (ass.id=ua.assoziation_id)
-		#		WHERE published = "t"
-		#		GROUP BY ding_zwei_id)
-		#		GROUP BY ding_id
-		#		ORDER BY count DESC LIMIT 10;')
 		@pop_dings = st.execute('SELECT ding_id,SUM(count) count FROM
 				(SELECT ding_eins_id ding_id,count(*) as count 
 				FROM assoziations ass JOIN user_assoziations ua ON (ass.id=ua.assoziation_id)
@@ -103,7 +91,9 @@ class DingsController < ApplicationController
 					.joins(:user_assoziations, :ding_zwei => {:ding_has_typs => :ding_typ})
 					.where(:ding_eins => @ding)
 					.where("ding_has_typs.user_id = ?", current_user.id)
-					.where("ding_typs.name = ?", 'Habit').collect {|ass| ass.ding_zwei}
+					.where("ding_typs.name = ?", 'Habit')
+					.collect {|ass| [ass.ding_zwei, ass.ding_zwei.get_habit_info(current_user)]}
+					.sort_by {|habit, habit_info| [-(Time.now-habit_info[:latest_time]-habit_info[:ts]), -habit_info[:streak]]}
 			end
 
 			if not @ding.published
