@@ -161,7 +161,7 @@ class Ding < ActiveRecord::Base
 		@times_done = Assoziation
 			.joins(:user_assoziations, :ding_zwei => :ding_typ)
 			.where(:ding_eins => @ding)
-			.where("ding_typs.name = ? OR ding_typs.name = ?", 'Todo Done', 'Todo Skip')
+			.where("ding_typs.name = ? OR ding_typs.name = ? OR ding_typs.name = ?", 'Todo Done', 'Todo Skip', 'Todo Fail')
 
 		@times_done = @times_done.sort_by {|x| x.ding_zwei.name}
 
@@ -185,6 +185,10 @@ class Ding < ActiveRecord::Base
 		comp_time = Time.now
 
 		@times_done.reverse.each do |ass|
+			if ass.ding_zwei.ding_typ.name == 'Todo Fail'
+				break
+			end
+
 			begin
 				next_time = Time.strptime(ass.ding_zwei.name, "%Y/%m/%d %H:%M")
 			rescue
