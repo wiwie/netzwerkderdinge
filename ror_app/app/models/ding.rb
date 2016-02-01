@@ -173,7 +173,11 @@ class Ding < ActiveRecord::Base
 		else
 			@latest_ding = @starttp_ding
 		end
-		@latest_time = Time.strptime(@latest_ding.name, "%Y/%m/%d %H:%M")
+		begin
+			@latest_time = Time.strptime(@latest_ding.name.scan(/\[([^\[]*)\]/)[0][0], "%Y/%m/%d %H:%M")
+		rescue
+			return nil
+		end
 
 		@overdue = (Time.now - @latest_time)
 		@is_overdue = @overdue > @ts
@@ -183,7 +187,11 @@ class Ding < ActiveRecord::Base
 		comp_time = Time.now
 
 		@times_done.reverse.each do |ass|
-			next_time = Time.strptime(ass.ding_zwei.name, "%Y/%m/%d %H:%M")
+			begin
+				next_time = Time.strptime(ass.ding_zwei.name.scan(/\[([^\[]*)\]/)[0][0], "%Y/%m/%d %H:%M")
+			rescue
+				break
+			end
 			time_diff = comp_time - next_time
 			if time_diff > @ts
 				break
