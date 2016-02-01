@@ -116,6 +116,7 @@ class Ding < ActiveRecord::Base
 		@starttp_ass = Assoziation
 			.joins(:user_assoziations, :ding_zwei => :ding_typ)
 			.where(:ding_eins => @ding)
+			.where(:user_assoziations => {:user => current_user})
 			.where("ding_typs.name = ?", 'Start Time Point')
 		@has_starttp = @starttp_ass.count > 0
 		if @has_starttp
@@ -127,6 +128,7 @@ class Ding < ActiveRecord::Base
 		@timespan_ass = Assoziation
 			.joins(:user_assoziations, :ding_zwei => :ding_typ)
 			.where(:ding_eins => @ding)
+			.where(:user_assoziations => {:user => current_user})
 			.where("ding_typs.name = ?", 'Time Span')
 		@has_timespan = @timespan_ass.count > 0
 		if @has_timespan
@@ -150,6 +152,7 @@ class Ding < ActiveRecord::Base
 		@times_done = Assoziation
 			.joins(:user_assoziations, :ding_zwei => :ding_typ)
 			.where(:ding_eins => @ding)
+			.where(:user_assoziations => {:user => current_user})
 			.where("ding_typs.name = ? OR ding_typs.name = ? OR ding_typs.name = ?", 'Todo Done', 'Todo Skip', 'Todo Fail')
 
 		@times_done = @times_done.sort_by {|x| x.ding_zwei.name}

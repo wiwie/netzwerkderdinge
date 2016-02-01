@@ -87,6 +87,7 @@ class DingsController < ApplicationController
 					.joins(:user_assoziations, :ding_zwei => :ding_typ)
 					.where(:ding_eins => @ding)
 					.where("ding_typs.name = ?", 'Habit')
+					.where(:user_assoziations => {:user => current_user})
 					.collect {|ass| [ass.ding_zwei, ass.ding_zwei.get_habit_info(current_user)]}
 					.sort_by {|habit, habit_info| habit_info.nil? ? [Time.now, -5] : [habit_info[:latest_time]+habit_info[:ts], -habit_info[:streak]]}
 			end
