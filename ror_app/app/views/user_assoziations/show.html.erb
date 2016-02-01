@@ -5,13 +5,7 @@
 	Published? <%= best_in_place @userass, :published, :as => :checkbox, :collection => [raw("<i class='fa fa-square-o'></i>"), raw("<i class='fa fa-check-square-o'></i>")]%>
 
 	<h2><%= I18n.t("user_assoziations.show.assoziation") %></h2>
-	<ul class="list-inline">
-	    <li><% if not @userass.assoziation.ding_eins.published %><i><% end %><%= link_to @userass.assoziation.ding_eins.name, @userass.assoziation.ding_eins %><% if not @userass.assoziation.ding_eins.published %></i><% end %></li>
-	    <li><%= link_to @userass.assoziation do %>
-	        <%= fa_icon(:link) %>
-	      <% end %></li>
-	    <li><% if not @userass.assoziation.ding_zwei.published %><i><% end %><%= link_to @userass.assoziation.ding_zwei.name, @userass.assoziation.ding_zwei %><% if not @userass.assoziation.ding_zwei.published %></i><% end %></li>
-	</ul>
+	<%= assoziation_to_html(@userass.assoziation, button_classes: nil) %>
 
 	<h2><%= I18n.t("user_assoziations.show.beschreibung") %></h2>
 	<% if @userass.user == current_user %>
