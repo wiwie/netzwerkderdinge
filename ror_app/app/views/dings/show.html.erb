@@ -198,11 +198,11 @@
 						<% end %>
 						<% if @habit_info[:is_overdue] %>
 							<span class="label label-warning">
-								Dieses Habit ist seit <%= distance_of_time_in_words(@habit_info[:latest_time]+@habit_info[:ts],Time.now) %> überfällig.
+								seit <%= distance_of_time_in_words(@habit_info[:latest_time]+@habit_info[:ts],Time.now) %> überfällig.
 							</span>
 						<% else %>
 							<span class="label label-info">
-								Dieses Habit ist das nächste mal fällig in <%= distance_of_time_in_words(Time.now,@habit_info[:latest_time]+@habit_info[:ts]) %>.
+								fällig in <%= distance_of_time_in_words(Time.now,@habit_info[:latest_time]+@habit_info[:ts]) %>.
 							</span>
 						<% end %>
 					<% end %>
