@@ -41,9 +41,11 @@ class Ding < ActiveRecord::Base
 		elsif ding_typ.name == "Todo"
 			return "circle-o"
 		elsif ding_typ.name == "Todo Done"
-			return "check-circle-o"
+			return "check"
 		elsif ding_typ.name == "Todo Skip"
-			return "dot-circle-o"
+			return "pause"
+		elsif ding_typ.name == "Todo Fail"
+			return "times"
 		elsif ding_typ.name == "Habit"
 			return "tachometer"
 		elsif ding_typ.name == "Habit Collection"
@@ -107,19 +109,6 @@ class Ding < ActiveRecord::Base
 			#write_attribute(:ding_typ_id, Ding.guess_ding_typ_from_name(self.name).id)
 		#end
 	end
-
-	#def ding_typ(user=nil)
-	#	if not user
-	#		return DingTyp.find_by_name('Ding')
-	#	else
-	#		#return has_ding_typs#.where(:user => user).first
-	#		@typs = DingHasTyp.where(:user => user, :ding => self)
-	#		if @typs.count > 0
-	#			return @typs.first.ding_typ
-	#		end
-	#		return DingTyp.find_by_name('Ding')
-	#	end
-	#end
 
 	# TODO: what if we are no habit ding?
 	def get_habit_info(current_user)
