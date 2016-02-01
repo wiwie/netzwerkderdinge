@@ -17,7 +17,10 @@ class FavoritsController < ApplicationController
 
 	def create
 		if not params.has_key?(:selected_ding_id) or params[:selected_ding_id] == ''
-			@ding = Ding.where(:name => params[:favorit][:ding_id]).first_or_create
+			name = params[:favorit][:ding_id]
+			guessed_ding_typ = Ding.guess_ding_typ_from_name(name)
+
+			@ding = Ding.where(:name => name).where(:ding_typ => guessed_ding_typ).first_or_create
 		else
 			@ding = Ding.find(params[:selected_ding_id].to_i)
 		end

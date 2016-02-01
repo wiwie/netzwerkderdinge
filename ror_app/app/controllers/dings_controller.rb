@@ -58,11 +58,7 @@ class DingsController < ApplicationController
 		@can_access = @ding.published || (@users.include?(current_user.id))
 		
 		if @can_access
-			@has_ding_typ = @ding.ding_has_typs.where(:user => current_user).first
-			if not @has_ding_typ
-				@has_ding_typ = DingHasTyp.create(:ding => @ding, :user => current_user, :ding_typ => DingTyp.find_by_name('Ding'))
-			end
-			@ding_typ = @has_ding_typ.ding_typ
+			@ding_typ = @ding.ding_typ
 
 			if @ding_typ.name == 'URL'
 				begin
@@ -70,27 +66,26 @@ class DingsController < ApplicationController
 				rescue
 				end
 			elsif @ding_typ.name == 'Todo List' or @ding_typ.name == 'Todo List Done'
-				@todos = @ding.assoziierte_dinge(current_user).select {|d| Ding.find(d[0]).ding_typ(current_user).name == 'Todo' or Ding.find(d[0]).ding_typ(current_user).name == 'Todo List' }
-				@done_todos = @ding.assoziierte_dinge(current_user).select {|d| Ding.find(d[0]).ding_typ(current_user).name == 'Todo Done' or Ding.find(d[0]).ding_typ(current_user).name == 'Todo List Done' }
+				@todos = @ding.assoziierte_dinge(current_user).select {|d| Ding.find(d[0]).ding_typ.name == 'Todo' or Ding.find(d[0]).ding_typ.name == 'Todo List' }
+				@done_todos = @ding.assoziierte_dinge(current_user).select {|d| Ding.find(d[0]).ding_typ.name == 'Todo Done' or Ding.find(d[0]).ding_typ.name == 'Todo List Done' }
 		  		if @todos.count+@done_todos.count > 0
 					@perc_finished = (@done_todos.count.to_f/(@todos.count+@done_todos.count)*100).to_i
 				end
 				@sublistof = Assoziation.joins(:user_assoziations, 
-						:ding_eins => {:ding_has_typs => :ding_typ})
+						:ding_eins => :ding_typ)
 					.where(:ding_zwei => @ding)
 					.where('ding_typs.name = ? OR ding_typs.name = ?', 'Todo List', 'Todo List Done')
 			elsif @ding_typ.name == 'Todo' or @ding_typ.name == 'Todo Done'
 				@todoof = Assoziation.joins(:user_assoziations,
-						:ding_eins => {:ding_has_typs => :ding_typ})
+						:ding_eins => :ding_typ)
 					.where(:ding_zwei => @ding)
 					.where('ding_typs.name = ? OR ding_typs.name = ?', 'Todo List', 'Todo List Done')
 			elsif @ding_typ.name == 'Habit'
 				@habit_info = @ding.get_habit_info(current_user)
 			elsif @ding_typ.name == 'Habit Collection'
 				@habits = Assoziation
-					.joins(:user_assoziations, :ding_zwei => {:ding_has_typs => :ding_typ})
+					.joins(:user_assoziations, :ding_zwei => :ding_typ)
 					.where(:ding_eins => @ding)
-					.where("ding_has_typs.user_id = ?", current_user.id)
 					.where("ding_typs.name = ?", 'Habit')
 					.collect {|ass| [ass.ding_zwei, ass.ding_zwei.get_habit_info(current_user)]}
 					.sort_by {|habit, habit_info| habit_info.nil? ? [1000000000000000000000, -5] : [habit_info[:overdue] > 0 ? -habit_info[:overdue] : 0, -habit_info[:streak]]}
@@ -190,53 +185,59 @@ class DingsController < ApplicationController
 					format.json { respond_with_bip(@ding) }
 				end
 			end
-	    else
-	      @new_ding = Ding.where(
-	      	:name => params[:ding][:name],
-	      	:published => @ding.published
-	      	).first_or_create
-	      # TODO: doesn't seem to work
+	    elsif params[:ding].has_key?(:name) or params[:ding].has_key?(:ding_typ_id)
+	      if params[:ding].has_key?(:name)
+		      @new_ding = Ding.where(
+		      	:name => params[:ding][:name],
+		      	:ding_typ => @ding.ding_typ,
+		      	:published => @ding.published
+		      	).first_or_create
+		  elsif params[:ding].has_key?(:ding_typ_id)
+		      @new_ding = Ding.where(
+		      	:name => @ding.name,
+		      	:ding_typ => params[:ding][:ding_typ_id].to_i,
+		      	:published => @ding.published
+		      	).first_or_create
+		  end
 	      # take all assoziationen which contain that ding
-	      @all_asses_1 = Assoziation.joins(:user_assoziations).where(:ding_eins_id => @ding.id).where(:user_assoziations => {:user_id => current_user.id})
+	      @all_asses_1 = Assoziation
+	      	.joins(:user_assoziations)
+	      	.where(:ding_eins_id => @ding.id)
+	      	.where(:user_assoziations => {:user_id => current_user.id})
 	      @all_asses_1.each do |ass|
 	      	attrib = ass.dup.attributes
 	      	attrib[:ding_eins_id] = @new_ding.id
-	      	if ass.ding_zwei_id > @new_ding.id
-	      		@new_ass = Assoziation.find_or_create_by({:ding_eins_id => @new_ding.id, :ding_zwei_id => ass.ding_zwei_id})
-	      	else
-	      		@new_ass = Assoziation.find_or_create_by({:ding_eins_id => ass.ding_zwei_id, :ding_zwei_id => @new_ding.id})
-	      	end
-
-	      	@user_ass = UserAssoziation.where(
+	      	@new_ass = Assoziation.find_or_create_by({:ding_eins_id => @new_ding.id, :ding_zwei_id => ass.ding_zwei_id})
+	      	# if user has already associated the new one, don't recreate it; just delete the old obsolete assoziation
+	      	if UserAssoziation.where(
 				:user_id => current_user.id).where(
-				:assoziation_id => ass.id)
-			@new_user_ass = UserAssoziation.find_or_create_by(
-				:user_id => current_user.id, 
-				:assoziation_id => @new_ass.id,
-				:published => @user_ass.first.published)
-			@user_ass.destroy_all
+				:assoziation_id => @new_ass.id).count > 0
+				ass.delete
+			else
+		      	@user_ass = UserAssoziation.where(
+					:user_id => current_user.id).where(
+					:assoziation_id => ass.id).update_all(assoziation_id: @new_ass.id)
+			end
 	      end
-	      @all_asses_2 = Assoziation.joins(:user_assoziations).where(:ding_zwei_id => @ding.id).where(:user_assoziations => {:user_id => current_user.id})
+	      @all_asses_2 = Assoziation
+	      	.joins(:user_assoziations)
+	      	.where(:ding_zwei_id => @ding.id)
+	      	.where(:user_assoziations => {:user_id => current_user.id})
 	      @all_asses_2.each do |ass|
-	      	if ass.ding_eins_id > @new_ding.id
-	      		@new_ass = Assoziation.find_or_create_by({:ding_eins_id => @new_ding.id, :ding_zwei_id => ass.ding_eins_id})
-	      	else
-	      		@new_ass = Assoziation.find_or_create_by({:ding_eins_id => ass.ding_eins_id, :ding_zwei_id => @new_ding.id})
-	      	end
-
-	      	@user_ass = UserAssoziation.where(
+	      	@new_ass = Assoziation.find_or_create_by({:ding_eins_id => ass.ding_eins_id, :ding_zwei_id => @new_ding.id})
+	      	
+	      	# if user has already associated the new one, don't recreate it; just delete the old obsolete assoziation
+	      	if UserAssoziation.where(
 				:user_id => current_user.id).where(
-				:assoziation_id => ass.id)
-			@new_user_ass = UserAssoziation.find_or_create_by(
-				:user_id => current_user.id, 
-				:assoziation_id => @new_ass.id,
-				:published => @user_ass.first.published)
-			@user_ass.destroy_all
+				:assoziation_id => @new_ass.id).count > 0
+				ass.delete
+			else
+		      	@user_ass = UserAssoziation.where(
+					:user_id => current_user.id).where(
+					:assoziation_id => ass.id).update_all(assoziation_id: @new_ass.id)
+			end
 	      end
-	      # update the ding has typ for this user
-	      @ding.ding_has_typs.where(:user => current_user).update_all(ding_id: @new_ding.id)
-
-	      #.update_all(:assoziation_id => @new_ding.id)
+	      
 	      format.html { redirect_to(@new_ding, :notice => 'User was successfully updated.') }
 	      format.json { respond_with_bip(@ding) }
 	    end

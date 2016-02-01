@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160131222325) do
+ActiveRecord::Schema.define(version: 20160201113244) do
 
   create_table "assoziations", force: :cascade do |t|
     t.integer  "ding_eins_id", null: false
@@ -24,19 +24,6 @@ ActiveRecord::Schema.define(version: 20160131222325) do
   add_index "assoziations", ["ding_eins_id", "ding_zwei_id"], name: "index_assoziations_on_ding_eins_id_and_ding_zwei_id", unique: true
   add_index "assoziations", ["ding_eins_id"], name: "index_assoziations_on_ding_eins_id"
   add_index "assoziations", ["ding_zwei_id"], name: "index_assoziations_on_ding_zwei_id"
-
-  create_table "ding_has_typs", force: :cascade do |t|
-    t.integer  "ding_id"
-    t.integer  "ding_typ_id"
-    t.integer  "user_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
-
-  add_index "ding_has_typs", ["ding_id", "ding_typ_id", "user_id"], name: "ding_has_typs_index", unique: true
-  add_index "ding_has_typs", ["ding_id"], name: "index_ding_has_typs_on_ding_id"
-  add_index "ding_has_typs", ["ding_typ_id"], name: "index_ding_has_typs_on_ding_typ_id"
-  add_index "ding_has_typs", ["user_id"], name: "index_ding_has_typs_on_user_id"
 
   create_table "ding_translations", force: :cascade do |t|
     t.integer  "ding_id",     null: false
@@ -64,8 +51,10 @@ ActiveRecord::Schema.define(version: 20160131222325) do
     t.boolean  "published",    default: false
     t.integer  "indegree",     default: 0
     t.integer  "outdegree",    default: 0
+    t.integer  "ding_typ_id",  default: 1
   end
 
+  add_index "dings", ["ding_typ_id"], name: "index_dings_on_ding_typ_id"
   add_index "dings", ["kategorie_id"], name: "index_dings_on_kategorie_id"
 
   create_table "favorits", force: :cascade do |t|

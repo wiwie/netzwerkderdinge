@@ -1,7 +1,7 @@
 class Assoziation < ActiveRecord::Base
 	belongs_to :ding_eins, :class_name => 'Ding', :foreign_key => 'ding_eins_id'
 	belongs_to :ding_zwei, :class_name => 'Ding', :foreign_key => 'ding_zwei_id'
-	has_many :user_assoziations
+	has_many :user_assoziations, :dependent => :delete_all
 
 	#before_validation :handle_ding_ids, on: :create
 

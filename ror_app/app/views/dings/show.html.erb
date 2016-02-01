@@ -19,7 +19,7 @@
 	  </div>
 	</div>
 		<div class="h4">Typ: 
-		<%= best_in_place @has_ding_typ, :ding_typ_id, :as => :select, :collection => Hash[DingTyp.all.map {|x| [x.id, x.name]}], :classes => 'reload_on_success' %>
+		<%= best_in_place @ding, :ding_typ_id, :as => :select, :collection => Hash[DingTyp.all.map {|x| [x.id, x.name]}], :classes => 'reload_on_success' %>
 		</div>
 		<% if @can_toggle_publish %>
 		<div class="h4">Öffentlich?:

@@ -1,10 +1,11 @@
 class Ding < ActiveRecord::Base
 	has_many :assoziations, :foreign_key => 'ding_eins_id'
-	has_many :eingehende_assoziations, :foreign_key => 'ding_zwei_id'
+	has_many :eingehende_assoziations, :class_name => 'Assoziation', :foreign_key => 'ding_zwei_id'
+	has_many :ding_has_typs
+	has_many :favorits, :dependent => :delete_all
 	#has_many :assoziierte_dinge, through: :assoziation, :source => 'ding_zwei'
 	belongs_to :kategorie
 	belongs_to :ding_typ
-	has_many :ding_has_typs
 	translates :name, :description
 	globalize_accessors
 	before_validation :after_initialize, on: :create
@@ -22,7 +23,7 @@ class Ding < ActiveRecord::Base
 	end
 
 	def get_symbol(user)
-		ding_typ = self.ding_typ(user)
+		ding_typ = self.ding_typ
 		if not ding_typ
 			# skip this if
 		elsif ding_typ.name == "Image"
@@ -58,11 +59,11 @@ class Ding < ActiveRecord::Base
 
 	def self.search(search, user)
 	  if search
-	    with_translations.joins(:assoziations => :user_assoziations).where('name LIKE ?', "%#{search}%")
-	    	.where("dings.published = 't' OR user_assoziations.user_id = ?", user.id).distinct
+	    with_translations.where('name LIKE ?', "%#{search}%")
+	    	.where("dings.published = 't'")
 	  else
-	    with_translations.joins(:assoziations => :user_assoziations)
-	    	.where("dings.published = 't' OR user_assoziations.user_id = ?", user.id).distinct
+	    with_translations
+	    	.where("dings.published = 't'")
 	  end
 	end
 
@@ -76,7 +77,7 @@ class Ding < ActiveRecord::Base
 		end
 	end
 
-	def guess_ding_typ_from_name
+	def self.guess_ding_typ_from_name(name)
 		begin
 			if name.start_with? 'http://' or name.start_with? 'https://'
 				if name.includes?('youtube')
@@ -102,33 +103,30 @@ class Ding < ActiveRecord::Base
 	end
 
 	def after_initialize
-		puts "after_initialize"
-		if not ding_typ
-			puts "after_initialize 2"
-			write_attribute(:ding_typ_id, self.guess_ding_typ_from_name.id)
-		end
+		#if not ding_typ
+			#write_attribute(:ding_typ_id, Ding.guess_ding_typ_from_name(self.name).id)
+		#end
 	end
 
-	def ding_typ(user=nil)
-		if not user
-			return DingTyp.find_by_name('Ding')
-		else
-			#return has_ding_typs#.where(:user => user).first
-			@typs = DingHasTyp.where(:user => user, :ding => self)
-			if @typs.count > 0
-				return @typs.first.ding_typ
-			end
-			return DingTyp.find_by_name('Ding')
-		end
-	end
+	#def ding_typ(user=nil)
+	#	if not user
+	#		return DingTyp.find_by_name('Ding')
+	#	else
+	#		#return has_ding_typs#.where(:user => user).first
+	#		@typs = DingHasTyp.where(:user => user, :ding => self)
+	#		if @typs.count > 0
+	#			return @typs.first.ding_typ
+	#		end
+	#		return DingTyp.find_by_name('Ding')
+	#	end
+	#end
 
 	# TODO: what if we are no habit ding?
 	def get_habit_info(current_user)
 		@ding = self
 		@starttp_ass = Assoziation
-			.joins(:user_assoziations, :ding_zwei => {:ding_has_typs => :ding_typ})
+			.joins(:user_assoziations, :ding_zwei => :ding_typ)
 			.where(:ding_eins => @ding)
-			.where("ding_has_typs.user_id = ?", current_user.id)
 			.where("ding_typs.name = ?", 'Start Time Point')
 		@has_starttp = @starttp_ass.count > 0
 		if @has_starttp
@@ -138,9 +136,8 @@ class Ding < ActiveRecord::Base
 		end
 
 		@timespan_ass = Assoziation
-			.joins(:user_assoziations, :ding_zwei => {:ding_has_typs => :ding_typ})
+			.joins(:user_assoziations, :ding_zwei => :ding_typ)
 			.where(:ding_eins => @ding)
-			.where("ding_has_typs.user_id = ?", current_user.id)
 			.where("ding_typs.name = ?", 'Time Span')
 		@has_timespan = @timespan_ass.count > 0
 		if @has_timespan
@@ -162,9 +159,8 @@ class Ding < ActiveRecord::Base
 		end
 
 		@times_done = Assoziation
-			.joins(:user_assoziations, :ding_zwei => {:ding_has_typs => :ding_typ})
+			.joins(:user_assoziations, :ding_zwei => :ding_typ)
 			.where(:ding_eins => @ding)
-			.where("ding_has_typs.user_id = ?", current_user.id)
 			.where("ding_typs.name = ? OR ding_typs.name = ?", 'Todo Done', 'Todo Skip')
 
 		@times_done = @times_done.sort_by {|x| x.ding_zwei.name}
@@ -176,7 +172,7 @@ class Ding < ActiveRecord::Base
 			@latest_ding = @starttp_ding
 		end
 		begin
-			@latest_time = Time.strptime(@latest_ding.name.scan(/\[([^\[]*)\]/)[0][0], "%Y/%m/%d %H:%M")
+			@latest_time = Time.strptime(@latest_ding.name, "%Y/%m/%d %H:%M")
 		rescue
 			return nil
 		end
@@ -190,9 +186,9 @@ class Ding < ActiveRecord::Base
 
 		@times_done.reverse.each do |ass|
 			begin
-				next_time = Time.strptime(ass.ding_zwei.name.scan(/\[([^\[]*)\]/)[0][0], "%Y/%m/%d %H:%M")
+				next_time = Time.strptime(ass.ding_zwei.name, "%Y/%m/%d %H:%M")
 			rescue
-				break
+				next
 			end
 			time_diff = comp_time - next_time
 			if time_diff > @ts
