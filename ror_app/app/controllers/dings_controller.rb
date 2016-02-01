@@ -93,7 +93,7 @@ class DingsController < ApplicationController
 					.where("ding_has_typs.user_id = ?", current_user.id)
 					.where("ding_typs.name = ?", 'Habit')
 					.collect {|ass| [ass.ding_zwei, ass.ding_zwei.get_habit_info(current_user)]}
-					.sort_by {|habit, habit_info| [-(Time.now-habit_info[:latest_time]-habit_info[:ts]), -habit_info[:streak]]}
+					.sort_by {|habit, habit_info| habit_info.nil? ? [1000000000000000000000, -5] : [habit_info[:overdue] > 0 ? -habit_info[:overdue] : 0, -habit_info[:streak]]}
 			end
 
 			if not @ding.published

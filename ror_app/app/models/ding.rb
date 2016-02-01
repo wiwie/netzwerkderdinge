@@ -181,8 +181,8 @@ class Ding < ActiveRecord::Base
 			return nil
 		end
 
-		@overdue = (Time.now - @latest_time)
-		@is_overdue = @overdue > @ts
+		@overdue = (Time.now - @latest_time - @ts)
+		@is_overdue = @overdue > 0
 
 		# how many times have we done the habit in time?
 		@streak = 0
