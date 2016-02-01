@@ -49,6 +49,8 @@ class Ding < ActiveRecord::Base
 			return "tachometer"
 		elsif ding_typ.name == "Start Time Point"
 			return "clock-o"
+		elsif ding_typ.name == "Time Span"
+			return "refresh"
 		end
 		
 		return "cube"
