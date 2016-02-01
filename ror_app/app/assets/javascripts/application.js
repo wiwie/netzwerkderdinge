@@ -17,6 +17,7 @@
 //= require autocomplete-rails
 //= require jquery.ui.autocomplete.html.js
 //= require turbolinks
+//= require jquery.turbolinks
 //= require best_in_place
 //= require best_in_place.jquery-ui
 //= require 'epiceditor'  
