@@ -48,7 +48,7 @@ class DingsController < ApplicationController
 		end
 		@dings.order(:name).each do |ding_typ|
 			json = json + [{:id => "add_new_" + ding_typ.id.to_s, 
-				:label => "<i class='fa fa-" + Ding.get_symbol(ding_typ) + "'></i> Add new " + ding_typ.name + " '" + term + "'", 
+				:label => "<i style=\"color: #777\" class='fa fa-" + Ding.get_symbol(ding_typ) + "'></i> <i style=\"color: #777\">Add new " + ding_typ.name + " '" + term + "'</i>", 
 				:value => term}]
 		end
 
