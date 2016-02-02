@@ -105,13 +105,16 @@ class DingsController < ApplicationController
 			elsif @ding_typ.name == 'Habit'
 				@habit_info = @ding.get_habit_info(current_user)
 			elsif @ding_typ.name == 'Habit Collection'
-				@habits = Assoziation
+				@habit_groups = Hash[Assoziation
 					.joins(:user_assoziations, :ding_zwei => :ding_typ)
 					.where(:ding_eins => @ding)
 					.where("ding_typs.name = ?", 'Habit')
 					.where(:user_assoziations => {:user => current_user})
 					.collect {|ass| [ass.ding_zwei, ass.ding_zwei.get_habit_info(current_user)]}
-					.sort_by {|habit, habit_info| habit_info.nil? ? [Time.now, -5] : [habit_info[:latest_time]+habit_info[:ts], -habit_info[:streak]]}
+					.select {|habit, habit_info| not habit_info.nil?}
+					.group_by {|habit, habit_info| habit_info[:ts]}
+					.sort_by{|k,v| k}]
+					.map {|key, habit_group| [key, habit_group.sort_by {|habit, habit_info| habit_info.nil? ? [Time.now, -5] : [habit_info[:latest_time]+habit_info[:ts], -habit_info[:streak]]}] }
 			end
 
 			if not @ding.published
