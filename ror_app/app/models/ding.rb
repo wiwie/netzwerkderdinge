@@ -22,8 +22,11 @@ class Ding < ActiveRecord::Base
 		return hash
 	end
 
-	def get_symbol(user)
-		ding_typ = self.ding_typ
+	def get_symbol
+		return Ding.get_symbol(self.ding_typ)
+	end
+
+	def self.get_symbol(ding_typ)
 		if not ding_typ
 			# skip this if
 		elsif ding_typ.name == "Image"

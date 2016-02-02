@@ -26,7 +26,7 @@ module ApplicationHelper
 		end
 
 		if with_symbol
-			link_text += ("<li>" + fa_icon(ding.get_symbol(current_user)) + "</li>").html_safe
+			link_text += ("<li>" + fa_icon(ding.get_symbol) + "</li>").html_safe
 		end
 
 		#link_text += "<b>".html_safe

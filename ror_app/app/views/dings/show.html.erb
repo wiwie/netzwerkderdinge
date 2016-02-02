@@ -9,8 +9,8 @@
 	<% end %>
 	  <div class="h1">
 	  	<% if not @ding.published %><i><% end %>
-	  	<%= fa_icon(@ding.get_symbol(current_user)) %>
-		<% if @ding.ding_typ(current_user).name != 'Ding' or @ding.has_translation(:name, params[:locale]) %>
+	  	<%= fa_icon(@ding.get_symbol) %>
+		<% if @ding.ding_typ.name != 'Ding' or @ding.has_translation(:name, params[:locale]) %>
 			<%= best_in_place @ding, :name, :as => :input %>
 		<% else %>
 			&lt;???&gt;
@@ -122,7 +122,7 @@
 				<% ding = ass.ding_eins %>
 				<li>
 				    <ul class="list-inline">
-		        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol(current_user)) %></span></li>
+		        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol) %></span></li>
 		        		<li><%= link_to ding.name, ding %></li>
 				        <li>(<%= link_to ass do %><span style="vertical-align:middle"><%= fa_icon(:link) %></span><% end %>)</li>
 				        <li><%= badge(ass.user_assoziations.count.to_s + " mal", :warning) %></li>
@@ -154,7 +154,7 @@
 				<% ding = ass.ding_eins %>
 				<li>
 				    <ul class="list-inline">
-		        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol(current_user)) %></span></li>
+		        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol) %></span></li>
 		        		<li><%= link_to ding.name, ding %></li>
 				        <li>(<%= link_to ass do %><span style="vertical-align:middle"><%= fa_icon(:link) %></span><% end %>)</li>
 				        <li><%= badge(ass.user_assoziations.count.to_s + " mal", :warning) %></li>
@@ -219,7 +219,7 @@
 					badge_text: ass.user_assoziations.count.to_s + " mal"}) %></li>
 				<!--<li>
 				    <ul class="list-inline">
-		        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol(current_user)) %></span></li>
+		        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol) %></span></li>
 		        		<li>
 		        			<% if not ding.published %><i><% end %>
 		        			<%= link_to ding.name, ding %>

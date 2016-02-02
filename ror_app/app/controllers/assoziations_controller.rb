@@ -11,9 +11,13 @@ class AssoziationsController < ApplicationController
 				ding.published ? true : params["user_assoziation"]["published"] == "1"
 			)
 
-			if params[:selected_ding_zwei_id] == ''
+			if params[:selected_ding_zwei_id] == '' or params[:selected_ding_zwei_id].start_with?("add_new_")
 				name = params[:assoziation][:ding_zwei_id]
-				guessed_ding_typ = Ding.guess_ding_typ_from_name(name)
+				if params[:selected_ding_zwei_id].start_with?("add_new_")
+					guessed_ding_typ = DingTyp.find(params[:selected_ding_zwei_id].gsub("add_new_","").to_i)
+				else
+					guessed_ding_typ = Ding.guess_ding_typ_from_name(name)
+				end
 
 				ding = Ding
 					.where(:name => name)
@@ -50,9 +54,13 @@ class AssoziationsController < ApplicationController
 	end
 
 	def create
-		if not params.has_key?(:selected_ding_eins_id) or params[:selected_ding_eins_id] == ''
+		if not params.has_key?(:selected_ding_eins_id) or params[:selected_ding_eins_id] == '' or params[:selected_ding_eins_id].start_with?("add_new_")
 			name = params[:assoziation][:ding_eins_id]
-			guessed_ding_typ = Ding.guess_ding_typ_from_name(name)
+			if params[:selected_ding_eins_id].start_with?("add_new_")
+				guessed_ding_typ = DingTyp.find(params[:selected_ding_eins_id].gsub("add_new_","").to_i)
+			else
+				guessed_ding_typ = Ding.guess_ding_typ_from_name(name)
+			end
 			@ding = Ding.where(:name => name).where(:ding_typ => guessed_ding_typ).first_or_create
 			@ding.update_attribute(:published,@ding.published ? true : params["user_assoziation"]["published"] == "1")
 			ding_eins_id = @ding.id
@@ -60,9 +68,13 @@ class AssoziationsController < ApplicationController
 			ding_eins_id = params[:selected_ding_eins_id].to_i
 		end
 
-		if not params.has_key?(:selected_ding_zwei_id) or params[:selected_ding_zwei_id] == ''
+		if not params.has_key?(:selected_ding_zwei_id) or params[:selected_ding_zwei_id] == '' or params[:selected_ding_eins_id].start_with?("add_new_")
 			name = params[:assoziation][:ding_zwei_id]
-			guessed_ding_typ = Ding.guess_ding_typ_from_name(name)
+			if params[:selected_ding_zwei_id].start_with?("add_new_")
+				guessed_ding_typ = DingTyp.find(params[:selected_ding_zwei_id].gsub("add_new_","").to_i)
+			else
+				guessed_ding_typ = Ding.guess_ding_typ_from_name(name)
+			end
 			@ding = Ding.where(:name => name).where(:ding_typ => guessed_ding_typ).first_or_create
 			@ding.update_attribute(:published,@ding.published ? true : params["user_assoziation"]["published"] == "1")
 			ding_zwei_id = @ding.id

@@ -30,7 +30,29 @@ class DingsController < ApplicationController
 			.where('name LIKE ?', term + '%')
 			.order(:name).distinct
 
-		render :json => dings.map { |ding| {:id => ding["id"], :label => "<i class='fa fa-" + ding.get_symbol(current_user) + "'></i> " + ding["name"], :value => ding["name"]} }
+		exact_dings_ding_typ_ids = Ding.with_translations
+			.joins(:assoziations => :user_assoziations)
+			.where("dings.published = 't' OR user_assoziations.user_id = ?", current_user.id)
+			.where('name = ?', term)
+			.order(:name).distinct.collect {|d| d.ding_typ_id}
+
+
+		json = dings.map { |ding| {
+			:id => ding["id"], 
+			:label => "<i class='fa fa-" + ding.get_symbol + "'></i> " + ding["name"],
+			:value => ding["name"]} }
+		if exact_dings_ding_typ_ids.count > 0
+			@dings = DingTyp.where("NOT id IN (?)", exact_dings_ding_typ_ids)
+		else
+			@dings = DingTyp.all
+		end
+		@dings.order(:name).each do |ding_typ|
+			json = json + [{:id => "add_new_" + ding_typ.id.to_s, 
+				:label => "<i class='fa fa-" + Ding.get_symbol(ding_typ) + "'></i> Add new " + ding_typ.name + " '" + term + "'", 
+				:value => term}]
+		end
+
+		render :json => json
 	end
 
 	def has_translation(ding_id, attribute, locale)
