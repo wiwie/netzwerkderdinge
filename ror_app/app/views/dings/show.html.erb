@@ -2,6 +2,7 @@
 	<h1>Ding</h1>
 </div>-->
 <% if @can_access %>
+	<% content_for :title, @ding.name + " - " + @ding.ding_typ.name %>
 	<% if @ding.ding_typ(current_user).name == 'Image' %>
 		<div class="page-header image-jumbotron" style="background-image: url('<%= @ding.name %>');">
 	<% else %>
