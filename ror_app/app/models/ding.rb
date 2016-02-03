@@ -64,11 +64,14 @@ class Ding < ActiveRecord::Base
 
 	def self.search(search, user)
 	  if search
-	    with_translations.where('name LIKE ?', "%#{search}%")
-	    	.where("dings.published = 't'")
+	    with_translations.joins(:assoziations => :user_assoziations)
+	    	.where("user_assoziations.user_id = ?", user.id)
+	    	.where('name LIKE ?', "%#{search}%")
+	    	.where("dings.published = 't'").distinct
 	  else
-	    with_translations
-	    	.where("dings.published = 't'")
+	    with_translations.joins(:assoziations => :user_assoziations)
+	    	.where("user_assoziations.user_id = ?", user.id)
+	    	.where("dings.published = 't'").distinct
 	  end
 	end
 
