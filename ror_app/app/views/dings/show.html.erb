@@ -222,7 +222,7 @@
 				<% ding = Ding.find(anderes_ding) %>
 				<li><%= assoziation_to_html(ass, {
 					button_classes: nil,
-					badge_text: ass.user_assoziations.count.to_s + " mal"}) %></li>
+					badge_text: ass.user_assoziations.count.to_s + "<span class=\"text-responsive\"> mal</span>"}) %></li>
 				<!--<li>
 				    <ul class="list-inline">
 		        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol) %></span></li>

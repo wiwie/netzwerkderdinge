@@ -99,7 +99,7 @@ module ApplicationHelper
 		end
 
 		link_text += "<ul class=\"list-inline\">".html_safe
-		link_text += ("<li>" + ding_eins_link + "</li>").html_safe
+		link_text += ("<li><span class=\"text-responsive\">" + ding_eins_link + "</span></li>").html_safe
 
 		
 		if button_classes
