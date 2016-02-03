@@ -197,15 +197,15 @@
 						<li><%= ding_to_html(habit) %>
 							<% if habit_info %>
 								<% if habit_info[:streak] > 1 %>
-									<span class="label label-success"><%= habit_info[:streak] %>-Streak!</span>
+									<span class="label label-success"><%= habit_info[:streak] %><span class="text-responsive">-Streak!</span></span>
 								<% end %>
 								<% if habit_info[:is_overdue] %>
 									<span class="label label-warning">
-										seit <%= distance_of_time_in_words(habit_info[:latest_time]+habit_info[:ts],Time.now) %> überfällig
+										<span class="text-responsive">seit</span> <%= distance_of_time_in_words(habit_info[:latest_time]+habit_info[:ts],Time.now) %> <span class="text-responsive">überfällig</span>
 									</span>
 								<% else %>
 									<span class="label label-info">
-										fällig in <%= distance_of_time_in_words(Time.now,habit_info[:latest_time]+habit_info[:ts]) %>
+										<span class="text-responsive">fällig in</span> <%= distance_of_time_in_words(Time.now,habit_info[:latest_time]+habit_info[:ts]) %>
 									</span>
 								<% end %>
 							<% end %>

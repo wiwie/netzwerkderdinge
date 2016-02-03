@@ -69,3 +69,9 @@
 	padding-left: 2px;
 	padding-right: 2px;
 }
+
+@media (max-width: 500px) {
+	.text-responsive {
+		display: none;
+	}
+}
