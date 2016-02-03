@@ -213,12 +213,18 @@ class DingsController < ApplicationController
 			end
 	    elsif params[:ding].has_key?(:name) or params[:ding].has_key?(:ding_typ_id)
 	      if params[:ding].has_key?(:name)
+	      	if @ding.name == params[:ding][:name]
+	      		return
+	      	end
 		      @new_ding = Ding.where(
 		      	:name => params[:ding][:name],
 		      	:ding_typ => @ding.ding_typ,
 		      	:published => @ding.published
 		      	).first_or_create
 		  elsif params[:ding].has_key?(:ding_typ_id)
+	      	if @ding.ding_typ_id == params[:ding][:ding_typ_id].to_i
+	      		return
+	      	end
 		      @new_ding = Ding.where(
 		      	:name => @ding.name,
 		      	:ding_typ => params[:ding][:ding_typ_id].to_i,
