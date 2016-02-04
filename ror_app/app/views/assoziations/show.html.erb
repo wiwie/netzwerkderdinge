@@ -5,7 +5,7 @@
 <div class="jumbotron assoz-jumbotron">
   <h1><ul class="list-inline">
 	<li><% if not @ass.ding_eins.published %><i><% end %><%= link_to @ass.ding_eins.name, @ass.ding_eins %><% if not @ass.ding_eins.published %></i><% end %></li>
-	<li><%= fa_icon(:link) %></li>
+	<li><%= fa_icon("long-arrow-right") %></li>
     <li><% if not @ass.ding_zwei.published %><i><% end %><%= link_to @ass.ding_zwei.name, @ass.ding_zwei %><% if not @ass.ding_zwei.published %></i><% end %></li>
  </ul></h1>
 </div>
@@ -17,7 +17,7 @@
 		<% if userass.published or userass.user == current_user %>
 			<li><%= fa_icon(:user) %> <%= link_to userass.user.email, userass.user %></li>
 			<li>(Details: <%= link_to userass do %>
-			            <%= fa_icon(:link) %><% end %>
+			            <%= fa_icon("long-arrow-right") %><% end %>
 				)</li>
 		<% else %>
 			<li><%= fa_icon(:user) %> Anonym</li>

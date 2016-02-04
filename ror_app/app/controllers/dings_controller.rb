@@ -5,15 +5,16 @@ class DingsController < ApplicationController
 	autocomplete :ding, :name
 	
 	def index
-		st = ActiveRecord::Base.connection
-		@pop_dings = st.execute('SELECT ding_id,SUM(count) count FROM
-				(SELECT ding_eins_id ding_id,count(*) as count 
-				FROM assoziations ass JOIN user_assoziations ua ON (ass.id=ua.assoziation_id)
-				WHERE published = "t"
-				GROUP BY ding_eins_id)
-				GROUP BY ding_id
-				ORDER BY count DESC LIMIT 10;')
-		st.close()
+		#st = ActiveRecord::Base.connection
+		#@pop_dings = st.execute('SELECT ding_id,SUM(count) count FROM
+		#		(SELECT ding_eins_id ding_id,count(*) as count 
+		#		FROM assoziations ass JOIN user_assoziations ua ON (ass.id=ua.assoziation_id)
+		#		WHERE published = "t"
+		#		GROUP BY ding_eins_id)
+		#		GROUP BY ding_id
+		#		ORDER BY count DESC LIMIT 10;')
+		#st.close()
+		@pop_dings = Ding.where(:published => true).order("indegree+outdegree DESC").limit(10)
 
 		@newest_dings = Ding.where(:published => true).order("created_at DESC").limit(10)
 

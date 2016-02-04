@@ -5,9 +5,9 @@
 
 <h2><%= I18n.t("dings.index.meist_assoziierte_dinge") %></h2>
 <ul class="list-unstyled list-ding">
-<% @pop_dings.each do |pop_ding| %>
-	<% ding = Ding.find(pop_ding["ding_id"]) %>
-	<li><%= ding_to_html(ding, {:badge_text => ding.outdegree.to_s, :badge_icon => :link}) %></li>
+<% @pop_dings.each do |ding| %>
+	<%# ding = Ding.find(pop_ding["ding_id"]) %>
+	<li><%= ding_to_html(ding, {:badge_text => (ding.indegree+ding.outdegree).to_s, :badge_icon => :exchange}) %></li>
 <% end %>
 </ul>
 

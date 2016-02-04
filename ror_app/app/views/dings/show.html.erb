@@ -178,7 +178,7 @@
 				    <ul class="list-inline">
 		        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol) %></span></li>
 		        		<li><%= link_to ding.name, ding %></li>
-				        <li>(<%= link_to ass do %><span style="vertical-align:middle"><%= fa_icon(:link) %></span><% end %>)</li>
+				        <li>(<%= link_to ass do %><span style="vertical-align:middle"><%= fa_icon("long-arrow-right") %></span><% end %>)</li>
 				        <li><%= badge(ass.user_assoziations.count.to_s + " mal", :warning) %></li>
 				        <% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => ass.id).count == 0 %>
 				        <li>
@@ -210,7 +210,7 @@
 				    <ul class="list-inline">
 		        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol) %></span></li>
 		        		<li><%= link_to ding.name, ding %></li>
-				        <li>(<%= link_to ass do %><span style="vertical-align:middle"><%= fa_icon(:link) %></span><% end %>)</li>
+				        <li>(<%= link_to ass do %><span style="vertical-align:middle"><%= fa_icon("long-arrow-right") %></span><% end %>)</li>
 				        <li><%= badge(ass.user_assoziations.count.to_s + " mal", :warning) %></li>
 				        <% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => ass.id).count == 0 %>
 				        <li>
