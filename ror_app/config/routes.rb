@@ -22,7 +22,9 @@ Rails.application.routes.draw do
   end
   resources :assoziations do
     post 'create_for_current_user'
+    get 'create_for_current_user'
     post 'remove_for_current_user'
+    get 'remove_for_current_user'
   end
   resources :user_assoziations
   resources :users do

@@ -15,10 +15,10 @@ class Ding < ActiveRecord::Base
 	end
 
 	def assoziierte_dinge(user)
-		hash = Hash[*Assoziation.joins(:user_assoziations).where(
+		hash = Hash[*Assoziation.joins({:ding_eins => :ding_typ}, {:ding_zwei => :ding_typ}, :user_assoziations).where(
 			:ding_eins_id => self.id).where(
 			'user_assoziations.published = ? OR user_assoziations.user_id = ?', true, user.id).map{ 
-				|ass| [ass.ding_zwei_id, ass] }.flatten].sort_by {|x| [-x[1].user_assoziations.count, Ding.find(x[0]).name.nil? ? '' : Ding.find(x[0]).name.downcase] }
+				|ass| [ass.ding_zwei, ass] }.flatten].sort_by {|x| [-x[1].user_assoziations.count, x[0].name.nil? ? '' : x[0].name.downcase] }
 		return hash
 	end
 

@@ -19,14 +19,14 @@ class AssoziationsController < ApplicationController
 					guessed_ding_typ = Ding.guess_ding_typ_from_name(name)
 				end
 
-				ding = Ding
+				ding_zwei = Ding
 					.where(:name => name)
 					.where(:ding_typ => guessed_ding_typ).first_or_create
-				ding.update_attribute(
+				ding_zwei.update_attribute(
 					:published,
-					ding.published ? true : params["user_assoziation"]["published"] == "1"
+					ding_zwei.published ? true : params["user_assoziation"]["published"] == "1"
 				)
-				@id_zwei = ding.id
+				@id_zwei = ding_zwei.id
 			else
 				@id_zwei = params[:selected_ding_zwei_id].to_i
 			end
@@ -47,7 +47,7 @@ class AssoziationsController < ApplicationController
 				@snd_user_ass.save()
 			end
 
-			redirect_to @first_user_ass
+			redirect_to ding
 		else
 			@assoziation = Assoziation.new()
 		end
@@ -105,13 +105,21 @@ class AssoziationsController < ApplicationController
 	def create_for_current_user
 		@ass = Assoziation.find(params[:assoziation_id])
 		@userass = UserAssoziation.where(:assoziation_id => @ass.id, :user_id => current_user.id).first_or_create
-		redirect_to @userass
+		if params.has_key?(:redirect_to)
+			redirect_to params[:redirect_to]
+		else
+			redirect_to @userass
+		end
 	end
 
 	def remove_for_current_user
 		@ass = Assoziation.find(params[:assoziation_id])
 		@userass = UserAssoziation.where(:assoziation_id => @ass.id, :user_id => current_user.id).destroy_all
-		redirect_to url_for([current_user, UserAssoziation])
+		if params.has_key?(:redirect_to)
+			redirect_to params[:redirect_to]
+		else
+			redirect_to url_for([current_user, UserAssoziation])
+		end
 	end
 
 	def index

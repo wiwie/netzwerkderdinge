@@ -20,7 +20,7 @@
 //= require jquery.turbolinks
 //= require best_in_place
 //= require best_in_place.jquery-ui
-//= require 'epiceditor'  
+// 'epiceditor'  
 //= require fancybox
 //= require vivagraph
 //= require marked

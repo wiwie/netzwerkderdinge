@@ -72,7 +72,7 @@ class DingsController < ApplicationController
 	end
 
 	def show
-		@ding = Ding.find(params[:id])
+		@ding = Ding.with_translations.joins(:ding_typ).find(params[:id])
 
 		# make sure, that the current user is allowed to show this ding;
 		# if it is non-published, the user needs to have at least one assoziation to it;
@@ -88,8 +88,8 @@ class DingsController < ApplicationController
 				rescue
 				end
 			elsif @ding_typ.name == 'Todo List' or @ding_typ.name == 'Todo List Done'
-				@todos = @ding.assoziierte_dinge(current_user).select {|d| Ding.find(d[0]).ding_typ.name == 'Todo' or Ding.find(d[0]).ding_typ.name == 'Todo List' }
-				@done_todos = @ding.assoziierte_dinge(current_user).select {|d| Ding.find(d[0]).ding_typ.name == 'Todo Done' or Ding.find(d[0]).ding_typ.name == 'Todo List Done' }
+				@todos = @ding.assoziierte_dinge(current_user).select {|d| d[0].ding_typ.name == 'Todo' or d[0].ding_typ.name == 'Todo List' }
+				@done_todos = @ding.assoziierte_dinge(current_user).select {|d| d[0].ding_typ.name == 'Todo Done' or d[0].ding_typ.name == 'Todo List Done' }
 		  		if @todos.count+@done_todos.count > 0
 					@perc_finished = (@done_todos.count.to_f/(@todos.count+@done_todos.count)*100).to_i
 				end

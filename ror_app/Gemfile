@@ -56,7 +56,7 @@ gem 'best_in_place'
 gem 'globalize', '~> 5.0.0'
 gem 'globalize-accessors'
 
-gem 'epic-editor-rails'
+#gem 'epic-editor-rails'
 gem 'fancybox2-rails', '~> 0.2.8'
 gem 'will_paginate'
 gem 'link_thumbnailer'

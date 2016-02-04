@@ -78,6 +78,7 @@ module ApplicationHelper
 		button_classes = link_options.has_key?(:button_classes) ? link_options[:button_classes] : "btn btn-success btn-assoziation"
 		badge_text = link_options[:badge_text] || nil
 		badge_icon = link_options[:badge_icon] || nil
+		redirect_to = link_options.has_key?(:redirect_to) ? link_options[:redirect_to] : ""
 		#show_add_remove_button = 
 
 		ding_params = {
@@ -117,13 +118,11 @@ module ApplicationHelper
 
 		user_has_ass = UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => assoziation.id).count > 0
 		if user_has_ass
-        	user_add_remove_link = link_to (url = '#'), :onclick => 'remove_asso_for_curr_user(' + assoziation.id.to_s + ');' do
-	        	fa_icon(:minus)
-	        end
+        	link = url_for(:controller => 'assoziations', :action => "remove_for_current_user", :assoziation_id => assoziation.id, :redirect_to => redirect_to)
+        	user_add_remove_link = "<a href=\"" + link + "\">" + fa_icon(:minus) + "</a>"
         else
-        	user_add_remove_link = link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + assoziation.id.to_s + ');' do
-	        	fa_icon(:plus)
-	        end
+        	link = url_for(:controller => 'assoziations', :action => "create_for_current_user", :assoziation_id => assoziation.id, :redirect_to => redirect_to)
+        	user_add_remove_link = "<a href=\"" + link + "\">" + fa_icon(:plus) + "</a>"
         end
         if not button_classes
         	link_text += ("<li>" + user_add_remove_link + "</li>").html_safe

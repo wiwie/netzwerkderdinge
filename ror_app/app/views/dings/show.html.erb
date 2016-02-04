@@ -61,7 +61,7 @@
 	<% end %>
 
 	<h2><%= I18n.t("dings.show.womit_assoziierst_du_dieses_ding") %></h2>
-	<%= form_for @assoziation, :url => new_assoziation_path(), :method => :get do |f| %>
+	<%= form_for @assoziation, :url => new_assoziation_path(@assoziation), :method => :get do |f| %>
 	  <%= f.label I18n.t("dings.show.ding") %><br>
 	  <%= hidden_field_tag :ding_eins_id, @ding.id %>
 	  <%= f.autocomplete_field :ding_zwei_id, autocomplete_ding_name_dings_path, :id_element => '#selected_ding_zwei_id' %>
@@ -219,29 +219,11 @@
 	<h2><%= I18n.t("dings.show.dieses_ding_wurde_mit_den_folgenden_dingen_assoziiert") %></h2>
 		<ul class="list-unstyled list-assoziation">
 			<% @ding.assoziierte_dinge(current_user).each do |anderes_ding, ass| %>
-				<% ding = Ding.find(anderes_ding) %>
+				<% ding = anderes_ding %>
 				<li><%= assoziation_to_html(ass, {
 					button_classes: nil,
-					badge_text: ass.user_assoziations.count.to_s + "<span class=\"text-responsive\"> mal</span>"}) %></li>
-				<!--<li>
-				    <ul class="list-inline">
-		        		<li><span style="vertical-align:middle"><%= fa_icon(ding.get_symbol) %></span></li>
-		        		<li>
-		        			<% if not ding.published %><i><% end %>
-		        			<%= link_to ding.name, ding %>
-		        			<% if not ding.published %></i><% end %>
-		        		</li>
-				        <li>(<%= link_to ass do %><span style="vertical-align:middle"><%= fa_icon(:link) %></span><% end %>)</li>
-				        <li><%= badge(ass.user_assoziations.count.to_s + " mal", :warning) %></li>
-				        <% if UserAssoziation.where(:user_id => current_user.id).where(:assoziation_id => ass.id).count == 0 %>
-				        <li>
-				          <%= link_to (url = '#'), :onclick => 'create_asso_for_curr_user(' + ass.id.to_s + ');' do %>
-				            <%= fa_icon(:plus) %>
-				          <% end %>
-				        </li>
-				        <% end %>
-				    </ul>
-				</li>-->
+					badge_text: ass.user_assoziations.count.to_s + "<span class=\"text-responsive\"> mal</span>",
+					redirect_to: ding_path(@ding)}) %></li>
 			<% end %>
 		</ul>
 
@@ -261,14 +243,14 @@
 	<div id="graph"></div>
 	<script type="text/javascript">
 		var graph = Viva.Graph.graph();
-		var data = {label: '<%= @ding.name.nil? ? "" : @ding.name.truncate(25) %>', size: <%= @ding.assoziierte_dinge(current_user).count %>, url: '<%= url_for(controller: :dings, action: :show, id: @ding.id, only_path: false) %>'};
+		var data = {label: '<%= @ding.name.nil? ? "" : @ding.name.truncate(25) %>', size: <%= @ding.indegree.to_i+@ding.outdegree.to_i %>, url: '<%= url_for(controller: :dings, action: :show, id: @ding.id, only_path: false) %>'};
 		graph.addNode(0, data);
 
 		<% i = 1 %>
 		<% @ding.assoziierte_dinge(current_user).each do |anderes_ding, ass| %>
-			<% ding = Ding.find(anderes_ding) %>
+			<% ding = anderes_ding %>
 			<% if ass.user_assoziations.count > 0 %>
-				data = {label: '<%= @ding.name.nil? ? "" : ding.name.truncate(25) %>', size: <%= ding.assoziierte_dinge(current_user).count %>, url: '<%= url_for(controller: :dings, action: :show, id: ding.id, only_path: false) %>'};
+				data = {label: '<%= @ding.name.nil? ? "" : ding.name.truncate(25) %>', size: <%= ding.indegree.to_i+ding.outdegree.to_i %>, url: '<%= url_for(controller: :dings, action: :show, id: ding.id, only_path: false) %>'};
 				graph.addNode(<%= i %>, data);
 				graph.addLink(0, <%= i %>);
 		    <% end %>

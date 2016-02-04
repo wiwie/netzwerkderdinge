@@ -17,7 +17,7 @@
  *= require_self
  */
 
-@import 'base/epiceditor'; 
+/* @import 'base/epiceditor'; */
 
 .welcome-jumbotron {
 	/*background-image: url("/assets/netding_banner.png");
