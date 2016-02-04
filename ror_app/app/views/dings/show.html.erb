@@ -35,9 +35,6 @@
 				$("#ding_name_label").click(function(x) {
 					showNameEditForm();
 				});
-				$("#ding_name").focusout(function(x) {
-					hideNameEditForm();
-				});
 			</script>
 		<% else %>
 			&lt;???&gt;
@@ -68,9 +65,6 @@
 
 				$("#ding_typ_label").click(function(x) {
 					showTypEditForm();
-				});
-				$("#ding_ding_typ_id").focusout(function(x) {
-					hideTypEditForm();
 				});
 			</script>
 		<%#= best_in_place @ding, :ding_typ_id, :as => :select, :collection => Hash[DingTyp.all.map {|x| [x.id, x.name]}], :classes => 'reload_on_success' %>
