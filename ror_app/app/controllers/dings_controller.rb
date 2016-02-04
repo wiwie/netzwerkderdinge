@@ -176,12 +176,12 @@ class DingsController < ApplicationController
 	  	# TODO: dont change existing ding;
 	  	if params[:ding].has_key?(:kategorie)
 	  	  if @ding.update_attribute(:kategorie, Kategorie.find(params[:ding][:kategorie].to_i))
-		    format.html { redirect_to(@ding, :notice => 'User was successfully updated.') }
+		    format.html { redirect_to(@ding, :notice => 'Ding was successfully updated.') }
 		    format.json { respond_with_bip(@ding) }
 		  end
 		elsif params[:ding].has_key?(:description)
 	  	  if @ding.update_attribute(:description, params[:ding][:description])
-		    format.html { redirect_to(@ding, :notice => 'User was successfully updated.') }
+		    format.html { redirect_to(@ding, :notice => 'Ding was successfully updated.') }
 		    format.json { respond_with_bip(@ding) }
 		  end
 		elsif params[:ding].has_key?(:published)
@@ -207,7 +207,7 @@ class DingsController < ApplicationController
 			if @success
 				# now update the published attribute of the ding
 				if @ding.update_attribute(:published, params[:ding][:published])
-					format.html { redirect_to(@ding, :notice => 'User was successfully updated.') }
+					format.html { redirect_to(@ding, :notice => 'Ding was successfully updated.') }
 					format.json { respond_with_bip(@ding) }
 				end
 			end
@@ -270,7 +270,7 @@ class DingsController < ApplicationController
 			end
 	      end
 	      
-	      format.html { redirect_to(@new_ding, :notice => 'User was successfully updated.') }
+	      format.html { redirect_to(@new_ding, :notice => 'Ding was successfully updated.') }
 	      format.json { respond_with_bip(@ding) }
 	    end
 	  end

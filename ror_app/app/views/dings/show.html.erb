@@ -12,7 +12,33 @@
 	  	<% if not @ding.published %><i><% end %>
 	  	<%= fa_icon(@ding.get_symbol) %>
 		<% if @ding.ding_typ.name != 'Ding' or @ding.has_translation(:name, params[:locale]) %>
-			<%= best_in_place @ding, :name, :as => :input %>
+			<span id="ding_name_label"><%= @ding.name %></span>
+			<%= form_for(@ding, :html => {:class => "hidden edit_ding_name", :style=>"display: inline-block;"}) do |f| %>
+				<%= f.text_field :name %>
+				<%= f.button_tag "Cancel", type: :reset, onclick: "hideNameEditForm();" %>
+				<%= f.submit "Change Name" %>
+			<% end %>
+
+			<script type="text/javascript">
+
+				function showNameEditForm() {
+					$(".edit_ding_name").removeClass("hidden");
+					$("#ding_name_label").addClass("hidden");
+					$("#ding_name").focus();
+				}
+
+				function hideNameEditForm() {
+					$(".edit_ding_name").addClass("hidden");
+					$("#ding_name_label").removeClass("hidden");
+				}
+
+				$("#ding_name_label").click(function(x) {
+					showNameEditForm();
+				});
+				$("#ding_name").focusout(function(x) {
+					hideNameEditForm();
+				});
+			</script>
 		<% else %>
 			&lt;???&gt;
 		<% end %>
@@ -20,7 +46,34 @@
 	  </div>
 	</div>
 		<div class="h4">Typ: 
-		<%= best_in_place @ding, :ding_typ_id, :as => :select, :collection => Hash[DingTyp.all.map {|x| [x.id, x.name]}], :classes => 'reload_on_success' %>
+			<span id="ding_typ_label"><%= @ding.ding_typ.name %></span>
+			<%= form_for(@ding, :html => {:class => "hidden edit_ding_typ", :style=>"display: inline-block;"}) do |f| %>
+				<%= f.select :ding_typ_id, DingTyp.all.collect{|x| [x.name, x.id]} %>
+				<%= f.button_tag "Cancel", type: :reset, onclick: "hideTypEditForm();" %>
+				<%= f.submit "Change Typ" %>
+			<% end %>
+
+			<script type="text/javascript">
+
+				function showTypEditForm() {
+					$(".edit_ding_typ").removeClass("hidden");
+					$("#ding_typ_label").addClass("hidden");
+					$("#ding_ding_typ_id").focus();
+				}
+
+				function hideTypEditForm() {
+					$(".edit_ding_typ").addClass("hidden");
+					$("#ding_typ_label").removeClass("hidden");
+				}
+
+				$("#ding_typ_label").click(function(x) {
+					showTypEditForm();
+				});
+				$("#ding_ding_typ_id").focusout(function(x) {
+					hideTypEditForm();
+				});
+			</script>
+		<%#= best_in_place @ding, :ding_typ_id, :as => :select, :collection => Hash[DingTyp.all.map {|x| [x.id, x.name]}], :classes => 'reload_on_success' %>
 		</div>
 		<% if @can_toggle_publish %>
 		<div class="h4">Öffentlich?:
