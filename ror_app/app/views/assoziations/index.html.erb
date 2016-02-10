@@ -38,9 +38,9 @@
 <% end %>
 
 <% if params.has_key?(:user_id) %>
-<h2>Neueste Assoziationen von Benutzer <%= User.find(params[:user_id]).email %></h2>
+<h2 id="neu">Neueste Assoziationen von Benutzer <%= User.find(params[:user_id]).email %></h2>
 <% else %>
-<h2><%= I18n.t("assoziations.index.neueste_assoziationen") %></h2>
+<h2 id="neu"><%= I18n.t("assoziations.index.neueste_assoziationen") %></h2>
 <% end %>
  
 <div class="row">
@@ -50,7 +50,7 @@
   <li><%= assoziation_to_html(ass.assoziation, {
     badge_text: ass.created_at.strftime("%Y-%m-%d"),
     button_classes: nil,
-    redirect_to: url_for(controller: controller_name, action: action_name)}) %></li>
+    redirect_to: url_for(controller: controller_name, action: action_name, anchor: :neu)}) %></li>
 <% end %>
 </ul>
 </div>
@@ -85,9 +85,9 @@
 
 
 <% if params.has_key?(:user_id) %>
-<h2>Neueste Unbekannte Assoziationen von Benutzer <%= User.find(params[:user_id]).email %></h2>
+<h2 id="neu_unbekannt">Neueste Unbekannte Assoziationen von Benutzer <%= User.find(params[:user_id]).email %></h2>
 <% else %>
-<h2><%= I18n.t("assoziations.index.neueste_unbekannte_assoziationen") %></h2>
+<h2 id="neu_unbekannt"><%= I18n.t("assoziations.index.neueste_unbekannte_assoziationen") %></h2>
 <% end %>
 <% if @new_unknown_asses.count > 0 %>
 <div class="row">
@@ -98,7 +98,7 @@
       <li><%= assoziation_to_html(ass, {
         badge_text: ass.created_at.strftime("%Y-%m-%d"),
         button_classes: nil,
-        redirect_to: url_for(controller: controller_name, action: action_name)}) %></li>
+        redirect_to: url_for(controller: controller_name, action: action_name, anchor: :neu_unbekannt)}) %></li>
     <% end %>
     </ul>
   </div>
@@ -136,9 +136,9 @@
 <% end %>
 
 <% if params.has_key?(:user_id) %>
-<h2>Beliebteste Unbekannte Assoziationen von Benutzer <%= User.find(params[:user_id]).email %></h2>
+<h2 id="pop_unbekannt">Beliebteste Unbekannte Assoziationen von Benutzer <%= User.find(params[:user_id]).email %></h2>
 <% else %>
-<h2><%= I18n.t("assoziations.index.beliebteste_unbekannte_assoziationen") %></h2>
+<h2 id="pop_unbekannt"><%= I18n.t("assoziations.index.beliebteste_unbekannte_assoziationen") %></h2>
 <% end %>
 <% if @new_asses.count > 0 %>
   <div class="row">
@@ -150,7 +150,7 @@
           <%= assoziation_to_html(ass, {
             badge_text: ass.count.to_s + " mal",
             button_classes: nil,
-            redirect_to: url_for(controller: controller_name, action: action_name)}) %>
+            redirect_to: url_for(controller: controller_name, action: action_name, anchor: :pop_unbekannt)}) %>
         </li>
       <% end %>
       </ul>
@@ -191,13 +191,13 @@
 
 <% if not params.has_key?(:user_id) %>
 <a name="all"></a>
-<h2>Stöbern</h2>
+<h2 id="all">Stöbern</h2>
 <ul class="nav nav-list">
 <% @all_asses.each do |ass| %>
   <li>
     <%= assoziation_to_html(ass, {
         button_classes: nil,
-        redirect_to: url_for(controller: controller_name, action: action_name)}) %>
+        redirect_to: url_for(controller: controller_name, action: action_name, anchor: :all)}) %>
   </li>
 <% end %>
 </ul>
