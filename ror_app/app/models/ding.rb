@@ -187,31 +187,7 @@ class Ding < ActiveRecord::Base
 				 	
 				while current_date+@ts < Time.now
 
-					puts "START_TIME:"
-					puts current_date
-					# insert new line to make it look nicer
-					new_block = false
-					if @ts < 1.day
-						# new day?
-						if last_date.day != current_date.day
-							new_block = true
-						end
-					elsif @ts < 1.week
-						# new week?
-						if last_date.strftime('%W').to_i != current_date.strftime('%W').to_i
-							new_block = true
-						end
-					elsif @ts < 1.month
-						# new month?
-						if last_date.strftime('%W').to_i/4 != current_date.strftime('%W').to_i/4
-							new_block = true
-						end
-					elsif @ts < 1.year
-						# new year?
-						if last_date.year != current_date.year
-							new_block = true
-						end
-					end
+					new_block = check_for_new_block(last_date, current_date)
 					if new_block
 						@last_months.append(@month)
 						@month = []
@@ -239,6 +215,17 @@ class Ding < ActiveRecord::Base
 
 					current_date += @ts
 				end
+
+				new_block = check_for_new_block(last_date, current_date)
+				if new_block
+					@last_months.append(@month)
+					@month = []
+				end
+				if current_date < Time.now
+					@month.append(["Today Done", current_date.to_s])
+				else
+					@month.append(["Today", Time.now.to_s])
+				end
 				
 				@latest_time = latest_date_done
 			end
@@ -251,15 +238,10 @@ class Ding < ActiveRecord::Base
 		if @month.count > 0
 			@last_months.append(@month)
 			@month = []
-
-			if current_date < Time.now
-				@month.append(["Today Done", current_date.to_s])
-			else
-				@month.append(["Today", Time.now.to_s])
-			end
 		end
-		puts "BLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-		puts @last_months
+
+		puts "BLAAAAAAAAAAAAA"
+		puts current_date.to_s + " " + Time.now.to_s
 
 		if not @latest_time
 			@latest_time = Time.parse(@starttp_ding.name)
@@ -275,5 +257,32 @@ class Ding < ActiveRecord::Base
 			latest_time: @latest_time, 
 			streak: @streak,
 			last_month: @last_months}
+	end
+
+	def check_for_new_block(last_date, current_date)
+		# insert new line to make it look nicer
+		new_block = false
+		if @ts < 1.day
+			# new day?
+			if last_date.day != current_date.day
+				new_block = true
+			end
+		elsif @ts < 1.week
+			# new week?
+			if last_date.strftime('%W').to_i != current_date.strftime('%W').to_i
+				new_block = true
+			end
+		elsif @ts < 1.month
+			# new month?
+			if last_date.strftime('%W').to_i/4 != current_date.strftime('%W').to_i/4
+				new_block = true
+			end
+		elsif @ts < 1.year
+			# new year?
+			if last_date.year != current_date.year
+				new_block = true
+			end
+		end
+		return new_block
 	end
 end
