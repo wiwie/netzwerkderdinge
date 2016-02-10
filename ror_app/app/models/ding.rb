@@ -208,8 +208,6 @@ class Ding < ActiveRecord::Base
 						end
 					elsif @ts < 1.year
 						# new year?
-						puts "YEEEEEEEEEEAR"
-						puts last_date.year.to_s + " " + current_date.year.to_s
 						if last_date.year != current_date.year
 							new_block = true
 						end
@@ -227,7 +225,7 @@ class Ding < ActiveRecord::Base
 
 					if @times_done.count > 0 and current_date_ass >= current_date and current_date_ass < current_date+@ts
 						typ_name = @times_done[current_day_ass_ind].ding_zwei.ding_typ.name
-						@month.append([typ_name, (current_date).to_s])
+						@month.append([typ_name, current_date.strftime('%Y/%m/%d') + " - " + (current_date + @ts).strftime('%Y/%m/%d')])
 						latest_date_done = current_date+@ts
 						if typ_name == "Todo Fail"
 							@streak = 0
@@ -235,16 +233,11 @@ class Ding < ActiveRecord::Base
 							@streak += 1
 						end
 					else
-						@month.append(["",current_date.to_s])
+						@month.append(["",current_date.strftime('%Y/%m/%d') + " - " + (current_date + @ts).strftime('%Y/%m/%d')])
 						@streak = 0
 					end
 
 					current_date += @ts
-				end
-				if current_date < Time.now
-					@month.append(["Today Done", current_date.to_s])
-				else
-					@month.append(["Today", Time.now.to_s])
 				end
 				
 				@latest_time = latest_date_done
@@ -257,6 +250,13 @@ class Ding < ActiveRecord::Base
 		end
 		if @month.count > 0
 			@last_months.append(@month)
+			@month = []
+
+			if current_date < Time.now
+				@month.append(["Today Done", current_date.to_s])
+			else
+				@month.append(["Today", Time.now.to_s])
+			end
 		end
 		puts "BLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 		puts @last_months
