@@ -235,23 +235,25 @@
 			</div>
 		<% end %>
 		<h2>Kalender</h2>
-		<% @habit_info[:last_month].each do |month| %>
-			<% month.each do |week| %>
-				<% week.each do |event, date| %>
+			<% @habit_info[:last_month].each do |block| %>
+				<div style="padding:2px;">
+				<% block.each do |event, date| %>
 					<% if event == "Todo Done" %>
-						<span class="label label-success" title="<%= date %>">&nbsp;</span>
+						<span class="label label-success" style="border: 1px solid #000; margin:1px;" title="<%= date %>">&nbsp;</span>
 					<% elsif event == "Todo Fail" %>
-						<span class="label label-danger" title="<%= date %>">&nbsp;</span>
+						<span class="label label-danger" style="border: 1px solid #000; margin:1px;" title="<%= date %>">&nbsp;</span>
 					<% elsif event == "Todo Skip" %>
-						<span class="label label-primary" title="<%= date %>">&nbsp;</span>
+						<span class="label label-primary" style="border: 1px solid #000; margin:1px;" title="<%= date %>">&nbsp;</span>
 					<% elsif event == "" %>
-						<span class="label label-info" style="background-color:#FFF; border: 1px dotted #000;" title="<%= date %>">&nbsp;</span>
+						<span class="label label-info" style="background-color:#FFF; border: 1px dotted #000; margin:1px;" title="<%= date %>">&nbsp;</span>
+					<% elsif event == "Today" %>
+						<span class="label label-info" style="color: #000; background-color:#FFF; border: 2px dotted #000;">&nbsp;</span>
+					<% elsif event == "Today Done" %>
+						<span class="label label-success" style="border: 2px dotted #000;" title="<%= date %>">&nbsp;</span>
 					<% end %>
 				<% end %>
-				<br>
+				</div>
 			<% end %>
-			<br>
-		<% end %>
 	<% elsif @ding.ding_typ(current_user).name == 'Habit Collection' %>
 		<h2>Status der Habits</h2>
 		<ul class="list-unstyled list-ding">

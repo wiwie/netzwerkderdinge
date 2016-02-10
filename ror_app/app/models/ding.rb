@@ -165,16 +165,15 @@ class Ding < ActiveRecord::Base
 
 		@last_months = []
 		@month = []
-		@week = []
 
 		@streak = 0
 
 		begin
 			if @starttp_ding and @ts
 				latest_date_done = nil
-				current_week = Time.parse(@starttp_ding.name)
-				if current_week < Date.today-90.day
-					current_week += ((Date.today-90.day-current_week)/@ts.to_f).ceil*@ts
+				current_date = Time.parse(@starttp_ding.name)
+				if current_date < Time.now-90.day
+					current_date += ((Time.now-90.day-current_date)/@ts.to_f).ceil*@ts
 				end
 				
 				current_day_ass_ind = -1
@@ -182,39 +181,86 @@ class Ding < ActiveRecord::Base
 					current_day_ass_ind = 0
 					current_date_ass = Time.parse(@times_done[current_day_ass_ind].ding_zwei.name)
 				end
-				 	
-				while current_week+@ts < Time.now+@ts
 
-					while @times_done.count > 0 and current_date_ass < current_week and current_day_ass_ind < @times_done.count-1
+				# needed for comparison whether we started a new day/week/month/ ...
+				last_date = current_date
+				 	
+				while current_date+@ts < Time.now
+
+					puts "START_TIME:"
+					puts current_date
+					# insert new line to make it look nicer
+					new_block = false
+					if @ts < 1.day
+						# new day?
+						if last_date.day != current_date.day
+							new_block = true
+						end
+					elsif @ts < 1.week
+						# new week?
+						if last_date.strftime('%W').to_i != current_date.strftime('%W').to_i
+							new_block = true
+						end
+					elsif @ts < 1.month
+						# new month?
+						if last_date.strftime('%W').to_i/4 != current_date.strftime('%W').to_i/4
+							new_block = true
+						end
+					elsif @ts < 1.year
+						# new year?
+						puts "YEEEEEEEEEEAR"
+						puts last_date.year.to_s + " " + current_date.year.to_s
+						if last_date.year != current_date.year
+							new_block = true
+						end
+					end
+					if new_block
+						@last_months.append(@month)
+						@month = []
+					end
+					last_date = current_date
+
+					while @times_done.count > 0 and current_date_ass < current_date and current_day_ass_ind < @times_done.count-1
 						current_day_ass_ind += 1
 						current_date_ass = Time.parse(@times_done[current_day_ass_ind].ding_zwei.name)
 					end
 
-					if @times_done.count > 0 and current_date_ass >= current_week and current_date_ass < current_week+@ts
+					if @times_done.count > 0 and current_date_ass >= current_date and current_date_ass < current_date+@ts
 						typ_name = @times_done[current_day_ass_ind].ding_zwei.ding_typ.name
-						@last_months.append([typ_name, (current_week).to_s])
-						latest_date_done = current_week+@ts
+						@month.append([typ_name, (current_date).to_s])
+						latest_date_done = current_date+@ts
 						if typ_name == "Todo Fail"
 							@streak = 0
 						else
 							@streak += 1
 						end
 					else
-						@last_months.append(["",current_week.to_s])
+						@month.append(["",current_date.to_s])
 						@streak = 0
 					end
 
-					current_week += @ts
+					current_date += @ts
 				end
-
-				@last_months = [[@last_months]]
+				if current_date < Time.now
+					@month.append(["Today Done", current_date.to_s])
+				else
+					@month.append(["Today", Time.now.to_s])
+				end
 				
 				@latest_time = latest_date_done
 			end
 			#end
-		rescue
-			@last_months = []
+		rescue => error
+			@month = []
+			puts $!.message
+			puts error.backtrace
 		end
+		if @month.count > 0
+			@last_months.append(@month)
+		end
+		puts "BLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+		puts @last_months
+
 		if not @latest_time
 			@latest_time = Time.parse(@starttp_ding.name)
 		end
