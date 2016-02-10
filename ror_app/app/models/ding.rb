@@ -183,7 +183,7 @@ class Ding < ActiveRecord::Base
 					current_date_ass = Time.parse(@times_done[current_day_ass_ind].ding_zwei.name)
 				end
 				 	
-				while current_week+@ts < Time.now
+				while current_week+@ts < Time.now+@ts
 
 					while @times_done.count > 0 and current_date_ass < current_week and current_day_ass_ind < @times_done.count-1
 						current_day_ass_ind += 1
