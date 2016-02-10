@@ -209,7 +209,7 @@ class Ding < ActiveRecord::Base
 					current_date_ass = Time.parse(@times_done[current_day_ass_ind].ding_zwei.name)
 				end
 				 	
-				while current_week < Time.now
+				while current_week+@ts < Time.now
 
 					while @times_done.count > 0 and current_date_ass < current_week and current_day_ass_ind < @times_done.count-1
 						current_day_ass_ind += 1
@@ -217,7 +217,7 @@ class Ding < ActiveRecord::Base
 					end
 
 					if @times_done.count > 0 and current_date_ass >= current_week and current_date_ass < current_week+@ts
-						@last_months.append([@times_done[current_day_ass_ind].ding_zwei.ding_typ.name, current_week.to_s])
+						@last_months.append([@times_done[current_day_ass_ind].ding_zwei.ding_typ.name, (current_week).to_s])
 						latest_date_done = current_week+@ts
 					else
 						@last_months.append(["",current_week.to_s])
