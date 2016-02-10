@@ -220,26 +220,26 @@ class Ding < ActiveRecord::Base
 								current_date_ass = Time.parse(@times_done[current_day_ass_ind].ding_zwei.name)
 							end
 						end
-
-						if total_typ_name == "Todo Fail"
-							@streak = 0
-						else
-							@streak += 1
-						end
 					else
 						total_typ_name = ""
-						#@month.append(["",get_range_string(current_date)])
-						@streak = 0
 					end
 
 					# is it the current one?
 					if current_date+@ts > Time.now
 						if total_typ_name == "Todo Done" or total_typ_name == "Todo Skip"
 							total_typ_name = "Today Done"
+							@streak += 1
 						else
 							total_typ_name = "Today"
 						end
+					else
+						if total_typ_name == "Todo Fail" or total_typ_name == ""
+							@streak = 0
+						else
+							@streak += 1
+						end
 					end
+
 					@month.append([total_typ_name, get_range_string(current_date)])
 
 					current_date += @ts
