@@ -245,7 +245,7 @@ class Ding < ActiveRecord::Base
 		# 		current_day -= @ts
 		# 	end
 		# elsif @timespan_ding.name.end_with?(" week")
-		if @starttp_ding
+		if @starttp_ding and @ts
 			current_week = Time.parse(@starttp_ding.name)
 			if current_week < Date.today-90.day
 				current_week += ((Date.today-90.day-current_week)/@ts.to_f).ceil*@ts
