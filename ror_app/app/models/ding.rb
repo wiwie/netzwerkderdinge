@@ -229,12 +229,13 @@ class Ding < ActiveRecord::Base
 				@last_months = [[@last_months]]
 				
 				@latest_time = latest_date_done
-			else
-				@latest_time = Time.parse(@starttp_ding.name)
 			end
 			#end
 		rescue
 			@last_months = []
+		end
+		if not @latest_time
+			@latest_time = Time.parse(@starttp_ding.name)
 		end
 		@overdue = (Time.now - @latest_time - @ts)
 		@is_overdue = @overdue > 0
