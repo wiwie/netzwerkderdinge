@@ -170,7 +170,11 @@ class Ding < ActiveRecord::Base
 			@latest_ding = @starttp_ding
 		end
 		begin
-			@latest_time = Time.strptime(@latest_ding.name, "%Y/%m/%d %H:%M")
+			if @latest_ding.name.include? ':'
+				@latest_time = Time.strptime(@latest_ding.name, "%Y/%m/%d %H:%M")
+			else
+				@latest_time = Time.strptime(@latest_ding.name, "%Y/%m/%d")
+			end
 		rescue
 			return nil
 		end
@@ -182,13 +186,19 @@ class Ding < ActiveRecord::Base
 		@streak = 0
 		comp_time = Time.now
 
-		@times_done.reverse.each do |ass|
+		@times_done_rev = @times_done.reverse
+
+		@times_done_rev.each do |ass|
 			if ass.ding_zwei.ding_typ.name == 'Todo Fail'
 				break
 			end
 
 			begin
-				next_time = Time.strptime(ass.ding_zwei.name, "%Y/%m/%d %H:%M")
+				if ass.ding_zwei.name.include? ':'
+					next_time = Time.strptime(ass.ding_zwei.name, "%Y/%m/%d %H:%M")
+				else
+					next_time = Time.strptime(ass.ding_zwei.name, "%Y/%m/%d")
+				end
 			rescue
 				next
 			end
@@ -200,6 +210,85 @@ class Ding < ActiveRecord::Base
 			@streak += 1
 		end
 
-		return {is_overdue: @is_overdue, overdue: @overdue, ts: @ts, latest_time: @latest_time, streak: @streak}
+		@last_months = []
+		@month = []
+		@week = []
+
+		# if its daily, show the last three months
+		# if @timespan_ding.name.end_with?(" day")
+		# 	current_day = Date.today
+		# 	current_day_ass_ind = @times_done.count-1
+		# 	current_date_ass = Date.parse(@times_done[current_day_ass_ind].ding_zwei.name)
+			 	
+		# 	while current_day > (Date.today-90.day)
+		# 		if current_day.wday == 0
+		# 			@month.append(@week)
+		# 			@week = []
+		# 		end
+
+		# 		if current_day.day == 1
+		# 			@last_months.append(@month)
+		# 			@month = []
+		# 		end
+
+		# 		while current_date_ass > current_day and current_day_ass_ind > 0
+		# 			current_day_ass_ind -= 1
+		# 			current_date_ass = Date.parse(@times_done[current_day_ass_ind].ding_zwei.name)
+		# 		end
+
+		# 		if current_date_ass == current_day
+		# 			@week.unshift([@times_done[current_day_ass_ind].ding_zwei.ding_typ.name,current_day.to_s])
+		# 		else
+		# 			@week.unshift(["",current_day.to_s])
+		# 		end
+
+		# 		current_day -= @ts
+		# 	end
+		# elsif @timespan_ding.name.end_with?(" week")
+			current_week = Time.parse(@starttp_ding.name)
+			if current_week < Date.today-90.day
+				current_week += ((Date.today-90.day-current_week)/@ts.to_f).ceil*@ts
+			end
+			
+			current_day_ass_ind = -1
+			if @times_done.count > 0
+				current_day_ass_ind = 0
+				current_date_ass = Time.parse(@times_done[current_day_ass_ind].ding_zwei.name)
+			end
+			 	
+			while current_week < Date.today
+				puts current_week
+				#if current_week.cweek % 4 == 0
+				#	@last_months.append(@month)
+				#	@month = []
+				#end
+				
+				while @times_done.count > 0 and current_date_ass < current_week and current_day_ass_ind < @times_done.count-1
+					current_day_ass_ind += 1
+					current_date_ass = Time.parse(@times_done[current_day_ass_ind].ding_zwei.name)
+				end
+
+				if @times_done.count > 0 and current_date_ass >= current_week and current_date_ass < current_week+@ts
+					@last_months.append([@times_done[current_day_ass_ind].ding_zwei.ding_typ.name, current_week.to_s])
+				else
+					@last_months.append(["",current_week.to_s])
+				end
+
+				current_week += @ts
+			end
+			#if @month.count > 0
+			#	@last_months.append(@month)
+			#end
+			@last_months = [[@last_months]]
+		#end
+
+
+		return {
+			is_overdue: @is_overdue, 
+			overdue: @overdue, 
+			ts: @ts, 
+			latest_time: @latest_time, 
+			streak: @streak,
+			last_month: @last_months}
 	end
 end

@@ -234,6 +234,24 @@
 				Dieses Habit ist das nächste mal fällig in <%= distance_of_time_in_words(Time.now,@habit_info[:latest_time]+@habit_info[:ts]) %>.
 			</div>
 		<% end %>
+		<h2>Kalender</h2>
+		<% @habit_info[:last_month].each do |month| %>
+			<% month.each do |week| %>
+				<% week.each do |event, date| %>
+					<% if event == "Todo Done" %>
+						<span class="label label-success" title="<%= date %>">&nbsp;</span>
+					<% elsif event == "Todo Fail" %>
+						<span class="label label-danger" title="<%= date %>">&nbsp;</span>
+					<% elsif event == "Todo Skip" %>
+						<span class="label label-primary" title="<%= date %>">&nbsp;</span>
+					<% elsif event == "" %>
+						<span class="label label-info" style="background-color:#FFF; border: 1px dotted #000;" title="<%= date %>">&nbsp;</span>
+					<% end %>
+				<% end %>
+				<br>
+			<% end %>
+			<br>
+		<% end %>
 	<% elsif @ding.ding_typ(current_user).name == 'Habit Collection' %>
 		<h2>Status der Habits</h2>
 		<ul class="list-unstyled list-ding">
