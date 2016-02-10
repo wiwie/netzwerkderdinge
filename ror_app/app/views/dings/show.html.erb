@@ -250,6 +250,8 @@
 						<span class="label label-info" style="color: #000; background-color:#FFF; border: 2px dotted #000;" title="<%= date %>">&nbsp;</span>
 					<% elsif event == "Today Done" %>
 						<span class="label label-success" style="border: 2px dotted #000;" title="<%= date %>">&nbsp;</span>
+					<% elsif event == "Today Fail" %>
+						<span class="label label-danger" style="border: 2px dotted #000;" title="<%= date %>">&nbsp;</span>
 					<% end %>
 				<% end %>
 				</div>

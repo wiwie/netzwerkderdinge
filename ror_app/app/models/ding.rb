@@ -229,6 +229,9 @@ class Ding < ActiveRecord::Base
 						if total_typ_name == "Todo Done" or total_typ_name == "Todo Skip"
 							total_typ_name = "Today Done"
 							@streak += 1
+						elsif total_typ_name == "Todo Fail"
+							total_typ_name = "Today Fail"
+							@streak = 0
 						else
 							total_typ_name = "Today"
 						end
