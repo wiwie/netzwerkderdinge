@@ -191,9 +191,14 @@ class Ding < ActiveRecord::Base
 					end
 
 					if @times_done.count > 0 and current_date_ass >= current_week and current_date_ass < current_week+@ts
-						@last_months.append([@times_done[current_day_ass_ind].ding_zwei.ding_typ.name, (current_week).to_s])
+						typ_name = @times_done[current_day_ass_ind].ding_zwei.ding_typ.name
+						@last_months.append([typ_name, (current_week).to_s])
 						latest_date_done = current_week+@ts
-						@streak += 1
+						if typ_name == "Todo Fail"
+							@streak = 0
+						else
+							@streak += 1
+						end
 					else
 						@last_months.append(["",current_week.to_s])
 						@streak = 0
