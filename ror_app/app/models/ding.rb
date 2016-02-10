@@ -201,7 +201,7 @@ class Ding < ActiveRecord::Base
 
 					if @times_done.count > 0 and current_date_ass >= current_date and current_date_ass < current_date+@ts
 						typ_name = @times_done[current_day_ass_ind].ding_zwei.ding_typ.name
-						@month.append([typ_name, current_date.strftime('%Y/%m/%d') + " - " + (current_date + @ts).strftime('%Y/%m/%d')])
+						@month.append([typ_name, get_range_string(current_date)])
 						latest_date_done = current_date+@ts
 						if typ_name == "Todo Fail"
 							@streak = 0
@@ -209,7 +209,7 @@ class Ding < ActiveRecord::Base
 							@streak += 1
 						end
 					else
-						@month.append(["",current_date.strftime('%Y/%m/%d') + " - " + (current_date + @ts).strftime('%Y/%m/%d')])
+						@month.append(["",get_range_string(current_date)])
 						@streak = 0
 					end
 
@@ -221,10 +221,10 @@ class Ding < ActiveRecord::Base
 					@last_months.append(@month)
 					@month = []
 				end
-				if current_date < Time.now
-					@month.append(["Today Done", current_date.to_s])
+				if current_date_ass and current_date_ass >= current_date
+					@month.append(["Today Done", get_range_string(current_date)])
 				else
-					@month.append(["Today", Time.now.to_s])
+					@month.append(["Today", get_range_string(current_date)])
 				end
 				
 				@latest_time = latest_date_done
@@ -257,6 +257,10 @@ class Ding < ActiveRecord::Base
 			latest_time: @latest_time, 
 			streak: @streak,
 			last_month: @last_months}
+	end
+
+	def get_range_string(current_date)
+		return current_date.strftime('%Y/%m/%d') + " - " + (current_date + @ts).strftime('%Y/%m/%d')
 	end
 
 	def check_for_new_block(last_date, current_date)
