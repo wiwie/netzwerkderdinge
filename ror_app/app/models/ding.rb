@@ -185,7 +185,7 @@ class Ding < ActiveRecord::Base
 				# needed for comparison whether we started a new day/week/month/ ...
 				last_date = current_date
 				 	
-				while current_date+@ts < Time.now
+				while current_date < Time.now
 
 					new_block = check_for_new_block(last_date, current_date)
 					if new_block
@@ -200,32 +200,62 @@ class Ding < ActiveRecord::Base
 					end
 
 					if @times_done.count > 0 and current_date_ass >= current_date and current_date_ass < current_date+@ts
-						typ_name = @times_done[current_day_ass_ind].ding_zwei.ding_typ.name
-						@month.append([typ_name, get_range_string(current_date)])
-						latest_date_done = current_date+@ts
-						if typ_name == "Todo Fail"
+						# go through all dates which are still smaller than the deadline
+						# as soon as we find one Done / Skip, we count it as done
+						total_typ_name = "Todo Fail"
+						while current_day_ass_ind < @times_done.count and current_date_ass < current_date+@ts
+							typ_name = @times_done[current_day_ass_ind].ding_zwei.ding_typ.name
+							if typ_name == "Todo Done"
+								total_typ_name = "Todo Done"
+							elsif typ_name == "Todo Skip"
+								if total_typ_name != "Todo Done"
+									total_typ_name = "Todo Skip"
+								end
+							end
+							
+							latest_date_done = current_date+@ts
+							
+							current_day_ass_ind += 1
+							if current_day_ass_ind < @times_done.count
+								current_date_ass = Time.parse(@times_done[current_day_ass_ind].ding_zwei.name)
+							end
+						end
+
+						if total_typ_name == "Todo Fail"
 							@streak = 0
 						else
 							@streak += 1
 						end
 					else
-						@month.append(["",get_range_string(current_date)])
+						total_typ_name = ""
+						#@month.append(["",get_range_string(current_date)])
 						@streak = 0
 					end
+
+					# is it the current one?
+					if current_date+@ts > Time.now
+						if total_typ_name == "Todo Done" or total_typ_name == "Todo Skip"
+							total_typ_name = "Today Done"
+						else
+							total_typ_name = "Today"
+						end
+					end
+					@month.append([total_typ_name, get_range_string(current_date)])
 
 					current_date += @ts
 				end
 
-				new_block = check_for_new_block(last_date, current_date)
-				if new_block
-					@last_months.append(@month)
-					@month = []
-				end
-				if current_date_ass and current_date_ass >= current_date
-					@month.append(["Today Done", get_range_string(current_date)])
-				else
-					@month.append(["Today", get_range_string(current_date)])
-				end
+				# the current one; did we already finish it before deadline?
+				#new_block = check_for_new_block(last_date, current_date)
+				#if new_block
+				#	@last_months.append(@month)
+				#	@month = []
+				#end
+				#if current_date_ass and current_date_ass >= current_date and ["Todo Done", "Todo Skip"].include?(@times_done[current_day_ass_ind].ding_zwei.ding_typ.name)
+				#	@month.append(["Today Done", get_range_string(current_date)])
+				#else
+				#	@month.append(["Today", get_range_string(current_date)])
+				#end
 				
 				@latest_time = latest_date_done
 			end
