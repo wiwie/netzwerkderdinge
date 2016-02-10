@@ -163,37 +163,11 @@ class Ding < ActiveRecord::Base
 
 		@times_done = @times_done.sort_by {|x| x.ding_zwei.name}
 
-		# how many times have we done the habit in time?
-		@streak = 0
-		comp_time = Time.now
-
-		@times_done_rev = @times_done.reverse
-
-		@times_done_rev.each do |ass|
-			if ass.ding_zwei.ding_typ.name == 'Todo Fail'
-				break
-			end
-
-			begin
-				if ass.ding_zwei.name.include? ':'
-					next_time = Time.strptime(ass.ding_zwei.name, "%Y/%m/%d %H:%M")
-				else
-					next_time = Time.strptime(ass.ding_zwei.name, "%Y/%m/%d")
-				end
-			rescue
-				next
-			end
-			time_diff = comp_time - next_time
-			if time_diff > @ts
-				break
-			end
-			comp_time = next_time
-			@streak += 1
-		end
-
 		@last_months = []
 		@month = []
 		@week = []
+
+		@streak = 0
 
 		begin
 			if @starttp_ding and @ts
@@ -219,8 +193,10 @@ class Ding < ActiveRecord::Base
 					if @times_done.count > 0 and current_date_ass >= current_week and current_date_ass < current_week+@ts
 						@last_months.append([@times_done[current_day_ass_ind].ding_zwei.ding_typ.name, (current_week).to_s])
 						latest_date_done = current_week+@ts
+						@streak += 1
 					else
 						@last_months.append(["",current_week.to_s])
+						@streak = 0
 					end
 
 					current_week += @ts
