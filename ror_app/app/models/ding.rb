@@ -247,22 +247,9 @@ class Ding < ActiveRecord::Base
 
 					current_date += @ts
 				end
-
-				# the current one; did we already finish it before deadline?
-				#new_block = check_for_new_block(last_date, current_date)
-				#if new_block
-				#	@last_months.append(@month)
-				#	@month = []
-				#end
-				#if current_date_ass and current_date_ass >= current_date and ["Todo Done", "Todo Skip"].include?(@times_done[current_day_ass_ind].ding_zwei.ding_typ.name)
-				#	@month.append(["Today Done", get_range_string(current_date)])
-				#else
-				#	@month.append(["Today", get_range_string(current_date)])
-				#end
 				
 				@latest_time = latest_date_done
 			end
-			#end
 		rescue => error
 			@month = []
 			puts $!.message
@@ -272,9 +259,6 @@ class Ding < ActiveRecord::Base
 			@last_months.append(@month)
 			@month = []
 		end
-
-		puts "BLAAAAAAAAAAAAA"
-		puts current_date.to_s + " " + Time.now.to_s
 
 		if not @latest_time
 			@latest_time = Time.parse(@starttp_ding.name)

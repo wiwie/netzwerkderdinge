@@ -5,7 +5,9 @@
 	Published? <%= best_in_place @userass, :published, :as => :checkbox, :collection => [raw("<i class='fa fa-square-o'></i>"), raw("<i class='fa fa-check-square-o'></i>")]%>
 
 	<h2><%= I18n.t("user_assoziations.show.assoziation") %></h2>
-	<%= assoziation_to_html(@userass.assoziation, button_classes: nil) %>
+	<%= assoziation_to_html(@userass.assoziation, {
+		button_classes: nil,
+    	redirect_to: url_for(controller: controller_name, action: action_name)}) %>
 
 	<h2><%= I18n.t("user_assoziations.show.beschreibung") %></h2>
 	<% if @userass.user == current_user %>
