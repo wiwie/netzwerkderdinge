@@ -66,12 +66,10 @@ class Ding < ActiveRecord::Base
 	  if search
 	    with_translations.joins(:assoziations => :user_assoziations, :eingehende_assoziations => :user_assoziations)
 	    	.where("user_assoziations.user_id = ?", user.id)
-	    	.where('name LIKE ?', "%#{search}%")
-	    	.where("dings.published = 't'").distinct
+	    	.where('name LIKE ?', "%#{search}%").distinct
 	  else
 	    with_translations.joins(:assoziations => :user_assoziations, :eingehende_assoziations => :user_assoziations)
-	    	.where("user_assoziations.user_id = ?", user.id)
-	    	.where("dings.published = 't'").distinct
+	    	.where("user_assoziations.user_id = ?", user.id).distinct
 	  end
 	end
 
