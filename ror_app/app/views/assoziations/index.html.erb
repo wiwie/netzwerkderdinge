@@ -194,11 +194,13 @@
 <h2 id="all">Stöbern</h2>
 <ul class="nav nav-list">
 <% @all_asses.each do |ass| %>
+  <% if ass.ding_eins and ass.ding_zwei %>
   <li>
     <%= assoziation_to_html(ass, {
         button_classes: nil,
         redirect_to: url_for({controller: controller_name, action: action_name, anchor: :all}.update(params))}) %>
   </li>
+  <% end %>
 <% end %>
 </ul>
 <%= will_paginate @all_asses, {:params => {anchor: 'all'}} %>
