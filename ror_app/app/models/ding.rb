@@ -250,8 +250,8 @@ class Ding < ActiveRecord::Base
 			end
 		rescue => error
 			@month = []
-			puts $!.message
-			puts error.backtrace
+			#puts $!.message
+			#puts error.backtrace
 		end
 		if @month.count > 0
 			@last_months.append(@month)
