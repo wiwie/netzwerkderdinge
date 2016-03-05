@@ -25,7 +25,5 @@ module RorApp
     config.active_record.raise_in_transactional_callbacks = true
 
     config.i18n.fallbacks = true
-
-    config.web_console.whiny_requests = false
   end
 end
