@@ -1,3 +1,11 @@
+<script type="text/javascript">
+	$(function() {
+		$('#assoziation_ding_zwei_id').focus(function(){            
+	        $(this).autocomplete('search');
+	    });
+	})
+</script>
+
 <!--<div class="page-header">
 	<h1>Ding</h1>
 </div>-->
@@ -108,10 +116,21 @@
 	<% end %>
 
 	<h2><%= I18n.t("dings.show.womit_assoziierst_du_dieses_ding") %></h2>
-	<%= form_for @assoziation, :url => new_assoziation_path(@assoziation), :method => :get do |f| %>
+	<%= form_for @assoziation, :url => new_assoziation_path(@assoziation), :method => :get, :html => {:class => 'form-inline'} do |f| %>
 	  <%= f.label I18n.t("dings.show.ding") %><br>
 	  <%= hidden_field_tag :ding_eins_id, @ding.id %>
-	  <%= f.autocomplete_field :ding_zwei_id, autocomplete_ding_name_dings_path, :id_element => '#selected_ding_zwei_id' %>
+	  <div class="input-group">
+      <%= f.autocomplete_field :ding_zwei_id, autocomplete_ding_name_dings_path, :id_element => '#selected_ding_zwei_id', :class => "form-control" %>
+      <% if @ding.ding_typ(current_user).name == 'Habit' %>
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shortcuts <span class="caret"></span></button>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <li><a onclick="insertTodayTimestamp();">Insert Today</a></li>
+          <li><a onclick="insertYesterdayTimestamp();">Insert Yesterday</a></li>
+        </ul>
+      </div><!-- /btn-group -->
+    <% end %>
+    </div><!-- /input-group -->
 	  <%= f.label "Publish?" %>
 	  <%= check_box :user_assoziation, :published, {:checked => @ding.published} %>
 	  <%= f.label "Assoziiere in beide Richtungen?" %>

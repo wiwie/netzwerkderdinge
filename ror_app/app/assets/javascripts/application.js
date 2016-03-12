@@ -16,6 +16,7 @@
 //= require jquery-ui/autocomplete
 //= require autocomplete-rails
 //= require jquery.ui.autocomplete.html.js
+//= require jquery-dateFormat.min.js
 //= require turbolinks
 //= require jquery.turbolinks
 //= require best_in_place
@@ -155,3 +156,18 @@ var decodeEntities = (function() {
 
   return decodeHTMLEntities;
 })();
+
+function insertTodayTimestamp() {
+  var str = $.format.date(new Date(), "yyyy/MM/dd");
+  $('#assoziation_ding_zwei_id').val(str);
+  $('#assoziation_ding_zwei_id').focus();
+}
+
+function insertYesterdayTimestamp() {
+  var today = new Date();
+  var yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  var str = $.format.date(yesterday, "yyyy/MM/dd");
+  $('#assoziation_ding_zwei_id').val(str);
+  $('#assoziation_ding_zwei_id').focus();
+}

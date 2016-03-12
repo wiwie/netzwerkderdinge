@@ -6,4 +6,4 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-DingTyp.create([{name: 'Ding'}, {name: 'URL'}, {name: 'Image'}])
+#DingTyp.create([{name: 'Ding'}, {name: 'URL'}, {name: 'Image'}])
