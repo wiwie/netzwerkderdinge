@@ -260,7 +260,7 @@ class Ding < ActiveRecord::Base
 								skip_count=skip_count+quant
 							end
 							
-							latest_date_done = current_date+@ts
+							#latest_date_done = current_date+@ts
 							
 							current_day_ass_ind += 1
 							if current_day_ass_ind < @times_done.count
@@ -306,9 +306,10 @@ class Ding < ActiveRecord::Base
 					if current_date+@ts > Time.now
 						if total_typ_name == "Todo Done" or total_typ_name == "Todo Skip"
 							total_typ_name = "Todo Done"
+							latest_date_done = current_date+@ts
 							@streak += 1
 						elsif total_typ_name == "Todo Fail"
-							total_typ_name = "Todo Fail"
+							total_typ_name = "Today"
 							@streak = 0
 						else
 							total_typ_name = "Today"
@@ -318,6 +319,7 @@ class Ding < ActiveRecord::Base
 							@streak = 0
 						else
 							@streak += 1
+							latest_date_done = current_date+@ts
 						end
 					end
 
