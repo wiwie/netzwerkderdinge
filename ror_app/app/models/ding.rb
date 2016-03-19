@@ -317,17 +317,17 @@ class Ding < ActiveRecord::Base
 
 					# is it the current one?
 					if current_date+@ts > Time.now
-						if total_typ_name == @goal or total_typ_name == "Todo Skip"
-							total_typ_name = "Today Done"
+						if total_typ_name == "Todo Done" or total_typ_name == "Todo Skip"
+							total_typ_name = "Todo Done"
 							@streak += 1
-						elsif total_typ_name == @goal_neg
-							total_typ_name = "Today Fail"
+						elsif total_typ_name == "Todo Fail"
+							total_typ_name = "Todo Fail"
 							@streak = 0
 						else
 							total_typ_name = "Today"
 						end
 					else
-						if total_typ_name == @goal_neg or total_typ_name == ""
+						if total_typ_name == "Todo Fail" or total_typ_name == ""
 							@streak = 0
 						else
 							@streak += 1
