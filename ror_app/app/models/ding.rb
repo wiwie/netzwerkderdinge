@@ -309,14 +309,17 @@ class Ding < ActiveRecord::Base
 							latest_date_done = current_date+@ts
 							@streak += 1
 						elsif total_typ_name == "Todo Fail"
-							total_typ_name = "Today"
+							total_typ_name = "Todo Fail"
 							latest_date_done = current_date+@ts
 							@streak = 0
 						else
 							total_typ_name = "Today"
 						end
 					else
-						if total_typ_name == "Todo Fail" or total_typ_name == ""
+						if total_typ_name == "Todo Fail"
+							latest_date_done = current_date+@ts
+							@streak = 0
+						elsif total_typ_name == ""
 							@streak = 0
 						else
 							@streak += 1
