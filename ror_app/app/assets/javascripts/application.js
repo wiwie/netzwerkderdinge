@@ -157,6 +157,12 @@ var decodeEntities = (function() {
   return decodeHTMLEntities;
 })();
 
+function insertNowTimestamp() {
+  var str = $.format.date(new Date(), "yyyy/MM/dd hh:mm");
+  $('#assoziation_ding_zwei_id').val(str);
+  $('#assoziation_ding_zwei_id').focus();
+}
+
 function insertTodayTimestamp() {
   var str = $.format.date(new Date(), "yyyy/MM/dd");
   $('#assoziation_ding_zwei_id').val(str);
