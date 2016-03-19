@@ -158,7 +158,7 @@ var decodeEntities = (function() {
 })();
 
 function insertNowTimestamp() {
-  var str = $.format.date(new Date(), "yyyy/MM/dd hh:mm");
+  var str = $.format.date(new Date(), "yyyy/MM/dd HH:mm");
   $('#assoziation_ding_zwei_id').val(str);
   $('#assoziation_ding_zwei_id').focus();
 }
