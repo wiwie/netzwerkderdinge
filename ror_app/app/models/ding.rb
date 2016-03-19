@@ -307,11 +307,11 @@ class Ding < ActiveRecord::Base
 					# is it the current one?
 					if current_date+@ts > Time.now
 						if total_typ_name == "Todo Done" or total_typ_name == "Todo Skip"
-							total_typ_name = "Todo Done"
+							total_typ_name = "Today Done"
 							latest_date_done = current_date+@ts
 							@streak += 1
 						elsif total_typ_name == "Todo Fail"
-							total_typ_name = "Todo Fail"
+							total_typ_name = "Today Fail"
 							latest_date_done = current_date+@ts
 							@streak = 0
 						else
