@@ -181,8 +181,6 @@ class Ding < ActiveRecord::Base
 		@has_goal = @goal_ass.count > 0
 		if @has_goal
 			@goal = @goal_ass.first.ding_zwei.name
-			puts @has_goal
-			puts @goal
 			if @goal == "done"
 				@goal = "Todo Done"
 				@goal_neg = "Todo Fail"
@@ -216,11 +214,13 @@ class Ding < ActiveRecord::Base
 				if current_date < Time.now-90.day
 					current_date += ((Time.now-90.day-current_date)/@ts.to_f).ceil*@ts
 				end
-				
+
 				current_day_ass_ind = -1
 				if @times_done.count > 0
 					current_day_ass_ind = 0
-					current_date_ass = Time.parse(@times_done[current_day_ass_ind].ding_zwei.name)
+					split = @times_done[current_day_ass_ind].ding_zwei.parse_time()
+					current_date_ass = split[0]
+					quant = split[1]
 				end
 
 				# needed for comparison whether we started a new day/week/month/ ...
@@ -238,7 +238,9 @@ class Ding < ActiveRecord::Base
 					# skip entries
 					while @times_done.count > 0 and current_date_ass < current_date and current_day_ass_ind < @times_done.count-1
 						current_day_ass_ind += 1
-						current_date_ass = Time.parse(@times_done[current_day_ass_ind].ding_zwei.name)
+						split = @times_done[current_day_ass_ind].ding_zwei.parse_time()
+						current_date_ass = split[0]
+						quant = split[1]
 					end
 
 					if @times_done.count > 0 and current_date_ass >= current_date and current_date_ass < current_date+@ts
@@ -251,20 +253,26 @@ class Ding < ActiveRecord::Base
 						while current_day_ass_ind < @times_done.count and current_date_ass < current_date+@ts
 							typ_name = @times_done[current_day_ass_ind].ding_zwei.ding_typ.name
 							if typ_name == @goal
-								goal_count=goal_count+1
+								goal_count=goal_count+quant
 							elsif typ_name == @goal_neg
-								goal_neg_count=goal_neg_count+1
+								goal_neg_count=goal_neg_count+quant
 							elsif typ_name == "Todo Skip"
-								skip_count=skip_count+1
+								skip_count=skip_count+quant
 							end
 							
 							latest_date_done = current_date+@ts
 							
 							current_day_ass_ind += 1
 							if current_day_ass_ind < @times_done.count
-								current_date_ass = Time.parse(@times_done[current_day_ass_ind].ding_zwei.name)
+								split = @times_done[current_day_ass_ind].ding_zwei.parse_time()
+								current_date_ass = split[0]
+								quant = split[1]
 							end
 						end
+
+						puts goal_count
+						puts goal_neg_count
+						puts skip_count
 
 						total_skip = false
 						total_done = false
@@ -289,27 +297,6 @@ class Ding < ActiveRecord::Base
 						else
 							total_typ_name = "Todo Fail"
 						end
-
-=begin
-						total_typ_name = "Todo Fail"
-						while current_day_ass_ind < @times_done.count and current_date_ass < current_date+@ts
-							typ_name = @times_done[current_day_ass_ind].ding_zwei.ding_typ.name
-							if typ_name == @goal
-								total_typ_name = "Todo Done"
-							elsif typ_name == "Todo Skip"
-								if total_typ_name != @goal
-									total_typ_name = "Todo Skip"
-								end
-							end
-							
-							latest_date_done = current_date+@ts
-							
-							current_day_ass_ind += 1
-							if current_day_ass_ind < @times_done.count
-								current_date_ass = Time.parse(@times_done[current_day_ass_ind].ding_zwei.name)
-							end
-						end
-=end
 
 					else
 						total_typ_name = ""
@@ -365,6 +352,17 @@ class Ding < ActiveRecord::Base
 			latest_time: @latest_time, 
 			streak: @streak,
 			last_month: @last_months}
+	end
+
+	def parse_time()
+		split = self.name.split(", ")
+		current_date_ass = Time.parse(split[0])
+		if split.length > 1
+			quant = split[1].to_i
+		else
+			quant = 1
+		end
+		return [current_date_ass, quant]
 	end
 
 	def get_range_string(current_date)
