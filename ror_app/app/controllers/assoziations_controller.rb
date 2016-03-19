@@ -43,7 +43,10 @@ class AssoziationsController < ApplicationController
 					:ding_zwei_id => @id_eins).first_or_create
 				@snd_ass.save()
 
-				@snd_user_ass = UserAssoziation.new(:assoziation => @snd_ass, :user => current_user, :published => params["user_assoziation"]["published"] == "1")
+				@snd_user_ass = UserAssoziation.where(
+					:assoziation => @snd_ass, 
+					:user => current_user, 
+					:published => params["user_assoziation"]["published"] == "1").first_or_create
 				@snd_user_ass.save()
 			end
 

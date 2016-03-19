@@ -57,6 +57,10 @@ class Ding < ActiveRecord::Base
 			return "clock-o"
 		elsif ding_typ.name == "Time Span"
 			return "refresh"
+		elsif ding_typ.name == "Quantity"
+			return "hashtag"
+		elsif ding_typ.name == "Goal"
+			return "bullseye"
 		end
 		
 		return "cube"
@@ -153,6 +157,45 @@ class Ding < ActiveRecord::Base
 			@ts = @timespan_ding.name.partition(" ").first.to_i.years
 		end
 
+		# how often do we want to do something for each time-span?
+		@quantity_ass = Assoziation
+			.joins(:user_assoziations, :ding_zwei => :ding_typ)
+			.where(:ding_eins => @ding)
+			.where(:user_assoziations => {:user => current_user})
+			.where("ding_typs.name = ?", 'Quantity')
+		@has_quant = @quantity_ass.count > 0
+		if @has_quant
+			@quant = @quantity_ass.first.ding_zwei.name.split(" ")
+			@quant[1] = @quant[1].to_i
+		else
+			# by default we want to do something once for each time-span
+			@quant =  [">=",1]
+		end
+
+		# what do we want to do for each time-span?
+		@goal_ass = Assoziation
+			.joins(:user_assoziations, :ding_zwei => :ding_typ)
+			.where(:ding_eins => @ding)
+			.where(:user_assoziations => {:user => current_user})
+			.where("ding_typs.name = ?", 'Goal')
+		@has_goal = @goal_ass.count > 0
+		if @has_goal
+			@goal = @goal_ass.first.ding_zwei.name
+			puts @has_goal
+			puts @goal
+			if @goal == "done"
+				@goal = "Todo Done"
+				@goal_neg = "Todo Fail"
+			elsif @goal == "fail"
+				@goal = "Todo Fail"
+				@goal_neg = "Todo Done"
+			end
+		else
+			# by default we want to have something done for each time-span
+			@goal = "Todo Done"
+			@goal_neg = "Todo Fail"
+		end
+
 		@times_done = Assoziation
 			.joins(:user_assoziations, :ding_zwei => :ding_typ)
 			.where(:ding_eins => @ding)
@@ -192,6 +235,7 @@ class Ding < ActiveRecord::Base
 					end
 					last_date = current_date
 
+					# skip entries
 					while @times_done.count > 0 and current_date_ass < current_date and current_day_ass_ind < @times_done.count-1
 						current_day_ass_ind += 1
 						current_date_ass = Time.parse(@times_done[current_day_ass_ind].ding_zwei.name)
@@ -200,13 +244,60 @@ class Ding < ActiveRecord::Base
 					if @times_done.count > 0 and current_date_ass >= current_date and current_date_ass < current_date+@ts
 						# go through all dates which are still smaller than the deadline
 						# as soon as we find one Done / Skip, we count it as done
+						goal_count = 0
+						goal_neg_count = 0
+						skip_count = 0
+
+						while current_day_ass_ind < @times_done.count and current_date_ass < current_date+@ts
+							typ_name = @times_done[current_day_ass_ind].ding_zwei.ding_typ.name
+							if typ_name == @goal
+								goal_count=goal_count+1
+							elsif typ_name == @goal_neg
+								goal_neg_count=goal_neg_count+1
+							elsif typ_name == "Todo Skip"
+								skip_count=skip_count+1
+							end
+							
+							latest_date_done = current_date+@ts
+							
+							current_day_ass_ind += 1
+							if current_day_ass_ind < @times_done.count
+								current_date_ass = Time.parse(@times_done[current_day_ass_ind].ding_zwei.name)
+							end
+						end
+
+						total_skip = false
+						total_done = false
+						if goal_count==0 and goal_neg_count==0 and skip_count>0
+							total_skip = true
+						elsif @quant[0] == "=="
+							total_done = (goal_count == @quant[1])
+						elsif @quant[0] == ">"
+							total_done = (goal_count > @quant[1])
+						elsif @quant[0] == "<"
+							total_done = (goal_count < @quant[1])
+						elsif @quant[0] == ">="
+							total_done = (goal_count >= @quant[1])
+						elsif @quant[0] == "<="
+							total_done = (goal_count <= @quant[1])
+						end
+
+						if total_skip
+							total_typ_name = "Todo Skip"
+						elsif total_done
+							total_typ_name = "Todo Done"
+						else
+							total_typ_name = "Todo Fail"
+						end
+
+=begin
 						total_typ_name = "Todo Fail"
 						while current_day_ass_ind < @times_done.count and current_date_ass < current_date+@ts
 							typ_name = @times_done[current_day_ass_ind].ding_zwei.ding_typ.name
-							if typ_name == "Todo Done"
+							if typ_name == @goal
 								total_typ_name = "Todo Done"
 							elsif typ_name == "Todo Skip"
-								if total_typ_name != "Todo Done"
+								if total_typ_name != @goal
 									total_typ_name = "Todo Skip"
 								end
 							end
@@ -218,23 +309,25 @@ class Ding < ActiveRecord::Base
 								current_date_ass = Time.parse(@times_done[current_day_ass_ind].ding_zwei.name)
 							end
 						end
+=end
+
 					else
 						total_typ_name = ""
 					end
 
 					# is it the current one?
 					if current_date+@ts > Time.now
-						if total_typ_name == "Todo Done" or total_typ_name == "Todo Skip"
+						if total_typ_name == @goal or total_typ_name == "Todo Skip"
 							total_typ_name = "Today Done"
 							@streak += 1
-						elsif total_typ_name == "Todo Fail"
+						elsif total_typ_name == @goal_neg
 							total_typ_name = "Today Fail"
 							@streak = 0
 						else
 							total_typ_name = "Today"
 						end
 					else
-						if total_typ_name == "Todo Fail" or total_typ_name == ""
+						if total_typ_name == @goal_neg or total_typ_name == ""
 							@streak = 0
 						else
 							@streak += 1
