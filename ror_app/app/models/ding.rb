@@ -294,8 +294,10 @@ class Ding < ActiveRecord::Base
 							total_typ_name = "Todo Skip"
 						elsif total_done
 							total_typ_name = "Todo Done"
-						else
+						elsif goal_neg_count > 0
 							total_typ_name = "Todo Fail"
+						else
+							total_typ_name = ""
 						end
 
 					else
