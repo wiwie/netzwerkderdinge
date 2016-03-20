@@ -270,10 +270,6 @@ class Ding < ActiveRecord::Base
 							end
 						end
 
-						puts goal_count
-						puts goal_neg_count
-						puts skip_count
-
 						total_skip = false
 						total_done = false
 						if goal_count==0 and goal_neg_count==0 and skip_count>0
